@@ -8,13 +8,13 @@ namespace CRM.Domain.Entities
 {
     public class Customer
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; } = string.Empty;
 
         public string ContactPerson { get; set; } = string.Empty;
 
-        public string Telephone { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
 

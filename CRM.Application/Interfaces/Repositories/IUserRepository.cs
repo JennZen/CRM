@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CRM.Services.Services
+namespace CRM.Application.Interfaces.Repositories
 {
-    public class RequestService
+    public interface IUserRepository
     {
+
+
     }
 }

@@ -28,20 +28,49 @@ namespace CRM.DataAccess.Repositories
                 Description = r.Description,
                 Status = r.Status,
                 Priority = r.Priority,
-                Customer
-
-                // Map other properties here
+                Customer = r.Customer == null ? null : new Customer
+                {
+                    Id = r.Customer.Oid,
+                    Name = r.Customer.Name,
+                    ContactPerson = r.Customer.ContactPerson,
+                    PhoneNumber = r.Customer.PhoneNumber,
+                    Email = r.Customer.Email,
+                    Comment = r.Customer.Comment,
+                    CreatedAt = r.Customer.CreatedAt,
+                    UpdatedAt = r.Customer.UpdatedAt
+                },
+                //map ManagerDb
+                CreatedAt = r.CreatedAt,
+                UpdatedAt = r.UpdatedAt,
+                FinishedAt = r.FinishedAt
             }).ToList();
         }
 
-        public Request GetById(int id)
+        public Request? GetById(int id)
         {
             var request = _uow.GetObjectByKey<RequestDb>(id);
             if (request == null) return null;
             return new Request
             {
-                Id = request.Oid,
-                // Map other properties here
+                Title = request.Title,
+                Description = request.Description,
+                Status = request.Status,
+                Priority = request.Priority,
+                Customer = new Customer
+                {
+                    Id = request.Customer.Oid,
+                    Name = request.Customer.Name,
+                    ContactPerson = request.Customer.ContactPerson,
+                    PhoneNumber = request.Customer.PhoneNumber,
+                    Email = request.Customer.Email,
+                    Comment = request.Customer.Comment,
+                    CreatedAt = request.Customer.CreatedAt,
+                    UpdatedAt = request.Customer.UpdatedAt
+                },
+                //map ManagerDb
+                CreatedAt = request.CreatedAt,
+                UpdatedAt = request.UpdatedAt,
+                FinishedAt = request.FinishedAt
             };
         }
 
@@ -56,12 +85,11 @@ namespace CRM.DataAccess.Repositories
 
         public bool Add(Request request)
         {
-            var requestDb = new RequestDb
+            var requestDb = new RequestDb(_uow)
             {
                 Oid = request.Id,
-                // Map other properties here
+                
             };
-            _uow.Save(requestDb);
             _uow.CommitChanges();
             return true;
         }

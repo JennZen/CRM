@@ -1,6 +1,5 @@
 ﻿using CRM.Domain.Entities;
 using CRM.Domain.Enums;
-using CRM.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace CRM.Application.Interfaces.Repositories
     {
         public List<Request> GetAll();
 
-        public Request GetById(int id);
+        public Request? GetById(int id);
 
         //public List<Request> GetByUser(int userId);
 
