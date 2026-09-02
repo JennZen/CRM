@@ -46,18 +46,18 @@ namespace CRM.DataAccess.Models
         }
 
 
-        private CustomerDb _customer;
+        private Customer _customer; //CustomerDb instead of Customer
         [Persistent("customer_id")]
         [Association("Customer-Requests")]
-        public CustomerDb Customer 
+        public Customer Customer //should be CustomerDb
         {
             get => _customer;
             set => SetPropertyValue(nameof(Customer), ref _customer, value);
         }
 
-        private UserDb _manager;
+        private User _manager; //UserDb instead of User
         [Persistent("manager_id")]
-        public UserDb? Manager
+        public User? Manager //should be UserDb
         {
             get => _manager;
             set => SetPropertyValue(nameof(Manager), ref _manager, value);
