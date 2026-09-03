@@ -1,6 +1,5 @@
 ﻿using CRM.Domain.Entities;
 using CRM.Domain.Enums;
-using CRM.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +10,17 @@ namespace CRM.Application.Interfaces.Repositories
 {
     public interface IRequestRepository
     {
-        public List<Request> GetAll();
+        public Task<List<Request>> GetAllAsync();
 
-        public Request GetById(int id);
+        public Task<Request?> GetByIdAsync(int id);
 
         //public List<Request> GetByUser(int userId);
 
-        public bool Add(Request request);
+        public Task<bool> AddAsync(Request request);
+        /*public Task<bool> UpdateAsync(Request request);
+        public Task<bool> DeleteAsync(Request request); 
 
-        /*public bool Update(Request request);
-        public bool Delete(Request request); 
-
-        public bool ChangeStatus(Request request, Status status);
-        public bool SetManager(Request request, User manager);*/
+        public Task<bool> ChangeStatusAsync(Request request, Status status);
+        public Task<bool> SetManagerAsync(Request request, User manager);*/
     }
 }

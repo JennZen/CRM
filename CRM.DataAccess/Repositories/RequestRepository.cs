@@ -1,7 +1,9 @@
 ﻿using CRM.Application.Interfaces.Repositories;
-using CRM.Domain.Entities;
-using DevExpress.Xpo;
+using CRM.DataAccess.Mapping;
 using CRM.DataAccess.Models;
+using CRM.Domain.Entities;
+using CRM.Domain.Enums;
+using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,36 +15,28 @@ namespace CRM.DataAccess.Repositories
     public class RequestRepository : IRequestRepository
     {
         private readonly UnitOfWork _uow;
+        private readonly RequestMapper _mapper;
 
-        public RequestRepository(UnitOfWork uow)
+        public RequestRepository(UnitOfWork uow, RequestMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
 
-        public List<Request> GetAll()
+        public async Task<List<Request>> GetAllAsync()
         {
-            return _uow.Query<RequestDb>().Select(r => new Request
-            {
-                Id = r.Oid,
-                Title = r.Title,
-                Description = r.Description,
-                Status = r.Status,
-                Priority = r.Priority,
-                Customer
+            var requests = await _uow.Query<RequestDb>().ToListAsync();
 
-                // Map other properties here
-            }).ToList();
+            return _mapper.ToDomains(requests);
         }
 
-        public Request GetById(int id)
+        public async Task<Request?> GetByIdAsync(int id)
         {
-            var request = _uow.GetObjectByKey<RequestDb>(id);
+            var request = await _uow.GetObjectByKeyAsync<RequestDb>(id);
+
             if (request == null) return null;
-            return new Request
-            {
-                Id = request.Oid,
-                // Map other properties here
-            };
+
+            return _mapper.ToDomain(request);
         }
 
         /*public List<Request> GetByUser(int userId)
@@ -54,15 +48,42 @@ namespace CRM.DataAccess.Repositories
             }).ToList();
         }*/
 
-        public bool Add(Request request)
+        public async Task<bool> AddAsync(Request request)
         {
-            var requestDb = new RequestDb
+            if (request == null) return false;
+
+            var customerDb = await _uow.GetObjectByKeyAsync<CustomerDb>(request.CustomerId);
+            if (customerDb == null) return false;
+
+            var duplicate = await _uow.Query<RequestDb>()
+                .Where(r => r.Customer.Oid == request.CustomerId
+                         && r.Title == request.Title
+                         && r.FinishedAt == null)
+                .FirstOrDefaultAsync();
+
+            if (duplicate != null) return false;
+
+            UserDb? managerDb = null;
+            if (request.ManagerId != 0)
             {
-                Oid = request.Id,
-                // Map other properties here
+                managerDb = await _uow.GetObjectByKeyAsync<UserDb>(request.ManagerId);
+            }
+
+            var requestDb = new RequestDb(_uow)
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Status = Status.New,
+                Priority = request.Priority,
+                Customer = customerDb,
+                Manager = managerDb,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                FinishedAt = null
             };
-            _uow.Save(requestDb);
-            _uow.CommitChanges();
+
+            await _uow.SaveAsync(requestDb);
+            await _uow.CommitChangesAsync();
             return true;
         }
 

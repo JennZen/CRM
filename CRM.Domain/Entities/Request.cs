@@ -19,17 +19,17 @@ namespace CRM.Domain.Entities
 
         public Priority Priority { get; set; } = Priority.Low;
 
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
 
         public int CustomerId { get; set; }
 
-        public User Manager { get; set; }
+        public User? Manager { get; set; }
 
         public int ManagerId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public DateTime? FinishedAt { get; set; }
         

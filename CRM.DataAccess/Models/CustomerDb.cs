@@ -73,6 +73,5 @@ namespace CRM.DataAccess.Models
         {
             get => GetCollection<RequestDb>(nameof(Requests));
         }
-
     }
 }
