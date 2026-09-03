@@ -21,13 +21,17 @@ namespace CRM.Domain.Entities
 
         public Customer Customer { get; set; }
 
+        public int CustomerId { get; set; }
+
         public User Manager { get; set; }
+
+        public int ManagerId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; }
 
-        public DateTime FinishedAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
         
     }
 }

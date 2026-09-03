@@ -46,18 +46,19 @@ namespace CRM.DataAccess.Models
         }
 
 
-        private Customer _customer; //CustomerDb instead of Customer
+        private CustomerDb _customer;
         [Persistent("customer_id")]
         [Association("Customer-Requests")]
-        public Customer Customer //should be CustomerDb
+        public CustomerDb Customer
         {
             get => _customer;
             set => SetPropertyValue(nameof(Customer), ref _customer, value);
         }
 
-        private User _manager; //UserDb instead of User
+        private UserDb _manager;
         [Persistent("manager_id")]
-        public User? Manager //should be UserDb
+        [Association("Manager-Requests")]
+        public UserDb Manager
         {
             get => _manager;
             set => SetPropertyValue(nameof(Manager), ref _manager, value);
@@ -77,8 +78,8 @@ namespace CRM.DataAccess.Models
             set => SetPropertyValue(nameof(UpdatedAt), ref _updatedAt, value);
         }
 
-        private DateTime _finishedAt;
-        public DateTime FinishedAt
+        private DateTime? _finishedAt;
+        public DateTime? FinishedAt
         {
             get => _finishedAt;
             set => SetPropertyValue(nameof(FinishedAt), ref _finishedAt, value);
