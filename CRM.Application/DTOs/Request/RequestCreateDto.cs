@@ -14,12 +14,10 @@ namespace CRM.Application.DTOs.Request
 
         public string Description { get; set; } = string.Empty;
 
-        public string Status { get; set; } = string.Empty;
+        public string Priority { get; set; } = string.Empty;
 
-        public string Priority { get; set; } = string.Empty ;
+        public int CustomerId { get; set; }
 
-        public string Customer { get; set; } = string.Empty;
-
-        public string Manager { get; set; } = string.Empty;
+        public int? ManagerId { get; set; }
     }
 }

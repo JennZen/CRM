@@ -39,14 +39,12 @@ namespace CRM.DataAccess.Repositories
             return _mapper.ToDomain(request);
         }
 
-        /*public List<Request> GetByUser(int userId)
+        public async Task<List<Request>> GetByUserAsync(int userId)
         {
-            return _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId).Select(r => new Request
-            {
-                Id = r.Oid,
-                // Map other properties here
-            }).ToList();
-        }*/
+            var requests = await _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId).ToListAsync();
+
+            return _mapper.ToDomains(requests);
+        }
 
         public async Task<bool> AddAsync(Request request)
         {
@@ -67,6 +65,7 @@ namespace CRM.DataAccess.Repositories
             if (request.ManagerId != 0)
             {
                 managerDb = await _uow.GetObjectByKeyAsync<UserDb>(request.ManagerId);
+                if (managerDb == null) return false;
             }
 
             var requestDb = new RequestDb(_uow)
@@ -82,10 +81,64 @@ namespace CRM.DataAccess.Repositories
                 FinishedAt = null
             };
 
-            await _uow.SaveAsync(requestDb);
             await _uow.CommitChangesAsync();
             return true;
         }
 
+        public async Task<bool> ChangeStatusAsync(int requestId, Status status)
+        {
+            var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(requestId);
+
+            if (requestDb == null) return false;
+
+            requestDb.Status = status;
+
+            await _uow.CommitChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int requestId)
+        {
+            var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(requestId);
+
+            if (requestDb == null) return false;
+
+            await _uow.DeleteAsync(requestDb);
+
+            await _uow.CommitChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateAsync(Request request)
+        {
+            if(request == null) return false;
+
+            var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(request.Id);
+            if (requestDb == null) return false;
+
+            requestDb.UpdatedAt = DateTime.Now;
+            requestDb.Title = request.Title;
+            requestDb.Description = request.Description;
+            requestDb.Status = request.Status;
+            requestDb.Priority = request.Priority;
+
+            await _uow.CommitChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> SetManagerAsync(int requestId, int managerId)
+        {
+            var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(requestId);
+            if (requestDb == null) return false;
+
+            var managerDb = await _uow.GetObjectByKeyAsync<UserDb>(managerId);
+            if (managerDb == null) return false;
+
+            requestDb.Manager = managerDb;
+            await _uow.CommitChangesAsync();
+            return true;
+        }
     }
 }

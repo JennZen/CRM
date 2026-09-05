@@ -14,13 +14,16 @@ namespace CRM.Application.Interfaces.Repositories
 
         public Task<Request?> GetByIdAsync(int id);
 
-        //public List<Request> GetByUser(int userId);
+        public Task<List<Request>> GetByUserAsync(int userId);
 
         public Task<bool> AddAsync(Request request);
-        /*public Task<bool> UpdateAsync(Request request);
-        public Task<bool> DeleteAsync(Request request); 
+        
+        public Task<bool> UpdateAsync(Request request);
 
-        public Task<bool> ChangeStatusAsync(Request request, Status status);
-        public Task<bool> SetManagerAsync(Request request, User manager);*/
+        public Task<bool> DeleteAsync(int requestId); 
+
+        public Task<bool> ChangeStatusAsync(int requestId, Status status);
+
+        public Task<bool> SetManagerAsync(int requestId, int managerId);
     }
 }

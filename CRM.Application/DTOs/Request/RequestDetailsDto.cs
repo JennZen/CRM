@@ -10,6 +10,8 @@ namespace CRM.Application.DTOs.Request
 {
     public class RequestDetailsDto
     {
+        public int Id { get; set; }
+
         public string Title { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
@@ -26,6 +28,6 @@ namespace CRM.Application.DTOs.Request
 
         public DateTime UpdatedAt { get; set; }
 
-        public DateTime FinishedAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
     }
 }

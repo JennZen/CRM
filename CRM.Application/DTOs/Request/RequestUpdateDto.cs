@@ -10,7 +10,6 @@ namespace CRM.Application.DTOs.Request
 {
     public class RequestUpdateDto
     {
-
         public int Id { get; set; }
 
         public string Title { get; set; } = string.Empty;
@@ -19,8 +18,8 @@ namespace CRM.Application.DTOs.Request
 
         public string Priority { get; set; } = string.Empty;
 
-        public string Customer { get; set; } = string.Empty;
+        public int CustomerId { get; set; }
 
-        public string Manager { get; set; } = string.Empty;
+        public int? ManagerId { get; set; }
     }
 }

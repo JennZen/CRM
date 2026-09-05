@@ -1,4 +1,9 @@
-﻿using DevExpress.Xpo;
+﻿using CRM.Application.DTOs.Request;
+using CRM.Application.Interfaces.Repositories;
+using CRM.Application.Interfaces.Services;
+using CRM.Application.Mapping;
+using CRM.Domain.Enums;
+using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +12,62 @@ using System.Threading.Tasks;
 
 namespace CRM.Services.Services
 {
-    public class RequestService
+    public class RequestService : IRequestService
     {
-        private readonly UnitOfWork _uow;
+        private readonly IRequestRepository _requestRepository;
 
-        public RequestService(UnitOfWork uow)
+        private readonly RequestMapper _requestMapper;
+
+        public RequestService(IRequestRepository requestRepository, RequestMapper requestMapper)
         {
-            _uow = uow;
+            _requestRepository = requestRepository;
+            _requestMapper = requestMapper;
         }
 
+        public async Task<List<RequestListDto>> GetAllAsync()
+        {
+            var requests = await _requestRepository.GetAllAsync();
 
+            return _requestMapper.ToListDtos(requests);
+        }
+
+        public async Task<RequestDetailsDto?> GetByIdAsync(int id)
+        {
+            var request = await _requestRepository.GetByIdAsync(id);
+            return request is null ? null : _requestMapper.ToDetailsDto(request);
+        }
+
+        public async Task<List<RequestMiniDto>> GetByUserAsync(int userId)
+        {
+            var requests = await _requestRepository.GetByUserAsync(userId);
+            return _requestMapper.ToMiniDtos(requests);
+        }
+
+        public async Task<bool> AddAsync(RequestCreateDto request)
+        {
+            var domainRequest = _requestMapper.ToDomain(request);
+            return await _requestRepository.AddAsync(domainRequest);
+        }
+
+        public async Task<bool> UpdateAsync(RequestUpdateDto request)
+        {
+            var domainRequest = _requestMapper.ToDomain(request);
+            return await _requestRepository.UpdateAsync(domainRequest);
+        }
+
+        public async Task<bool> DeleteAsync(int requestId)
+        {
+            return await _requestRepository.DeleteAsync(requestId);
+        }
+
+        public async Task<bool> ChangeStatusAsync(int requestId, Status status)
+        {
+            return await _requestRepository.ChangeStatusAsync(requestId, status);
+        }
+
+        public async Task<bool> SetManagerAsync(int requestId, int managerId)
+        {
+            return await _requestRepository.SetManagerAsync(requestId, managerId);
+        }
     }
 }
