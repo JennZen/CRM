@@ -10,7 +10,7 @@ namespace CRM.Application.Interfaces.Services
 {
     public interface ICustomerService
     {
-        public Task<List<CustomerListDto>> GetAllAsync();
+        public Task<List<CustomerDetailsDto>> GetAllAsync();
 
         public Task<CustomerDetailsDto?> GetByIdAsync(int id);
 

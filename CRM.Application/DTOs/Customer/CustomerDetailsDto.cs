@@ -9,6 +9,8 @@ namespace CRM.Application.DTOs.Customer
 {
     public class CustomerDetailsDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
 
         public string ContactPerson { get; set; } = string.Empty;
@@ -24,5 +26,7 @@ namespace CRM.Application.DTOs.Customer
         public int NumberOfRequests { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }

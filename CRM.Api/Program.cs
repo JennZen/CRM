@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IDataLayer>(provider =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     var dataStore = XpoDefault.GetConnectionProvider(connectionString, AutoCreateOption.DatabaseAndSchema);
-    return new ThreadSafeDataLayer(dataStore);
+    return new SimpleDataLayer(dataStore);
 });
 
 builder.Services.AddScoped<UnitOfWork>(provider =>
@@ -41,6 +41,15 @@ builder.Services.AddSingleton<CRM.Application.Mapping.CustomerMapper>();
 builder.Services.AddSingleton<CRM.Application.Mapping.UserMapper>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataLayer = scope.ServiceProvider.GetRequiredService<IDataLayer>();
+    using var uow = new UnitOfWork(dataLayer);
+    uow.UpdateSchema(typeof(CRM.DataAccess.Models.CustomerDb),
+                      typeof(CRM.DataAccess.Models.RequestDb),
+                      typeof(CRM.DataAccess.Models.UserDb));
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

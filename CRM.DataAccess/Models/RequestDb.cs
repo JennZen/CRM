@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace CRM.DataAccess.Models
 {
     [Persistent("requests")]
+    [DeferredDeletion(false)]
     public class RequestDb : XPObject
     {
         public RequestDb(Session session) : base(session) { }

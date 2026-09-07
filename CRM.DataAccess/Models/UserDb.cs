@@ -1,4 +1,5 @@
-﻿using DevExpress.Data.Platform.Compatibility;
+﻿using CRM.Domain.Enums;
+using DevExpress.Data.Platform.Compatibility;
 using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace CRM.DataAccess.Models
 {
     [Persistent("users")]
+    [DeferredDeletion(false)]
     public class UserDb : XPObject
     {
         public UserDb(Session session) : base(session) { }
@@ -45,8 +47,8 @@ namespace CRM.DataAccess.Models
             set => SetPropertyValue(nameof(PasswordHash), ref _passwordHash, value);
         }
 
-        private string _role = "Manager";
-        public string Role
+        private UserRole _role = UserRole.Manager;
+        public UserRole Role
         {
             get => _role;
             set => SetPropertyValue(nameof(Role), ref _role, value);

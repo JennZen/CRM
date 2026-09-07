@@ -22,11 +22,11 @@ namespace CRM.Application.Services
             _customerMapper = customerMapper;
         }
         
-        public async Task<List<CustomerListDto>> GetAllAsync()
+        public async Task<List<CustomerDetailsDto>> GetAllAsync()
         {
             var customers = await _customerRepository.GetAllAsync();
 
-            return _customerMapper.ToListDtos(customers);
+            return _customerMapper.ToDetailsDtos(customers);
         }
 
         public async Task<CustomerDetailsDto?> GetByIdAsync(int id)
