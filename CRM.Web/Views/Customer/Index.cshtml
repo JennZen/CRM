@@ -1,5 +1,409 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Customers";
 }
+<style>
+    :root {
+        --bg: #f2efe8;
+        --card: #ffffff;
+        --ink: #1c1b19;
+        --muted: #7a766e;
+        --line: #e7e2d8;
+        --green: #4b7a5a;
+        --green-bg: #e6efe4;
+        --amber: #a9812f;
+        --amber-bg: #f4ecd8;
+        --blue-bg: #e8ecf5;
+        --blue: #4a5a8a;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+    }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .78rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+        }
+
+    .page-title {
+        font-weight: 500;
+        font-size: 2.1rem;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: .95rem;
+    }
+
+    .search-box-page {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .5rem .9rem;
+        min-width: 260px;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        .search-box-page input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: .88rem;
+            width: 100%;
+            color: var(--ink);
+        }
+
+        .search-box-page svg {
+            width: 15px;
+            height: 15px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+    .btn-dark-soft {
+        background: #1c1b19;
+        color: #fff;
+        border-radius: 10px;
+        padding: .55rem 1.1rem;
+        font-size: .9rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        white-space: nowrap;
+    }
+
+        .btn-dark-soft:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .client-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.4rem 1.5rem;
+        height: 100%;
+    }
+
+    .client-name {
+        font-weight: 500;
+        font-size: 1.3rem;
+        margin: 0 0 .3rem;
+    }
+
+    .client-contact {
+        font-size: .85rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        margin-bottom: 1rem;
+    }
+
+        .client-contact svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+    .badge-status {
+        font-size: .76rem;
+        font-weight: 500;
+        padding: .3rem .65rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+        .badge-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: .35rem;
+        }
+
+    .badge-active {
+        background: var(--amber-bg);
+        color: var(--amber);
+    }
+
+        .badge-active .dot {
+            background: var(--amber);
+        }
+
+    .badge-none {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+        .badge-none .dot {
+            background: var(--green);
+        }
+
+    .contact-chip {
+        font-size: .8rem;
+        border-radius: 8px;
+        padding: .4rem .7rem;
+        display: inline-block;
+    }
+
+    .chip-email {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+    .chip-phone {
+        background: #f0eee8;
+        color: var(--ink);
+    }
+
+    .client-stats {
+        border-top: 1px solid var(--line);
+        padding-top: 1rem;
+        margin-top: 1rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+        .client-stats .stat {
+            text-align: center;
+        }
+
+        .client-stats .stat-num {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+            .client-stats .stat-num.amber {
+                color: var(--amber);
+            }
+
+        .client-stats .stat-label {
+            font-size: .68rem;
+            letter-spacing: .04em;
+            text-transform: lowercase;
+            color: var(--muted);
+            margin-top: .3rem;
+        }
+
+        .client-stats .stat-date {
+            font-size: .9rem;
+            text-align: right;
+        }
+
+            .client-stats .stat-date .stat-label {
+                text-align: right;
+            }
+</style>
+
+<div class="container-fluid px-0" style="max-width:1200px;">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
+        <div>
+            <div class="eyebrow"><span class="dot"></span>5 clients</div>
+            <div class="page-title">Customers</div>
+            <div class="subtitle">Client cards and their related requests.</div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <div class="search-box-page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+                <input type="text" placeholder="Search by name or contact" />
+            </div>
+            <button class="btn-dark-soft">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14" /></svg>
+                Add client
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-12 col-lg-6">
+            <div class="client-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="client-name">Nord Logistic LLC</div>
+                        <div class="client-contact">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            Sergey Tkachuk
+                        </div>
+                    </div>
+                    <span class="badge-status badge-active"><span class="dot"></span>2 active</span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="contact-chip chip-email">s.tkachuk@nordlog.md</span>
+                    <span class="contact-chip chip-phone">+373 22 123 456</span>
+                </div>
+                <div class="client-stats">
+                    <div class="stat">
+                        <div class="stat-num">3</div>
+                        <div class="stat-label">requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num amber">2</div>
+                        <div class="stat-label">active</div>
+                    </div>
+                    <div class="stat-date">
+                        03/12/2026
+                        <div class="stat-label">client since</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="client-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="client-name">SC Vinia Trade</div>
+                        <div class="client-contact">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            Maria Ionita
+                        </div>
+                    </div>
+                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="contact-chip chip-email">m.ionita@viniatrade.md</span>
+                    <span class="contact-chip chip-phone">+373 69 234 567</span>
+                </div>
+                <div class="client-stats">
+                    <div class="stat">
+                        <div class="stat-num">2</div>
+                        <div class="stat-label">requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num amber">1</div>
+                        <div class="stat-label">active</div>
+                    </div>
+                    <div class="stat-date">
+                        05/02/2026
+                        <div class="stat-label">client since</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="client-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="client-name">Agro Prim SRL</div>
+                        <div class="client-contact">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            Ion Gutu
+                        </div>
+                    </div>
+                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="contact-chip chip-email">i.gutu@agroprim.md</span>
+                    <span class="contact-chip chip-phone">+373 79 345 678</span>
+                </div>
+                <div class="client-stats">
+                    <div class="stat">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num amber">1</div>
+                        <div class="stat-label">active</div>
+                    </div>
+                    <div class="stat-date">
+                        06/18/2026
+                        <div class="stat-label">client since</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="client-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="client-name">Bunatati Natural</div>
+                        <div class="client-contact">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            Elena Cazac
+                        </div>
+                    </div>
+                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="contact-chip chip-email">e.cazac@bunatati.md</span>
+                    <span class="contact-chip chip-phone">+373 60 456 789</span>
+                </div>
+                <div class="client-stats">
+                    <div class="stat">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num amber">1</div>
+                        <div class="stat-label">active</div>
+                    </div>
+                    <div class="stat-date">
+                        07/01/2026
+                        <div class="stat-label">client since</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="client-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="client-name">Metaloprofil SRL</div>
+                        <div class="client-contact">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            Igor Rusu
+                        </div>
+                    </div>
+                    <span class="badge-status badge-none"><span class="dot"></span>0 active</span>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="contact-chip chip-email">i.rusu@metaloprofil.md</span>
+                    <span class="contact-chip chip-phone">+373 68 567 890</span>
+                </div>
+                <div class="client-stats">
+                    <div class="stat">
+                        <div class="stat-num">1</div>
+                        <div class="stat-label">requests</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-num">0</div>
+                        <div class="stat-label">active</div>
+                    </div>
+                    <div class="stat-date">
+                        04/09/2026
+                        <div class="stat-label">client since</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

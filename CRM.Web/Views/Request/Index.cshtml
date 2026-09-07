@@ -1,5 +1,337 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Requests";
 }
+<style>
+    :root {
+        --bg: #f2efe8;
+        --card: #ffffff;
+        --ink: #1c1b19;
+        --muted: #7a766e;
+        --line: #e7e2d8;
+        --green: #4b7a5a;
+        --green-bg: #e6efe4;
+        --amber: #a9812f;
+        --amber-bg: #f4ecd8;
+        --blue-bg: #e8ecf5;
+        --blue: #4a5a8a;
+        --red: #a94b3f;
+        --red-bg: #f4e2de;
+        --gray: #6f6b64;
+        --gray-bg: #eeece5;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+    }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .78rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+        }
+
+    .page-title {
+        font-weight: 500;
+        font-size: 2.1rem;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: .95rem;
+    }
+
+    .btn-dark-soft {
+        background: #1c1b19;
+        color: #fff;
+        border-radius: 10px;
+        padding: .55rem 1.1rem;
+        font-size: .9rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        white-space: nowrap;
+    }
+
+        .btn-dark-soft:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .filter-tabs {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.25rem;
+    }
+
+    .filter-tab {
+        background: var(--card);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: .45rem 1rem;
+        font-size: .85rem;
+        cursor: pointer;
+    }
+
+        .filter-tab:hover {
+            background: #f7f5f0;
+        }
+
+        .filter-tab.active {
+            background: #1c1b19;
+            color: #fff;
+            border-color: #1c1b19;
+        }
+
+    .req-table-wrap {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    table.req-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table.req-table thead th {
+            text-align: left;
+            font-size: .7rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 600;
+            padding: .9rem 1.4rem;
+            border-bottom: 1px solid var(--line);
+            background: var(--bg);
+            white-space: nowrap;
+        }
+
+        table.req-table tbody td {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--line);
+            font-size: .9rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.req-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.req-table tbody tr:hover {
+            background: #faf9f5;
+        }
+
+    .req-subject {
+        font-weight: 600;
+    }
+
+    .req-client {
+        color: var(--ink);
+    }
+
+    .req-updated {
+        color: var(--muted);
+    }
+
+    .badge-status {
+        font-size: .76rem;
+        font-weight: 500;
+        padding: .3rem .65rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .badge-status .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: .35rem;
+            display: inline-block;
+        }
+
+    .badge-new {
+        background: var(--blue-bg);
+        color: var(--blue);
+    }
+
+        .badge-new .dot {
+            background: var(--blue);
+        }
+
+    .badge-progress {
+        background: var(--amber-bg);
+        color: var(--amber);
+    }
+
+        .badge-progress .dot {
+            background: var(--amber);
+        }
+
+    .badge-done {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+        .badge-done .dot {
+            background: var(--green);
+        }
+
+    .badge-closed {
+        background: var(--gray-bg);
+        color: var(--gray);
+    }
+
+        .badge-closed .dot {
+            background: var(--gray);
+        }
+
+    .badge-priority {
+        font-size: .74rem;
+        font-weight: 500;
+        padding: .25rem .6rem;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+    .priority-high {
+        background: var(--red-bg);
+        color: var(--red);
+    }
+
+    .priority-medium {
+        background: var(--amber-bg);
+        color: var(--amber);
+    }
+
+    .priority-low {
+        background: var(--gray-bg);
+        color: var(--gray);
+    }
+</style>
+
+<div class="container-fluid px-0" style="max-width:1200px;">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
+        <div>
+            <div class="eyebrow"><span class="dot"></span>8 requests</div>
+            <div class="page-title">Requests</div>
+            <div class="subtitle">Customer inquiries and their processing status.</div>
+        </div>
+        <button class="btn-dark-soft">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14" /></svg>
+            New request
+        </button>
+    </div>
+
+    <div class="filter-tabs">
+        <button class="filter-tab active">All</button>
+        <button class="filter-tab">New</button>
+        <button class="filter-tab">In progress</button>
+        <button class="filter-tab">Resolved</button>
+        <button class="filter-tab">Closed</button>
+    </div>
+
+    <div class="req-table-wrap">
+        <table class="req-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Manager</th>
+                    <th>Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="req-subject">Error in client portal</td>
+                    <td class="req-client">SC Vinia Trade</td>
+                    <td><span class="badge-status badge-progress"><span class="dot"></span>In progress</span></td>
+                    <td><span class="badge-priority priority-high">High</span></td>
+                    <td>Anna Morari</td>
+                    <td class="req-updated">08/30/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Product range expansion</td>
+                    <td class="req-client">Bunatati Natural</td>
+                    <td><span class="badge-status badge-new"><span class="dot"></span>New</span></td>
+                    <td><span class="badge-priority priority-medium">Medium</span></td>
+                    <td>Victor Railean</td>
+                    <td class="req-updated">08/29/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Order notifications not arriving</td>
+                    <td class="req-client">Nord Logistic LLC</td>
+                    <td><span class="badge-status badge-new"><span class="dot"></span>New</span></td>
+                    <td><span class="badge-priority priority-high">High</span></td>
+                    <td>Anna Morari</td>
+                    <td class="req-updated">08/28/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Delayed shipment</td>
+                    <td class="req-client">Agro Prim SRL</td>
+                    <td><span class="badge-status badge-progress"><span class="dot"></span>In progress</span></td>
+                    <td><span class="badge-priority priority-high">High</span></td>
+                    <td>Dorin Cojocaru</td>
+                    <td class="req-updated">08/27/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Billing details update request</td>
+                    <td class="req-client">Nord Logistic LLC</td>
+                    <td><span class="badge-status badge-progress"><span class="dot"></span>In progress</span></td>
+                    <td><span class="badge-priority priority-medium">Medium</span></td>
+                    <td>Victor Railean</td>
+                    <td class="req-updated">08/26/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Question about July invoice</td>
+                    <td class="req-client">SC Vinia Trade</td>
+                    <td><span class="badge-status badge-done"><span class="dot"></span>Resolved</span></td>
+                    <td><span class="badge-priority priority-low">Low</span></td>
+                    <td>Anna Morari</td>
+                    <td class="req-updated">08/15/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Follow-up billing request</td>
+                    <td class="req-client">Nord Logistic LLC</td>
+                    <td><span class="badge-status badge-done"><span class="dot"></span>Resolved</span></td>
+                    <td><span class="badge-priority priority-low">Low</span></td>
+                    <td>Victor Railean</td>
+                    <td class="req-updated">08/07/2026</td>
+                </tr>
+                <tr>
+                    <td class="req-subject">Contract renewal request</td>
+                    <td class="req-client">Metaloprofil SRL</td>
+                    <td><span class="badge-status badge-closed"><span class="dot"></span>Closed</span></td>
+                    <td><span class="badge-priority priority-low">Low</span></td>
+                    <td>Dorin Cojocaru</td>
+                    <td class="req-updated">07/28/2026</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
