@@ -1,0 +1,517 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<style>
+    :root {
+        --bg: #f2efe8;
+        --card: #ffffff;
+        --ink: #1c1b19;
+        --muted: #7a766e;
+        --line: #e7e2d8;
+        --green: #4b7a5a;
+        --green-bg: #e6efe4;
+        --amber: #a9812f;
+        --amber-bg: #f4ecd8;
+        --blue-bg: #e8ecf5;
+        --blue: #4a5a8a;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .78rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+        }
+
+    .page-title {
+        font-weight: 500;
+        font-size: 2.1rem;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: .95rem;
+    }
+
+    .btn-outline-soft {
+        background: var(--card);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        border-radius: 10px;
+        padding: .55rem 1.1rem;
+        font-size: .9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .btn-outline-soft:hover {
+            background: #f7f5f0;
+            color: var(--ink);
+        }
+
+    .btn-dark-soft {
+        background: #1c1b19;
+        color: #fff;
+        border-radius: 10px;
+        padding: .55rem 1.1rem;
+        font-size: .9rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+        .btn-dark-soft:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .stat-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 1.25rem 1.4rem;
+        height: 100%;
+    }
+
+    .stat-label {
+        font-size: .72rem;
+        letter-spacing: .04em;
+        color: var(--muted);
+        text-transform: lowercase;
+    }
+
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 500;
+        margin: .25rem 0 .1rem;
+    }
+
+    .stat-sub {
+        font-size: .82rem;
+        color: var(--muted);
+    }
+
+    .icon-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .icon-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-badge.green {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .icon-badge.blue {
+            background: var(--blue-bg);
+            color: var(--blue);
+        }
+
+        .icon-badge.amber {
+            background: var(--amber-bg);
+            color: var(--amber);
+        }
+
+        .icon-badge.gray {
+            background: #ececec;
+            color: #555;
+        }
+
+    .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+    }
+
+    .panel-header {
+        padding: 1.1rem 1.4rem;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+        .panel-header h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .panel-header .hint {
+            font-size: .72rem;
+            color: var(--muted);
+            letter-spacing: .03em;
+        }
+
+    .link-btn {
+        background: var(--bg);
+        border: none;
+        border-radius: 8px;
+        padding: .4rem .9rem;
+        font-size: .85rem;
+        color: var(--ink);
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+
+        .link-btn:hover {
+            background: #e9e5db;
+        }
+
+        .link-btn svg {
+            width: 12px;
+            height: 12px;
+        }
+
+    .ticket-row {
+        padding: 1rem 1.4rem;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+    }
+
+        .ticket-row:last-child {
+            border-bottom: none;
+        }
+
+    .ticket-id {
+        font-size: .78rem;
+        color: var(--muted);
+        background: var(--bg);
+        border-radius: 6px;
+        padding: .2rem .5rem;
+        min-width: 42px;
+        text-align: center;
+    }
+
+    .ticket-title {
+        font-weight: 600;
+        font-size: .95rem;
+        margin-bottom: 1px;
+    }
+
+    .ticket-client {
+        font-size: .82rem;
+        color: var(--muted);
+    }
+
+    .badge-status {
+        font-size: .76rem;
+        font-weight: 500;
+        padding: .3rem .65rem;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+        .badge-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: .35rem;
+        }
+
+    .badge-new {
+        background: var(--blue-bg);
+        color: var(--blue);
+    }
+
+        .badge-new .dot {
+            background: var(--blue);
+        }
+
+    .badge-progress {
+        background: var(--amber-bg);
+        color: var(--amber);
+    }
+
+        .badge-progress .dot {
+            background: var(--amber);
+        }
+
+    .badge-done {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+        .badge-done .dot {
+            background: var(--green);
+        }
+
+    .ticket-date {
+        font-size: .85rem;
+        text-align: right;
+        min-width: 95px;
+    }
+
+    .ticket-updated {
+        font-size: .72rem;
+        color: var(--muted);
+    }
+
+    .manager-row {
+        padding: .9rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+        .manager-row:last-child {
+            border-bottom: none;
+        }
+
+    .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .manager-name {
+        font-weight: 600;
+        font-size: .92rem;
+    }
+
+    .manager-sub {
+        font-size: .72rem;
+        color: var(--muted);
+    }
+
+    .manager-count {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--green);
+    }
+</style>
+
+<div class="container py-4" style="max-width:1200px;">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
+        <div>
+            <div class="eyebrow"><span class="dot"></span>Today &middot; September 1, 2026</div>
+            <div class="page-title">Good afternoon, Anna</div>
+            <div class="subtitle">5 clients, 8 requests, 3 managers on the team.</div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn-outline-soft">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                Add client
+            </button>
+            <button class="btn-dark-soft">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14" /></svg>
+                New request
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <span class="stat-label text-capitalize">CLIENTS</span>
+                    <span class="icon-badge gray">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                    </span>
+                </div>
+                <div class="stat-value">5</div>
+                <div class="stat-sub">active base</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <span class="stat-label text-capitalize">NEW REQUESTS</span>
+                    <span class="icon-badge blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></svg>
+                    </span>
+                </div>
+                <div class="stat-value">2</div>
+                <div class="stat-sub">need attention</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <span class="stat-label text-capitalize">IN PROGRESS</span>
+                    <span class="icon-badge amber">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg>
+                    </span>
+                </div>
+                <div class="stat-value">3</div>
+                <div class="stat-sub">with managers</div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-start">
+                    <span class="stat-label text-capitalize">COMPLETED</span>
+                    <span class="icon-badge green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                    </span>
+                </div>
+                <div class="stat-value">3</div>
+                <div class="stat-sub">resolved and closed</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="panel h-100">
+                <div class="panel-header">
+                    <div>
+                        <h2>Recent requests</h2>
+                        <div class="hint">updated on activity</div>
+                    </div>
+                    <button class="link-btn">
+                        All requests
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                    </button>
+                </div>
+
+                <div class="ticket-row">
+                    <span class="ticket-id">#T7</span>
+                    <div class="flex-grow-1">
+                        <div class="ticket-title">Error in client portal</div>
+                        <div class="ticket-client">SC Vinia Trade</div>
+                    </div>
+                    <span class="badge-status badge-progress"><span class="dot"></span>In progress</span>
+                    <div class="ticket-date">
+                        08/30/2026
+                        <div class="ticket-updated">updated</div>
+                    </div>
+                </div>
+
+                <div class="ticket-row">
+                    <span class="ticket-id">#T5</span>
+                    <div class="flex-grow-1">
+                        <div class="ticket-title">Product range expansion</div>
+                        <div class="ticket-client">Bunatati Natural</div>
+                    </div>
+                    <span class="badge-status badge-new"><span class="dot"></span>New</span>
+                    <div class="ticket-date">
+                        08/29/2026
+                        <div class="ticket-updated">updated</div>
+                    </div>
+                </div>
+
+                <div class="ticket-row">
+                    <span class="ticket-id">#T1</span>
+                    <div class="flex-grow-1">
+                        <div class="ticket-title">Order notifications not arriving</div>
+                        <div class="ticket-client">Nord Logistic LLC</div>
+                    </div>
+                    <span class="badge-status badge-new"><span class="dot"></span>New</span>
+                    <div class="ticket-date">
+                        08/28/2026
+                        <div class="ticket-updated">updated</div>
+                    </div>
+                </div>
+
+                <div class="ticket-row">
+                    <span class="ticket-id">#T4</span>
+                    <div class="flex-grow-1">
+                        <div class="ticket-title">Delayed shipment</div>
+                        <div class="ticket-client">Agro Prim SRL</div>
+                    </div>
+                    <span class="badge-status badge-progress"><span class="dot"></span>In progress</span>
+                    <div class="ticket-date">
+                        08/27/2026
+                        <div class="ticket-updated">updated</div>
+                    </div>
+                </div>
+
+                <div class="ticket-row">
+                    <span class="ticket-id">#T2</span>
+                    <div class="flex-grow-1">
+                        <div class="ticket-title">Contract renewal request</div>
+                        <div class="ticket-client">Metaloprofil SRL</div>
+                    </div>
+                    <span class="badge-status badge-done"><span class="dot"></span>Done</span>
+                    <div class="ticket-date">
+                        08/25/2026
+                        <div class="ticket-updated">updated</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="panel h-100">
+                <div class="panel-header">
+                    <h2>Requests by manager</h2>
+                    <span class="hint text-end">total assigned</span>
+                </div>
+
+                <div class="manager-row">
+                    <div class="avatar" style="background:#7fa06f;">AM</div>
+                    <div class="flex-grow-1">
+                        <div class="manager-name">Anna Morari</div>
+                        <div class="manager-sub">Assigned requests</div>
+                    </div>
+                    <div class="manager-count">3</div>
+                </div>
+
+                <div class="manager-row">
+                    <div class="avatar" style="background:#c98a5e;">VR</div>
+                    <div class="flex-grow-1">
+                        <div class="manager-name">Victor Railean</div>
+                        <div class="manager-sub">Assigned requests</div>
+                    </div>
+                    <div class="manager-count">3</div>
+                </div>
+
+                <div class="manager-row">
+                    <div class="avatar" style="background:#7b8bb0;">DK</div>
+                    <div class="flex-grow-1">
+                        <div class="manager-name">Dorin Cojocaru</div>
+                        <div class="manager-sub">Assigned requests</div>
+                    </div>
+                    <div class="manager-count">2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

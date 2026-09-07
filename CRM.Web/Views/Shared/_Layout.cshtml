@@ -13,6 +13,8 @@
 
     <style>
         :root {
+            --sidebar-w: 255px;
+            --header-h: 68px;
             --sidebar-bg: #14161a;
             --sidebar-bg-2: #1c1e24;
             --accent: #8bc34a;
@@ -26,10 +28,15 @@
         }
 
         .sidebar {
-            width: 255px;
-            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            overflow-y: auto;
             background: var(--sidebar-bg);
             color: #cfd2d6;
+            z-index: 1030;
         }
 
             .sidebar .logo-badge {
@@ -43,6 +50,7 @@
                 justify-content: center;
                 color: #14161a;
                 font-weight: 700;
+                flex-shrink: 0;
             }
 
                 .sidebar .logo-badge img.logo-img {
@@ -104,12 +112,19 @@
                 background: var(--sidebar-bg-2);
                 border-radius: .75rem;
                 padding: .6rem .7rem;
+                flex-shrink: 0;
             }
 
         .topbar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-w);
+            right: 0;
+            height: var(--header-h);
             background: var(--header-bg);
             border-bottom: 1px solid rgba(0,0,0,.06);
-            padding: .85rem 1.5rem;
+            padding: 0 1.5rem;
+            z-index: 1020;
         }
 
             .topbar .breadcrumb-text {
@@ -156,83 +171,107 @@
                     background: var(--accent);
                     display: inline-block;
                 }
+
+        .content-col {
+            margin-left: var(--sidebar-w);
+            padding-top: var(--header-h);
+            min-height: 100vh;
+        }
+
+        @@media (max-width: 767.98px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+            }
+
+            .topbar {
+                position: static;
+                left: 0;
+                height: auto;
+                padding: .85rem 1.5rem;
+            }
+
+            .content-col {
+                margin-left: 0;
+                padding-top: 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="d-flex">
-        <nav class="sidebar d-flex flex-column p-3">
+    <nav class="sidebar d-flex flex-column p-3">
 
-            <div class="d-flex align-items-center mb-4">
-                <div class="logo-badge me-2">
-                    <img src="images/logo.png" alt="INTELECTSOFT logo" class="logo-img" />
-                </div>
-                <div>
-                    <div class="brand">Mini CRM</div>
-                    <div class="brand-sub">by INTELECTSOFT</div>
-                </div>
+        <div class="d-flex align-items-center mb-4">
+            <div class="logo-badge me-2">
+                <img src="images/logo.png" alt="INTELECTSOFT logo" class="logo-img" />
             </div>
-
-            <div class="section-label mb-2">Overview</div>
-            <ul class="nav nav-pills flex-column mb-4">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">
-                        <i class="bi bi-grid me-2"></i>Dashboard
-                    </a>
-                </li>
-            </ul>
-
-            <div class="section-label mb-2">Workspace</div>
-            <ul class="nav nav-pills flex-column">
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between" href="#">
-                        <span><i class="bi bi-people me-2"></i>Customers</span>
-                        <span class="badge rounded-pill badge-count">5</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link d-flex justify-content-between" href="#">
-                        <span><i class="bi bi-file-earmark-text me-2"></i>Requests</span>
-                        <span class="badge rounded-pill badge-count">5</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="mt-auto pt-3">
-                <div class="user-card d-flex align-items-center">
-                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2"
-                         style="width:36px;height:36px;">
-                        AM
-                    </div>
-                    <div class="small">
-                        <div class="fw-semibold text-white">Ana Moraru</div>
-                        <div class="text-secondary">Manager</div>
-                    </div>
-                </div>
+            <div>
+                <div class="brand">Mini CRM</div>
+                <div class="brand-sub">by INTELECTSOFT</div>
             </div>
-        </nav>
-
-        <div class="flex-grow-1 d-flex flex-column">
-            <header class="topbar d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-4">
-                    <div class="breadcrumb-text">
-                        INTELECTSOFT · Mini CRM / <strong>Dashboard</strong>
-                    </div>
-                    <div class="search-box d-flex align-items-center">
-                        <i class="bi bi-search me-2 text-secondary"></i>
-                        <input type="text" placeholder="Search customer or request..." />
-                    </div>
-                </div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="live-badge">
-                        <span class="dot"></span>LIVE · 3
-                    </span>
-                </div>
-            </header>
-
-            <main class="flex-grow-1 p-4">
-                @RenderBody()
-            </main>
         </div>
+
+        <div class="section-label mb-2">Overview</div>
+        <ul class="nav nav-pills flex-column mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="bi bi-grid me-2"></i>Dashboard
+                </a>
+            </li>
+        </ul>
+
+        <div class="section-label mb-2">Workspace</div>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between" href="#">
+                    <span><i class="bi bi-people me-2"></i>Customers</span>
+                    <span class="badge rounded-pill badge-count">5</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between" href="#">
+                    <span><i class="bi bi-file-earmark-text me-2"></i>Requests</span>
+                    <span class="badge rounded-pill badge-count">5</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="mt-auto pt-3">
+            <div class="user-card d-flex align-items-center">
+                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2"
+                     style="width:36px;height:36px;">
+                    AM
+                </div>
+                <div class="small">
+                    <div class="fw-semibold text-white">Ana Moraru</div>
+                    <div class="text-secondary">Manager</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="topbar d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-4">
+            <div class="breadcrumb-text">
+                INTELECTSOFT · Mini CRM / <strong>Dashboard</strong>
+            </div>
+            <div class="search-box d-flex align-items-center">
+                <i class="bi bi-search me-2 text-secondary"></i>
+                <input type="text" placeholder="Search customer or request..." />
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="live-badge">
+                <span class="dot"></span>LIVE · 3
+            </span>
+        </div>
+    </header>
+
+    <div class="content-col">
+        <main class="p-4">
+            @RenderBody()
+        </main>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
