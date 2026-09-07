@@ -14,6 +14,10 @@
         --amber-bg: #f4ecd8;
         --blue-bg: #e8ecf5;
         --blue: #4a5a8a;
+        --red: #a94b3f;
+        --red-bg: #f4e2de;
+        --gray: #6f6b64;
+        --gray-bg: #eeece5;
     }
 
     body {
@@ -216,6 +220,127 @@
             .client-stats .stat-date .stat-label {
                 text-align: right;
             }
+
+    /* Add client modal */
+    #addClientModal .modal-content {
+        background: var(--bg);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    #addClientModal .modal-header-custom {
+        padding: 1.5rem 1.75rem 1.25rem;
+        border-bottom: 1px solid var(--line);
+        position: relative;
+    }
+
+    #addClientModal .modal-title-custom {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        font-size: 1.6rem;
+        margin: 0 0 .3rem;
+    }
+
+    #addClientModal .modal-subtitle {
+        color: var(--muted);
+        font-size: .9rem;
+    }
+
+    #addClientModal .modal-close-btn {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: #ebe8e0;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        #addClientModal .modal-close-btn:hover {
+            background: #e0ddd3;
+        }
+
+    #addClientModal .modal-body {
+        padding: 1.5rem 1.75rem;
+    }
+
+    #addClientModal .field-label {
+        font-size: .72rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: .5rem;
+        display: block;
+    }
+
+        #addClientModal .field-label .req {
+            color: var(--red);
+        }
+
+    #addClientModal .form-control {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .65rem .9rem;
+        font-size: .92rem;
+        color: var(--ink);
+    }
+
+        #addClientModal .form-control:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px var(--green-bg);
+        }
+
+    #addClientModal textarea.form-control {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    #addClientModal .field-group {
+        margin-bottom: 1.25rem;
+    }
+
+    #addClientModal .modal-footer-custom {
+        padding: 1.1rem 1.75rem;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: flex-end;
+        gap: .6rem;
+    }
+
+    #addClientModal .btn-cancel {
+        background: var(--gray-bg);
+        color: var(--ink);
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+    }
+
+        #addClientModal .btn-cancel:hover {
+            background: #e2ded3;
+        }
+
+    #addClientModal .btn-save {
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: .6rem 1.4rem;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        #addClientModal .btn-save:hover {
+            background: #3f6a4c;
+        }
 </style>
 
 <div class="container-fluid px-0" style="max-width:1200px;">
@@ -231,7 +356,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
                 <input type="text" placeholder="Search by name or contact" />
             </div>
-            <button class="btn-dark-soft">
+            <button class="btn-dark-soft" type="button" data-bs-toggle="modal" data-bs-target="#addClientModal">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14" /></svg>
                 Add client
             </button>
@@ -405,5 +530,59 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="eyebrow"><span class="dot"></span>New client</div>
+                <div class="modal-title-custom" id="addClientModalLabel">Add client</div>
+                <div class="modal-subtitle">Client card for the mini-CRM.</div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <form>
+                <div class="modal-body">
+
+                    <div class="field-group">
+                        <label class="field-label" for="clientName">Company name <span class="req">*</span></label>
+                        <input type="text" class="form-control" id="clientName" placeholder="Ex: Nord Logistic LLC" required />
+                    </div>
+
+                    <div class="row g-3 field-group">
+                        <div class="col-6">
+                            <label class="field-label" for="clientContact">Contact person</label>
+                            <input type="text" class="form-control" id="clientContact" placeholder="Ex: Sergey Tkachuk" />
+                        </div>
+                        <div class="col-6">
+                            <label class="field-label" for="clientPhone">Phone</label>
+                            <input type="text" class="form-control" id="clientPhone" placeholder="+373 ..." />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="clientEmail">Email</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="info@company.md" />
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="clientComment">Comment</label>
+                        <textarea class="form-control" id="clientComment" placeholder="Notes about working with this client..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn-save">Save client</button>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>
