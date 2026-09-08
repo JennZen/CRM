@@ -1,4 +1,5 @@
-﻿using CRM.Domain.Entities;
+﻿using CRM.Application.DTOs.User;
+using CRM.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CRM.Application.Interfaces.Services
 {
-    public interface ITokenService
+    public interface IAuthService
     {
-        public string GenerateToken(User user);
+        public Task<AuthResultDto?> LoginAsync(UserLoginDto dto);
     }
 }

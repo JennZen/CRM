@@ -20,5 +20,7 @@ namespace CRM.Application.Interfaces.Repositories
         public Task<int> CountAsync();
 
         public Task<List<User>> GetAllAsync();
+
+        public Task<User?> GetByEmailAsync(string email);
     }
 }

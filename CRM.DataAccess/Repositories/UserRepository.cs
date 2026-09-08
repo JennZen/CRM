@@ -7,6 +7,7 @@ using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +41,13 @@ namespace CRM.DataAccess.Repositories
         {
             var user = await _uow.GetObjectByKeyAsync<UserDb>(id);
            
+            return _mapper.ToDomain(user);
+        }
+
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            var user = await _uow.Query<UserDb>().Where(u => u.Email == email).FirstOrDefaultAsync();
+
             return _mapper.ToDomain(user);
         }
 
