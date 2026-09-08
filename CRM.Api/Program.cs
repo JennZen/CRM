@@ -32,6 +32,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRequestService, RequestService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHasherService, HasherService>();
 
 builder.Services.AddSingleton<CRM.DataAccess.Mapping.CustomerMapper>();
 builder.Services.AddSingleton<CRM.DataAccess.Mapping.RequestMapper>();

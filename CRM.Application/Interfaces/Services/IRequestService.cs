@@ -17,7 +17,7 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<List<RequestMiniDto>> GetByUserAsync(int userId);
 
-        public Task<bool> AddAsync(RequestCreateDto request);
+        public Task<RequestDetailsDto> AddAsync(RequestCreateDto request);
 
         public Task<bool> UpdateAsync(RequestUpdateDto request);
 

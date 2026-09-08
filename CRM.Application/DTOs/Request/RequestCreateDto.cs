@@ -10,6 +10,8 @@ namespace CRM.Application.DTOs.Request
 {
     public class RequestCreateDto
     {
+
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;

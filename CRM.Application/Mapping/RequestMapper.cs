@@ -20,6 +20,8 @@ namespace CRM.Application.Mapping
 
         public partial List<RequestMiniDto> ToMiniDtos(List<Request> requests);
 
+        public partial RequestCreateDto ToCreateDto(Request request);
+
 
         // DTO -> Domain
 

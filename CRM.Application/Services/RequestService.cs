@@ -43,10 +43,11 @@ namespace CRM.Services.Services
             return _requestMapper.ToMiniDtos(requests);
         }
 
-        public async Task<bool> AddAsync(RequestCreateDto request)
+        public async Task<RequestDetailsDto> AddAsync(RequestCreateDto request)
         {
             var domainRequest = _requestMapper.ToDomain(request);
-            return await _requestRepository.AddAsync(domainRequest);
+            await _requestRepository.AddAsync(domainRequest);
+            return _requestMapper.ToDetailsDto(domainRequest);
         }
 
         public async Task<bool> UpdateAsync(RequestUpdateDto request)

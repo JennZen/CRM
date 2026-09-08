@@ -18,6 +18,5 @@ namespace CRM.DataAccess.Mapping
         public partial Request ToDomain(RequestDb r);
 
         public partial List<Request> ToDomains(List<RequestDb> r);
-
     }
 }

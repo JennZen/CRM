@@ -17,14 +17,14 @@ namespace CRM.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCustomers()
+        public async Task<IActionResult> GetAllCustomersAsync()
         {
             var customers = await _customerService.GetAllAsync();
             return Ok(customers);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetCustomerById(int id)
+        public async Task<IActionResult> GetCustomerByIdAsync(int id)
         {
             var customer = await _customerService.GetByIdAsync(id);
             if (customer == null)
@@ -35,29 +35,29 @@ namespace CRM.Api.Controllers
         }
 
         [HttpGet("count")]
-        public async Task<IActionResult> CountCustomers()
+        public async Task<IActionResult> CountCustomersAsync()
         {
             var count = await _customerService.CountAsync();
             return Ok(count);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody] CustomerCreateDto customerCreateDto)
+        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerCreateDto customerCreateDto)
         {
             var createdCustomer = await _customerService.CreateAsync(customerCreateDto);
-            return CreatedAtAction(nameof(GetCustomerById), new { id = createdCustomer.Id }, createdCustomer);
+            return CreatedAtAction(nameof(CreateCustomerAsync), new { id = createdCustomer.Id }, createdCustomer);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerUpdateDto dto)
+        public async Task<IActionResult> UpdateCustomerAsync(int id, [FromBody] CustomerUpdateDto dto)
         {
             if(dto.Id != id) 
             {
                 return BadRequest("Customer ID mismatch.");
             }
 
-            var updatedCustomer = await _customerService.UpdateAsync(dto);
-            if (updatedCustomer == false)
+            var result = await _customerService.UpdateAsync(dto);
+            if (result == false)
             {
                 return NotFound();
             }
@@ -66,7 +66,7 @@ namespace CRM.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
             var deletedCustomer = await _customerService.DeleteAsync(id);
             if (deletedCustomer == false)

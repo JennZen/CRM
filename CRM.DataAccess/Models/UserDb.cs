@@ -55,7 +55,7 @@ namespace CRM.DataAccess.Models
         }
 
         [Association("Manager-Requests")]
-        public XPCollection<RequestDb> AssignedRequests => GetCollection<RequestDb>(nameof(AssignedRequests));
+        public XPCollection<RequestDb> Requests => GetCollection<RequestDb>(nameof(Requests));
 
         private DateTime _createdAt = DateTime.Now;
 
