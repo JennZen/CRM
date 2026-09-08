@@ -1,5 +1,515 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Nord Logistics LLC";
 }
+
+<style>
+    :root {
+        --bg: #f6f2e9;
+        --card-bg: #faf8f2;
+        --border: #e6e0d2;
+        --ink: #2b2a26;
+        --muted: #8a8578;
+        --accent: #6f8f4e;
+        --accent-dark: #55712f;
+        --badge-new-bg: #e7e6f7;
+        --badge-new-fg: #5b57c9;
+        --badge-progress-bg: #f4e6c9;
+        --badge-progress-fg: #93711b;
+        --badge-resolved-bg: #e3ecd9;
+        --badge-resolved-fg: #4f7a34;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+    }
+
+    .client-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+    }
+
+    .back-link {
+        font-size: .78rem;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+    }
+
+        .back-link:hover {
+            color: var(--ink);
+        }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: .75rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--accent-dark);
+        margin: 20px 0 6px;
+    }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .page-title {
+        font-size: 2.4rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .page-subtitle {
+        color: var(--muted);
+        font-size: .95rem;
+        margin-top: 4px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-ghost {
+        background: #fff;
+        border: 1px solid var(--border);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 10px 20px;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        .btn-ghost:hover {
+            background: #f1ede2;
+            color: var(--ink);
+        }
+
+    .btn-dark {
+        background: #1c1b18;
+        border: none;
+        color: #fff;
+        border-radius: 999px;
+        padding: 10px 22px;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        .btn-dark:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .btn-accent {
+        background: var(--accent);
+        border: none;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-weight: 600;
+    }
+
+        .btn-accent:hover {
+            background: var(--accent-dark);
+            color: #fff;
+        }
+
+    .btn-cancel {
+        background: #ece7d8;
+        border: none;
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 10px 22px;
+        font-weight: 500;
+    }
+
+        .btn-cancel:hover {
+            background: #e2ddcb;
+        }
+
+    .panel {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 28px;
+    }
+
+    .panel-title {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    .info-label {
+        font-size: .68rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        margin-bottom: 18px;
+    }
+
+    .request-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 4px;
+        border-top: 1px solid var(--border);
+    }
+
+        .request-row:first-of-type {
+            border-top: none;
+        }
+
+    .request-code {
+        background: #efeadb;
+        color: var(--muted);
+        font-size: .75rem;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 4px 9px;
+        flex-shrink: 0;
+    }
+
+    .request-main {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .request-title {
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .request-client {
+        font-size: .82rem;
+        color: var(--muted);
+    }
+
+    .badge-status {
+        font-size: .75rem;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 5px 12px;
+        white-space: nowrap;
+    }
+
+    .badge-new {
+        background: var(--badge-new-bg);
+        color: var(--badge-new-fg);
+    }
+
+    .badge-progress {
+        background: var(--badge-progress-bg);
+        color: var(--badge-progress-fg);
+    }
+
+    .badge-resolved {
+        background: var(--badge-resolved-bg);
+        color: var(--badge-resolved-fg);
+    }
+
+    .request-date {
+        text-align: right;
+        font-size: .85rem;
+        color: var(--ink);
+        min-width: 96px;
+    }
+
+        .request-date small {
+            display: block;
+            color: var(--muted);
+            font-size: .72rem;
+        }
+
+    .modal-content {
+        background: var(--card-bg);
+        border-radius: 20px;
+        border: none;
+        padding: 8px;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--border);
+        padding: 20px 26px 16px;
+    }
+
+    .modal-body {
+        padding: 22px 26px;
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--border);
+        padding: 16px 26px 22px;
+    }
+
+    .modal-eyebrow {
+        font-size: .72rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--accent-dark);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+
+        .modal-eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+    .modal-title-lg {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .modal-desc {
+        color: var(--muted);
+        font-size: .88rem;
+    }
+
+    .form-label-sm {
+        font-size: .72rem;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 11px 14px;
+        background: #fff;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(111,143,78,.15);
+        }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .hint-note {
+        font-size: .8rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+        .hint-note .dot {
+            width: 5px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+</style>
+
+<div class="client-page">
+
+    <a class="back-link" href="#">&lsaquo; BACK TO CLIENTS</a>
+
+    <div class="eyebrow"><span class="dot"></span> CLIENT &middot; 3 REQUESTS</div>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Nord Logistics LLC</h1>
+            <div class="page-subtitle">Sergey Tkachuk &middot; client since 12.03.2026</div>
+        </div>
+        <div class="header-actions">
+            <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#editClientModal">Edit</button>
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#newRequestModal">+ New Request</button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="panel">
+                <div class="panel-title">Information</div>
+
+                <div class="info-label">Contact Person</div>
+                <div class="info-value">Sergey Tkachuk</div>
+
+                <div class="info-label">Phone</div>
+                <div class="info-value">+373 22 123 456</div>
+
+                <div class="info-label">Email</div>
+                <div class="info-value">s.tkaciuc@nordlog.md</div>
+
+                <div class="info-label">Client Since</div>
+                <div class="info-value">12.03.2026</div>
+
+                <div class="info-label">Comment</div>
+                <div class="info-value mb-0">Key account, priority support.</div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="panel">
+                <div class="panel-title">Client Requests</div>
+
+                <div class="request-row">
+                    <span class="request-code">#T1</span>
+                    <div class="request-main">
+                        <div class="request-title">Order notifications not arriving</div>
+                        <div class="request-client">Ana Moraru</div>
+                    </div>
+                    <span class="badge-status badge-new">New</span>
+                    <div class="request-date">28.08.2026<small>updated</small></div>
+                </div>
+
+                <div class="request-row">
+                    <span class="request-code">#T2</span>
+                    <div class="request-main">
+                        <div class="request-title">Request to change billing details</div>
+                        <div class="request-client">Viktor Railyan</div>
+                    </div>
+                    <span class="badge-status badge-progress">In Progress</span>
+                    <div class="request-date">26.08.2026<small>updated</small></div>
+                </div>
+
+                <div class="request-row">
+                    <span class="request-code">#T8</span>
+                    <div class="request-main">
+                        <div class="request-title">Repeat invoice request</div>
+                        <div class="request-client">Viktor Railyan</div>
+                    </div>
+                    <span class="badge-status badge-resolved">Resolved</span>
+                    <div class="request-date">07.08.2026<small>updated</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editClientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="#">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-eyebrow"><span class="dot"></span> EDITING</div>
+                        <div class="modal-title-lg">Edit Client</div>
+                        <div class="modal-desc">Client card for mini-CRM.</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-label-sm">Company Name *</div>
+                            <input type="text" name="CompanyName" class="form-control" value="Nord Logistics LLC" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-label-sm">Contact Person</div>
+                            <input type="text" name="ContactPerson" class="form-control" value="Sergey Tkachuk" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-label-sm">Phone</div>
+                            <input type="text" name="Phone" class="form-control" value="+373 22 123 456" />
+                        </div>
+                        <div class="col-12">
+                            <div class="form-label-sm">Email</div>
+                            <input type="email" name="Email" class="form-control" value="s.tkaciuc@nordlog.md" />
+                        </div>
+                        <div class="col-12">
+                            <div class="form-label-sm">Comment</div>
+                            <textarea name="Comment" class="form-control" rows="3">Key account, priority support.</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-accent">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- New Request -->
+<div class="modal fade" id="newRequestModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="#">
+                <div class="modal-header">
+                    <div>
+                        <div class="modal-eyebrow"><span class="dot"></span> NEW REQUEST</div>
+                        <div class="modal-title-lg">New Request</div>
+                        <div class="modal-desc">Client inquiry to be handled by a manager.</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-label-sm">Client *</div>
+                            <select name="ClientId" class="form-select">
+                                <option selected>Nord Logistics LLC</option>
+                                <option>Vector Trans SRL</option>
+                                <option>Bravo Group ICS</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-label-sm">Subject *</div>
+                            <input type="text" name="Title" class="form-control" placeholder="Ex: Billing inquiry" />
+                        </div>
+                        <div class="col-12">
+                            <div class="form-label-sm">Description</div>
+                            <textarea name="Description" class="form-control" rows="3" placeholder="Request details..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-label-sm">Priority</div>
+                            <select name="Priority" class="form-select">
+                                <option>Low</option>
+                                <option selected>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-label-sm">Manager</div>
+                            <select name="ManagerId" class="form-select">
+                                <option selected>Ana Moraru</option>
+                                <option>Viktor Railyan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hint-note"><span class="dot"></span> New request gets "New" status automatically</div>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-accent">Save Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
