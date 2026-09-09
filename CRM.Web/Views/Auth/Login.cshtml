@@ -22,6 +22,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        color: var(--dark);
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
     .login-wrapper {
@@ -234,7 +236,7 @@
         <h1>Welcome back</h1>
         <div class="subtitle">Sign in to continue</div>
 
-        <form asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" novalidate>
+        <form asp-controller="Auth" asp-action="Login" method="post" novalidate>
 
             <div asp-validation-summary="ModelOnly"></div>
 
@@ -246,7 +248,7 @@
 
             <div class="form-group">
                 <label asp-for="Password" class="form-label">Password</label>
-                <input asp-for="Password" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+                <input asp-for="Password" class="form-control" placeholder="•••" autocomplete="current-password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
