@@ -1,7 +1,31 @@
+using CRM.Web.Interfaces;
+using CRM.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.LogoutPath = "/Auth/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.AddHttpClient("CRM.Api", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7056/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICustomerApiClient, CustomerApiClient>();
+builder.Services.AddScoped<IRequestApiClient, RequestApiClient>();
+builder.Services.AddScoped<IUserApiClient, UserApiClient>();
 
 var app = builder.Build();
 
@@ -19,6 +43,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

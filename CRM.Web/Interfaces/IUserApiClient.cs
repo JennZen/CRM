@@ -1,0 +1,13 @@
+﻿using CRM.Application.DTOs.User;
+
+namespace CRM.Web.Interfaces
+{
+    public interface IUserApiClient
+    {
+        public Task<List<UserDetailsDto>?> GetAllAsync();
+        
+        public Task<UserDetailsDto?> GetByIdAsync(int id);
+        
+        public Task<bool> CreateAsync(UserCreateDto dto);
+    }
+}

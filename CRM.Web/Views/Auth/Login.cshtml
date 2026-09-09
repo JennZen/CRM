@@ -1,0 +1,260 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<style>
+    :root {
+        --accent: #8bc34a;
+        --accent-soft: #1f2a1a;
+        --page-bg: #f5f4ef;
+        --dark: #14161a;
+        --dark-2: #1c1e24;
+    }
+
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        background: var(--page-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 920px;
+        min-height: 560px;
+        background: #fff;
+        border-radius: 1.25rem;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.08);
+        display: flex;
+    }
+
+    .login-side {
+        width: 42%;
+        background: var(--dark);
+        background-image: radial-gradient(circle at 30% 20%, var(--accent-soft), transparent 60%);
+        color: #cfd2d6;
+        padding: 2.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .login-side .logo-badge {
+            width: 46px;
+            height: 46px;
+            background: var(--accent);
+            border-radius: .7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+            .login-side .logo-badge img {
+                width: 36px;
+                height: 36px;
+                object-fit: contain;
+                border-radius: .4rem;
+            }
+
+        .login-side .brand {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .login-side .brand-sub {
+            color: #6b7076;
+            font-size: .78rem;
+        }
+
+        .login-side .tagline {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.35;
+        }
+
+            .login-side .tagline span {
+                color: var(--accent);
+            }
+
+        .login-side .feature-item {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .85rem;
+            color: #a7abb1;
+            margin-bottom: .5rem;
+        }
+
+            .login-side .feature-item i {
+                color: var(--accent);
+            }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .login-form-side {
+        width: 58%;
+        padding: 3rem 3.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .login-form-side h2 {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: .3rem;
+        }
+
+        .login-form-side .subtitle {
+            color: #8a8f96;
+            font-size: .92rem;
+            margin-bottom: 2rem;
+        }
+
+    .form-label {
+        font-size: .82rem;
+        font-weight: 600;
+        color: var(--dark);
+        display: block;
+        margin-bottom: .5rem;
+    }
+
+    .form-control {
+        border-radius: .65rem;
+        border: 1px solid #e4e2da;
+        padding: .7rem .9rem;
+        font-size: .92rem;
+        background: #faf9f5;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 .2rem rgba(139, 195, 74, .18);
+            background: #fff;
+        }
+
+    .btn-login {
+        margin-top: .5rem;
+        background: var(--dark);
+        color: #fff;
+        border-radius: .7rem;
+        padding: .75rem 1rem;
+        font-weight: 600;
+        border: none;
+        transition: background .15s ease;
+    }
+
+        .btn-login:hover {
+            background: #24272e;
+            color: #fff;
+        }
+
+        .btn-login:active {
+            background: var(--accent-soft);
+        }
+
+    .validation-summary-errors {
+        background: #fdeeee;
+        border: 1px solid #f3c9c9;
+        color: #b33636;
+        border-radius: .6rem;
+        padding: .7rem 1rem;
+        font-size: .85rem;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 1.1rem;
+        }
+
+    .text-danger {
+        font-size: .78rem;
+    }
+
+    @@media (max-width: 767.98px) {
+        .login-wrapper {
+            flex-direction: column;
+            max-width: 420px;
+            min-height: auto;
+        }
+
+        .login-side, .login-form-side {
+            width: 100%;
+        }
+
+        .login-side {
+            padding: 1.8rem;
+        }
+
+        .login-form-side {
+            padding: 2rem;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+
+    <div class="login-side">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-5">
+                <div class="logo-badge">
+                    <img src="~/images/logo.png" alt="INTELECTSOFT logo" />
+                </div>
+                <div>
+                    <div class="brand">Mini CRM</div>
+                    <div class="brand-sub">by INTELECTSOFT</div>
+                </div>
+            </div>
+
+            <div class="tagline mb-4">
+                Manage your clients<br />and requests <span>in one place</span>
+            </div>
+        </div>
+
+        <div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Full visibility over every request</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Transparent manager workload</div>
+            <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Quick access to your clients</div>
+        </div>
+    </div>
+
+    <div class="login-form-side">
+        <h1>Welcome back</h1>
+        <div class="subtitle">Sign in to continue</div>
+
+        <form asp-controller="Auth" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" novalidate>
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="you@company.com" autocomplete="username" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-login w-100">
+                Sign in <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+
+        </form>
+    </div>
+
+</div>

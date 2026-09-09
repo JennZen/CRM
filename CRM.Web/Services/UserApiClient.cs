@@ -1,0 +1,58 @@
+﻿using CRM.Application.DTOs.User;
+using CRM.Web.Interfaces;
+using System.Net.Http.Headers;
+
+namespace CRM.Web.Services
+{
+    public class UserApiClient : IUserApiClient
+    {
+        private readonly HttpClient _httpClient;
+
+        private readonly IHttpContextAccessor _httpContentAccessor;
+
+        public UserApiClient(IHttpClientFactory factory, IHttpContextAccessor httpContentAccessor)
+        {
+            _httpClient = factory.CreateClient("CRM.Api");
+            _httpContentAccessor = httpContentAccessor;
+        }
+
+        private void AttachToken()
+        {
+            var token = _httpContentAccessor.HttpContext?.Session.GetString("JwtToken");
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
+        public async Task<List<UserDetailsDto>?> GetAllAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/user");
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<UserDetailsDto>>();
+        }
+
+        public async Task<UserDetailsDto?> GetByIdAsync(int id)
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync($"api/user/{id}");
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<UserDetailsDto>();
+        }
+
+        public async Task<bool> CreateAsync(UserCreateDto dto)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PostAsJsonAsync("api/user", dto);
+            return response.IsSuccessStatusCode;
+        }
+    }
+}
