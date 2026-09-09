@@ -4,10 +4,12 @@ using CRM.Application.Services;
 using CRM.DataAccess.Auth;
 using CRM.DataAccess.Mapping;
 using CRM.DataAccess.Repositories;
+using CRM.DataAccess.Seed;
 using CRM.Services.Services;
 using DevExpress.Xpo;
 using DevExpress.Xpo.DB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -105,6 +107,23 @@ using (var scope = app.Services.CreateScope())
     uow.UpdateSchema(typeof(CRM.DataAccess.Models.CustomerDb),
                       typeof(CRM.DataAccess.Models.RequestDb),
                       typeof(CRM.DataAccess.Models.UserDb));
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataLayer = scope.ServiceProvider.GetRequiredService<IDataLayer>();
+    var passwordHasher = scope.ServiceProvider.GetRequiredService<IHasherService>();
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+    using (var uow = new UnitOfWork(dataLayer))
+    {
+        DbSeeder.SeedAdmin(
+            uow,
+            passwordHasher,
+            config["AdminSeed:Email"],
+            config["AdminSeed:Password"]
+        );
+    }
 }
 
 // Configure the HTTP request pipeline.
