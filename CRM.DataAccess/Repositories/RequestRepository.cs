@@ -7,6 +7,7 @@ using DevExpress.Xpo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +45,18 @@ namespace CRM.DataAccess.Repositories
             var requests = await _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId).ToListAsync();
 
             return _mapper.ToDomains(requests);
+        }
+
+        public async Task<int> CountByUserAndStatusAsync(int userId, Status? status)
+        {
+            var query =  _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId);
+
+            if(status.HasValue)
+            {
+                query = query.Where(r => r.Status == status);
+            }
+
+            return await query.CountAsync();
         }
 
         public async Task<bool> AddAsync(Request request)

@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Domain.Enums;
 
 namespace CRM.Web.Interfaces
 {
@@ -9,5 +10,9 @@ namespace CRM.Web.Interfaces
         public Task<RequestDetailsDto?> GetByIdAsync(int id);
 
         public Task<bool> CreateAsync(RequestCreateDto dto);
+
+        public Task<List<RequestDetailsDto>?> GetMyRequests();
+
+        public Task<int> CountRequestsAsync(Status? status);
     }
 }

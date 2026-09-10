@@ -1,13 +1,16 @@
 ﻿using CRM.Application.DTOs.Request;
 using CRM.Application.Interfaces.Services;
 using CRM.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CRM.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RequestController : ControllerBase
     {
         private readonly IRequestService _requestService;
@@ -35,12 +38,25 @@ namespace CRM.Api.Controllers
             return Ok(request);
         }
 
-        [HttpGet("user/{userId:int}")]
-        public async Task<IActionResult> GetRequestsByUserAsync(int userId)
+        [HttpGet("my")]
+        public async Task<IActionResult> GetRequestsByUserAsync()
         {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
             var requests = await _requestService.GetByUserAsync(userId);
             return Ok(requests);
         }
+
+        [HttpGet("my/count")]
+        public async Task<IActionResult> CountRequestsAsync(Status? status)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var number = await _requestService.CountByUserAndStatusAsync(userId, status);
+            return Ok(number);
+        }
+
+        
 
         [HttpPost]
         public async Task<IActionResult> CreateRequestAsync([FromBody] RequestCreateDto requestCreateDto)

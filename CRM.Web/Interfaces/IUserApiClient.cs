@@ -9,5 +9,7 @@ namespace CRM.Web.Interfaces
         public Task<UserDetailsDto?> GetByIdAsync(int id);
         
         public Task<bool> CreateAsync(UserCreateDto dto);
+
+        public Task<int> CountUsersAsync();
     }
 }

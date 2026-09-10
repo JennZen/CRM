@@ -6,13 +6,11 @@
 
         public string UserLastName { get; set; } = string.Empty;
 
-        public string UserRole { get; set; } = string.Empty;
+        public int NumberOfCustomers { get; set; }
 
-        public int NumberOfActiveUsers { get; set; }
+        public int NumberOfManagers { get; set; }
 
-        public int NumberOfClients { get; set; }
-
-        public int NumberOfRequests { get; set; }
+        public int TotalRequests { get; set; }
 
         public int NewRequests { get; set;}
 

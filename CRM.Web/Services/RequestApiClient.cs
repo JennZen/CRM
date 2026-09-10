@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Domain.Enums;
 using CRM.Web.Interfaces;
 using System.Net.Http.Headers;
 
@@ -48,6 +49,17 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<RequestDetailsDto>();
         }
 
+        public async Task<List<RequestDetailsDto>?> GetMyRequests()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/request/my");
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<RequestDetailsDto>>();
+        }
+
         public async Task<bool> CreateAsync(RequestCreateDto dto)
         {
             AttachToken();
@@ -57,5 +69,22 @@ namespace CRM.Web.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<int> CountRequestsAsync(Status? status)
+        {
+            AttachToken();
+
+            var url = "api/request/my/count";
+
+            if(status.HasValue)
+            {
+                url += $"?status={status.Value}";
+            }
+
+            var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<int>();
+        }
     }
 }

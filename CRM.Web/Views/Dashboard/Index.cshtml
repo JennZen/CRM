@@ -594,7 +594,7 @@
                 <span class="dot"></span>Today &middot; @DateTime.Now.ToString("MMMM d, yyyy", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
             </div>
             <div class="page-title">Good afternoon, @Model.UserFirstName</div>
-            <div class="subtitle">5 clients, 8 requests, 3 managers on the team.</div>
+            <div class="subtitle">@Model.NumberOfCustomers clients, @Model.TotalRequests requests, @Model.NumberOfManagers managers and admins on the team.</div>
         </div>
         <div class="d-flex gap-2">
             <button class="btn-outline-soft" data-bs-toggle="modal" data-bs-target="#addClientModal">
@@ -617,7 +617,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                     </span>
                 </div>
-                <div class="stat-value">5</div>
+                <div class="stat-value">@Model.NumberOfCustomers</div>
                 <div class="stat-sub">active base</div>
             </div>
         </div>
@@ -629,7 +629,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></svg>
                     </span>
                 </div>
-                <div class="stat-value">2</div>
+                <div class="stat-value">@Model.NewRequests</div>
                 <div class="stat-sub">need attention</div>
             </div>
         </div>
@@ -641,7 +641,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg>
                     </span>
                 </div>
-                <div class="stat-value">3</div>
+                <div class="stat-value">@Model.InProgressRequests</div>
                 <div class="stat-sub">with managers</div>
             </div>
         </div>
@@ -653,7 +653,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                     </span>
                 </div>
-                <div class="stat-value">3</div>
+                <div class="stat-value">@Model.FinishedRequests</div>
                 <div class="stat-sub">resolved and closed</div>
             </div>
         </div>

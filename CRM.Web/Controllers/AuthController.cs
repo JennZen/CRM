@@ -21,7 +21,7 @@ namespace CRM.Web.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity is { IsAuthenticated: true }) return RedirectToAction("Index", "Dashboard");
+           //if (User.Identity is { IsAuthenticated: true }) return RedirectToAction("Index", "Dashboard");
 
             return View(new LoginViewModel());
         }
@@ -47,6 +47,14 @@ namespace CRM.Web.Controllers
             }
 
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+
+            if (string.IsNullOrEmpty(result?.Token))
+            {
+                ModelState.AddModelError(string.Empty, "Login failed: no token received.");
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("JwtToken", result.Token);
 
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = handler.ReadJwtToken(result?.Token);

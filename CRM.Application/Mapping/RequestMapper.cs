@@ -12,6 +12,8 @@ namespace CRM.Application.Mapping
 
         public partial RequestDetailsDto ToDetailsDto(Request request);
 
+        public partial List<RequestDetailsDto> ToDetailsDtos(List<Request> requests);
+
         public partial RequestListDto ToListDto(Request request);
 
         public partial List<RequestListDto> ToListDtos(List<Request> requests);

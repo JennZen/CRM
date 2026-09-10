@@ -1,5 +1,7 @@
+using CRM.Domain.Enums;
 using CRM.Web.Interfaces;
 using CRM.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.IdentityModel.Claims;
@@ -8,6 +10,7 @@ using System.Security.Cryptography;
 
 namespace CRM.Web.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IUserApiClient _userApiClient;
@@ -23,7 +26,7 @@ namespace CRM.Web.Controllers
             _customerApiClient = customerApiClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var firstName = User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
             var lastName = User.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
@@ -34,7 +37,12 @@ namespace CRM.Web.Controllers
             {
                 UserFirstName = firstName,
                 UserLastName = lastName,
-                UserRole = role,
+                NewRequests = await _requestApiClient.CountRequestsAsync(Status.New),
+                InProgressRequests = await _requestApiClient.CountRequestsAsync(Status.Active),
+                FinishedRequests = await _requestApiClient.CountRequestsAsync(Status.Finished),
+                TotalRequests = await _requestApiClient.CountRequestsAsync(null),
+                NumberOfCustomers = await _customerApiClient.CountCustomersAsync(),
+                NumberOfManagers = await _userApiClient.CountUsersAsync()
             };
 
             return View(model);

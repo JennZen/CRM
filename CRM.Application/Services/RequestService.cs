@@ -37,10 +37,15 @@ namespace CRM.Services.Services
             return request is null ? null : _requestMapper.ToDetailsDto(request);
         }
 
-        public async Task<List<RequestMiniDto>> GetByUserAsync(int userId)
+        public async Task<List<RequestDetailsDto>> GetByUserAsync(int userId)
         {
             var requests = await _requestRepository.GetByUserAsync(userId);
-            return _requestMapper.ToMiniDtos(requests);
+            return _requestMapper.ToDetailsDtos(requests);
+        }
+
+        public async Task<int> CountByUserAndStatusAsync(int userId, Status? status)
+        {
+            return await _requestRepository.CountByUserAndStatusAsync(userId, status);
         }
 
         public async Task<RequestDetailsDto> AddAsync(RequestCreateDto request)

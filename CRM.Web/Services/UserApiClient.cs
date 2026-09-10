@@ -54,5 +54,15 @@ namespace CRM.Web.Services
             var response = await _httpClient.PostAsJsonAsync("api/user", dto);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<int> CountUsersAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/user/count");
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<int>(); 
+        }
     }
 }
