@@ -1,4 +1,6 @@
-﻿namespace CRM.Web.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace CRM.Web.Models
 {
     public class DashboardViewModel
     {
@@ -17,5 +19,9 @@
         public int InProgressRequests { get; set; }
 
         public int FinishedRequests { get; set; }
+
+        public List<SelectListItem> Customers { get; set; } = new();
+
+        public List<SelectListItem> Managers { get; set; } = new();
     }
 }

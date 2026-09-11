@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<CRM.Application.DTOs.Request.RequestDetailsDto>;
+
+@{
     ViewData["Title"] = "Requests";
 }
 <style>
@@ -383,39 +385,95 @@
         </button>
     </div>
 
-    <div class="filter-tabs">
-        <button class="filter-tab active">All</button>
-        <button class="filter-tab">New</button>
-        <button class="filter-tab">In progress</button>
-        <button class="filter-tab">Resolved</button>
-        <button class="filter-tab">Closed</button>
+    @if (Model == null || !Model.Any())
+    {
+    <div class="text-center py-5">
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.5"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             width="48"
+             height="48"
+             style="color: var(--muted); margin-bottom: 1rem;">
+
+            <path d="M6 3h9l3 3v15H6z" />
+            <path d="M15 3v4h4" />
+            <path d="M9 12h6" />
+            <path d="M9 16h4" />
+        </svg>
+
+        <div class="fs-5 fw-medium mb-1">No requests yet</div>
+        <div class="subtitle mb-3">
+            There are no customer requests to display.
+        </div>
     </div>
 
-    <div class="req-table-wrap">
-        <table class="req-table">
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Client</th>
-                    <th>Status</th>
-                    <th>Priority</th>
-                    <th>Manager</th>
-                    <th>Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="req-subject">Error in client portal</td>
-                    <td class="req-client">SC Vinia Trade</td>
-                    <td><span class="badge-status">In progress</span></td>
-                    <td><span class="badge-priority">High</span></td>
-                    <td>Anna Morari</td>
-                    <td class="req-updated">08/30/2026</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        }
+    else
+    {
 
+        <div class="filter-tabs">
+            <button class="filter-tab active">All</button>
+            <button class="filter-tab">New</button>
+            <button class="filter-tab">In progress</button>
+            <button class="filter-tab">Resolved</button>
+            <button class="filter-tab">Closed</button>
+        </div>
+
+        <div class="req-table-wrap">
+            <table class="req-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Manager</th>
+                        <th>Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model)
+                    {
+                        <tr>
+                            <td class="req-subject">
+                                <a asp-controller="Request"
+                                   asp-action="Details"
+                                   asp-route-id="@request.Id">
+                                    @request.Title
+                                </a>
+                            </td>
+
+                            <td class="req-client">@request.Customer</td>
+
+                            <td>
+                                <span class="badge-status">
+                                    @request.Status
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge-priority">
+                                    @request.Priority
+                                </span>
+                            </td>
+
+                            <td>
+                                @request.Manager
+                            </td>
+
+                            <td class="req-updated">
+                                @request.UpdatedAt.ToString("MM/dd/yyyy")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        }
 </div>
 
 <div class="modal fade" id="newRequestModal" tabindex="-1" aria-labelledby="newRequestModalLabel" aria-hidden="true">
