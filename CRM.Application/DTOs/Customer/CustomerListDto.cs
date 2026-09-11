@@ -8,6 +8,8 @@ namespace CRM.Application.DTOs.Customer
 {
     public class CustomerListDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
 
         public string ContactPerson { get; set; } = string.Empty;
@@ -16,9 +18,9 @@ namespace CRM.Application.DTOs.Customer
 
         public string Email { get; set; } = string.Empty;
 
-        public int NumberOfRequests { get; set; }
+        public int NumberOfRequests { get; set; } = 0;
 
-        public int NumberOfActiveRequests { get; set; }
+        public int NumberOfActiveRequests { get; set; } = 0;
 
         public DateTime CreatedAt { get; set; }
     }

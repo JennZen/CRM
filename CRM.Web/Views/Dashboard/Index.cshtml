@@ -188,6 +188,7 @@
         white-space: nowrap;
         display: inline-flex;
         align-items: center;
+        text-decoration: none;
         gap: .35rem;
     }
 
@@ -594,7 +595,7 @@
                 <span class="dot"></span>Today &middot; @DateTime.Now.ToString("MMMM d, yyyy", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
             </div>
             <div class="page-title">Good afternoon, @Model.UserFirstName</div>
-            <div class="subtitle">@Model.NumberOfCustomers clients, @Model.TotalRequests requests, @Model.NumberOfManagers managers and admins on the team.</div>
+            <div class="subtitle">@Model.NumberOfCustomers clients, @Model.TotalRequests requests, @Model.NumberOfManagers managers / admins on the team.</div>
         </div>
         <div class="d-flex gap-2">
             <button class="btn-outline-soft" data-bs-toggle="modal" data-bs-target="#addClientModal">
@@ -667,10 +668,10 @@
                         <h2>Recent requests</h2>
                         <div class="hint">updated on activity</div>
                     </div>
-                    <button class="link-btn">
+                    <a asp-controller="Request" asp-action="Index" class="link-btn">
                         All requests
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                    </button>
+                    </a>
                 </div>
 
                 <div class="ticket-row">
@@ -792,33 +793,33 @@
                 </button>
             </div>
 
-            <form>
+            <form asp-controller="Customer" asp-action="Create" method="post">
                 <div class="modal-body">
 
                     <div class="field-group">
                         <label class="field-label" for="clientName">Company name <span class="req">*</span></label>
-                        <input type="text" class="form-control" id="clientName" placeholder="Ex: Nord Logistic LLC" required />
+                        <input type="text" class="form-control" id="clientName" name=Name placeholder="Ex: Nord Logistic LLC" required />
                     </div>
 
                     <div class="row g-3 field-group">
                         <div class="col-6">
                             <label class="field-label" for="clientContact">Contact person</label>
-                            <input type="text" class="form-control" id="clientContact" placeholder="Ex: Sergey Tkachuk" />
+                            <input type="text" class="form-control" id="clientContact" name=ContactPerson placeholder="Ex: Sergey Tkachuk" />
                         </div>
                         <div class="col-6">
                             <label class="field-label" for="clientPhone">Phone</label>
-                            <input type="text" class="form-control" id="clientPhone" placeholder="+373 ..." />
+                            <input type="text" class="form-control" id="clientPhone" name=Telephone placeholder="+373 ..." />
                         </div>
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="clientEmail">Email</label>
-                        <input type="email" class="form-control" id="clientEmail" placeholder="info@company.md" />
+                        <input type="email" class="form-control" id="clientEmail" name=Email placeholder="info@company.md" />
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="clientComment">Comment</label>
-                        <textarea class="form-control" id="clientComment" placeholder="Notes about working with this client..."></textarea>
+                        <textarea class="form-control" id="clientComment" name=Comment placeholder="Notes about working with this client..."></textarea>
                     </div>
 
                 </div>

@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Nord Logistics LLC";
+﻿@model CRM.Application.DTOs.Customer.CustomerDetailsDto;
+
+@{
+    ViewData["Title"] = $"{@Model.Name}";
 }
 
 <style>
@@ -9,7 +11,6 @@
         --border: #e6e0d2;
         --ink: #2b2a26;
         --muted: #8a8578;
-        --accent: #6f8f4e;
         --accent-dark: #55712f;
         --badge-new-bg: #e7e6f7;
         --badge-new-fg: #5b57c9;
@@ -337,8 +338,6 @@
 <div class="client-page">
 
     <a class="back-link" href="#">&lsaquo; BACK TO CLIENTS</a>
-
-    <div class="eyebrow"><span class="dot"></span> CLIENT &middot; 3 REQUESTS</div>
 
     <div class="page-header">
         <div>

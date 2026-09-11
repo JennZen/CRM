@@ -25,6 +25,13 @@ namespace CRM.Api.Controllers
             return Ok(customers);
         }
 
+        [HttpGet("cards")]
+        public async Task<IActionResult> GetAllCustomerCardsAsync()
+        {
+            var customers = await _customerService.GetAllCardsAsync();
+            return Ok(customers);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCustomerByIdAsync(int id)
         {

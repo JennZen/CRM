@@ -7,6 +7,8 @@ namespace CRM.Web.Interfaces
     {
         public Task<List<CustomerDetailsDto>?> GetAllAsync();
 
+        public Task<List<CustomerListDto>?> GetAllCardsAsync();
+
         public Task<CustomerDetailsDto?> GetByIdAsync(int id);
 
         public Task<bool> CreateAsync(CustomerCreateDto dto);

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<CRM.Application.DTOs.Customer.CustomerListDto>;
+
+@{
     ViewData["Title"] = "Customers";
 }
 <style>
@@ -345,7 +347,7 @@
 
     <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
         <div>
-            <div class="eyebrow"><span class="dot"></span>5 clients</div>
+            <div class="eyebrow"><span class="dot"></span>@ViewBag.NumberClients clients</div>
             <div class="page-title">Customers</div>
             <div class="subtitle">Client cards and their related requests.</div>
         </div>
@@ -361,174 +363,55 @@
         </div>
     </div>
 
-    <div class="row g-3">
-
-        <div class="col-12 col-lg-6">
-            <div class="client-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="client-name">Nord Logistic LLC</div>
-                        <div class="client-contact">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            Sergey Tkachuk
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" style="color: var(--muted); margin-bottom: 1rem;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+            <div class="fs-5 fw-medium mb-1">No clients yet</div>
+            <div class="subtitle mb-3">Add your first client to get started.</div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var card in Model)
+            {
+                <a asp-controller="Customer" asp-action="Details" asp-route-id="@card.Id" class="text-decoration-none text-reset">
+                    <div class="col-12 col-lg-6">
+                        <div class="client-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="client-name">@card.Name</div>
+                                    <div class="client-contact">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                        @card.ContactPerson
+                                    </div>
+                                </div>
+                                <span class="badge-status badge-active"><span class="dot"></span>@card.NumberOfActiveRequests</span>
+                            </div>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <span class="contact-chip chip-email">@card.Email</span>
+                                <span class="contact-chip chip-phone">@card.Telephone</span>
+                            </div>
+                            <div class="client-stats">
+                                <div class="stat">
+                                    <div class="stat-num">@card.NumberOfRequests</div>
+                                    <div class="stat-label">requests</div>
+                                </div>
+                                <div class="stat-date">
+                                    @card.CreatedAt.ToString("MM/dd/yyyy")
+                                    <div class="stat-label">client since</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <span class="badge-status badge-active"><span class="dot"></span>2 active</span>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span class="contact-chip chip-email">s.tkachuk@nordlog.md</span>
-                    <span class="contact-chip chip-phone">+373 22 123 456</span>
-                </div>
-                <div class="client-stats">
-                    <div class="stat">
-                        <div class="stat-num">3</div>
-                        <div class="stat-label">requests</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num amber">2</div>
-                        <div class="stat-label">active</div>
-                    </div>
-                    <div class="stat-date">
-                        03/12/2026
-                        <div class="stat-label">client since</div>
-                    </div>
-                </div>
-            </div>
+                </a> 
+            }
         </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="client-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="client-name">SC Vinia Trade</div>
-                        <div class="client-contact">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            Maria Ionita
-                        </div>
-                    </div>
-                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span class="contact-chip chip-email">m.ionita@viniatrade.md</span>
-                    <span class="contact-chip chip-phone">+373 69 234 567</span>
-                </div>
-                <div class="client-stats">
-                    <div class="stat">
-                        <div class="stat-num">2</div>
-                        <div class="stat-label">requests</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num amber">1</div>
-                        <div class="stat-label">active</div>
-                    </div>
-                    <div class="stat-date">
-                        05/02/2026
-                        <div class="stat-label">client since</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="client-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="client-name">Agro Prim SRL</div>
-                        <div class="client-contact">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            Ion Gutu
-                        </div>
-                    </div>
-                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span class="contact-chip chip-email">i.gutu@agroprim.md</span>
-                    <span class="contact-chip chip-phone">+373 79 345 678</span>
-                </div>
-                <div class="client-stats">
-                    <div class="stat">
-                        <div class="stat-num">1</div>
-                        <div class="stat-label">requests</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num amber">1</div>
-                        <div class="stat-label">active</div>
-                    </div>
-                    <div class="stat-date">
-                        06/18/2026
-                        <div class="stat-label">client since</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="client-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="client-name">Bunatati Natural</div>
-                        <div class="client-contact">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            Elena Cazac
-                        </div>
-                    </div>
-                    <span class="badge-status badge-active"><span class="dot"></span>1 active</span>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span class="contact-chip chip-email">e.cazac@bunatati.md</span>
-                    <span class="contact-chip chip-phone">+373 60 456 789</span>
-                </div>
-                <div class="client-stats">
-                    <div class="stat">
-                        <div class="stat-num">1</div>
-                        <div class="stat-label">requests</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num amber">1</div>
-                        <div class="stat-label">active</div>
-                    </div>
-                    <div class="stat-date">
-                        07/01/2026
-                        <div class="stat-label">client since</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-lg-6">
-            <div class="client-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="client-name">Metaloprofil SRL</div>
-                        <div class="client-contact">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
-                            Igor Rusu
-                        </div>
-                    </div>
-                    <span class="badge-status badge-none"><span class="dot"></span>0 active</span>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span class="contact-chip chip-email">i.rusu@metaloprofil.md</span>
-                    <span class="contact-chip chip-phone">+373 68 567 890</span>
-                </div>
-                <div class="client-stats">
-                    <div class="stat">
-                        <div class="stat-num">1</div>
-                        <div class="stat-label">requests</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-num">0</div>
-                        <div class="stat-label">active</div>
-                    </div>
-                    <div class="stat-date">
-                        04/09/2026
-                        <div class="stat-label">client since</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    }
 </div>
 
 <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
@@ -544,33 +427,33 @@
                 </button>
             </div>
 
-            <form>
+            <form asp-controller="Customer" asp-action="Create" method="post">
                 <div class="modal-body">
 
                     <div class="field-group">
                         <label class="field-label" for="clientName">Company name <span class="req">*</span></label>
-                        <input type="text" class="form-control" id="clientName" placeholder="Ex: Nord Logistic LLC" required />
+                        <input type="text" class="form-control" id="clientName" name=Name placeholder="Ex: Nord Logistic LLC" required />
                     </div>
 
                     <div class="row g-3 field-group">
                         <div class="col-6">
                             <label class="field-label" for="clientContact">Contact person</label>
-                            <input type="text" class="form-control" id="clientContact" placeholder="Ex: Sergey Tkachuk" />
+                            <input type="text" class="form-control" id="clientContact" name=ContactPerson placeholder="Ex: Sergey Tkachuk" />
                         </div>
                         <div class="col-6">
                             <label class="field-label" for="clientPhone">Phone</label>
-                            <input type="text" class="form-control" id="clientPhone" placeholder="+373 ..." />
+                            <input type="text" class="form-control" id="clientPhone" name=Telephone placeholder="+373 ..." />
                         </div>
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="clientEmail">Email</label>
-                        <input type="email" class="form-control" id="clientEmail" placeholder="info@company.md" />
+                        <input type="email" class="form-control" id="clientEmail" name=Email placeholder="info@company.md" />
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="clientComment">Comment</label>
-                        <textarea class="form-control" id="clientComment" placeholder="Notes about working with this client..."></textarea>
+                        <textarea class="form-control" id="clientComment" name=Comment placeholder="Notes about working with this client..."></textarea>
                     </div>
 
                 </div>
