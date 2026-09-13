@@ -379,8 +379,8 @@
         <div class="row g-3">
             @foreach (var card in Model)
             {
-                <a asp-controller="Customer" asp-action="Details" asp-route-id="@card.Id" class="text-decoration-none text-reset">
-                    <div class="col-12 col-lg-6">
+                <div class="col-12 col-lg-6">
+                    <a asp-controller="Customer" asp-action="Details" asp-route-id="@card.Id" class="text-decoration-none text-reset">
                         <div class="client-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
@@ -407,8 +407,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a> 
+                    </a>
+                </div>       
             }
         </div>
     }

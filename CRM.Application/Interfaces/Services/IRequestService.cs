@@ -17,6 +17,8 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<List<RequestDetailsDto>> GetByUserAsync(int userId);
 
+        public Task<List<RequestRecentDto>> GetRecentByUserAsync(int userId);
+
         public Task<int> CountByUserAndStatusAsync(int userId, Status? status);
 
         public Task<RequestDetailsDto> AddAsync(RequestCreateDto request);

@@ -17,7 +17,11 @@ namespace CRM.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var requests = await _requestApiClient.GetMyRequests();
+            var requests = await _requestApiClient.GetMyRequestsAsync();
+            var numberRequests = await _requestApiClient.CountRequestsAsync(null);
+
+            ViewBag.NumberRequests = numberRequests;
+
             return View(requests);
         }
 

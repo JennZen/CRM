@@ -43,6 +43,13 @@ namespace CRM.Services.Services
             return _requestMapper.ToDetailsDtos(requests);
         }
 
+        public async Task<List<RequestRecentDto>> GetRecentByUserAsync(int userId)
+        {
+            var requests = await _requestRepository.GetRecentByUserAsync(userId);
+            return _requestMapper.ToRecentDtos(requests);
+        }
+
+
         public async Task<int> CountByUserAndStatusAsync(int userId, Status? status)
         {
             return await _requestRepository.CountByUserAndStatusAsync(userId, status);

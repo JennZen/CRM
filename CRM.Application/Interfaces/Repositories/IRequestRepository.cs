@@ -16,6 +16,8 @@ namespace CRM.Application.Interfaces.Repositories
 
         public Task<List<Request>> GetByUserAsync(int userId);
 
+        public Task<List<Request>> GetRecentByUserAsync(int userId);
+
         public Task<int> CountByUserAndStatusAsync(int userId, Status? status);
 
         public Task<bool> AddAsync(Request request);

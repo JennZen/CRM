@@ -24,6 +24,10 @@ namespace CRM.Application.Mapping
 
         public partial RequestCreateDto ToCreateDto(Request request);
 
+        public partial RequestRecentDto ToRecentDto(Request request);
+
+        public partial List<RequestRecentDto> ToRecentDtos(List<Request> requests);
+
 
         // DTO -> Domain
 

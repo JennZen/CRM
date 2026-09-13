@@ -47,6 +47,16 @@ namespace CRM.Api.Controllers
             return Ok(requests);
         }
 
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentRequestsByUserAsync()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var requests = await _requestService.GetRecentByUserAsync(userId);
+            return Ok(requests);
+        }
+
+
         [HttpGet("my/count")]
         public async Task<IActionResult> CountRequestsAsync(Status? status)
         {

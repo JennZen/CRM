@@ -329,6 +329,46 @@
         color: var(--green);
     }
 
+    .ticket-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--blue-bg);
+        color: var(--blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .ticket-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+    .empty-state {
+        padding: 2.5rem 1.4rem;
+        text-align: center;
+        color: var(--muted);
+    }
+
+        .empty-state svg {
+            width: 32px;
+            height: 32px;
+            color: var(--muted);
+            margin-bottom: .75rem;
+        }
+
+        .empty-state .empty-title {
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: .25rem;
+        }
+
+        .empty-state .empty-sub {
+            font-size: .85rem;
+        }
+
     #newRequestModal .modal-content {
         background: var(--bg);
         border: none;
@@ -674,70 +714,34 @@
                     </a>
                 </div>
 
-                <div class="ticket-row">
-                    <span class="ticket-id">#T7</span>
-                    <div class="flex-grow-1">
-                        <div class="ticket-title">Error in client portal</div>
-                        <div class="ticket-client">SC Vinia Trade</div>
+                @if (Model.RecentRequests != null && Model.RecentRequests.Any())
+                {
+                    @foreach (var request in Model.RecentRequests)
+                    {
+                        <div class="ticket-row">
+                            <span class="ticket-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h1" /><path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" /></svg>
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="ticket-title">@request.Title</div>
+                                <div class="ticket-client">@request.Customer</div>
+                            </div>
+                            <span class="badge-status"><span class="dot"></span>@request.Status</span>
+                            <div class="ticket-date">
+                                @request.UpdatedAt.ToString("dd/MM/yyyy")
+                                <div class="ticket-updated">updated</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h1" /><path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" /></svg>
+                        <div class="empty-title">No requests yet</div>
+                        <div class="empty-sub">New requests will show up here as they come in.</div>
                     </div>
-                    <span class="badge-status badge-progress"><span class="dot"></span>In progress</span>
-                    <div class="ticket-date">
-                        08/30/2026
-                        <div class="ticket-updated">updated</div>
-                    </div>
-                </div>
-
-                <div class="ticket-row">
-                    <span class="ticket-id">#T5</span>
-                    <div class="flex-grow-1">
-                        <div class="ticket-title">Product range expansion</div>
-                        <div class="ticket-client">Bunatati Natural</div>
-                    </div>
-                    <span class="badge-status badge-new"><span class="dot"></span>New</span>
-                    <div class="ticket-date">
-                        08/29/2026
-                        <div class="ticket-updated">updated</div>
-                    </div>
-                </div>
-
-                <div class="ticket-row">
-                    <span class="ticket-id">#T1</span>
-                    <div class="flex-grow-1">
-                        <div class="ticket-title">Order notifications not arriving</div>
-                        <div class="ticket-client">Nord Logistic LLC</div>
-                    </div>
-                    <span class="badge-status badge-new"><span class="dot"></span>New</span>
-                    <div class="ticket-date">
-                        08/28/2026
-                        <div class="ticket-updated">updated</div>
-                    </div>
-                </div>
-
-                <div class="ticket-row">
-                    <span class="ticket-id">#T4</span>
-                    <div class="flex-grow-1">
-                        <div class="ticket-title">Delayed shipment</div>
-                        <div class="ticket-client">Agro Prim SRL</div>
-                    </div>
-                    <span class="badge-status badge-progress"><span class="dot"></span>In progress</span>
-                    <div class="ticket-date">
-                        08/27/2026
-                        <div class="ticket-updated">updated</div>
-                    </div>
-                </div>
-
-                <div class="ticket-row">
-                    <span class="ticket-id">#T2</span>
-                    <div class="flex-grow-1">
-                        <div class="ticket-title">Contract renewal request</div>
-                        <div class="ticket-client">Metaloprofil SRL</div>
-                    </div>
-                    <span class="badge-status badge-done"><span class="dot"></span>Done</span>
-                    <div class="ticket-date">
-                        08/25/2026
-                        <div class="ticket-updated">updated</div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 

@@ -42,7 +42,8 @@ namespace CRM.Web.Controllers
                 FinishedRequests = await _requestApiClient.CountRequestsAsync(Status.Finished),
                 TotalRequests = await _requestApiClient.CountRequestsAsync(null),
                 NumberOfCustomers = await _customerApiClient.CountCustomersAsync(),
-                NumberOfManagers = await _userApiClient.CountUsersAsync()
+                NumberOfManagers = await _userApiClient.CountUsersAsync(),
+                RecentRequests = await _requestApiClient.GetRecentRequestsByUserAsync()
             };
 
             return View(model);

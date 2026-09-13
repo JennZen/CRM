@@ -49,7 +49,7 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<RequestDetailsDto>();
         }
 
-        public async Task<List<RequestDetailsDto>?> GetMyRequests()
+        public async Task<List<RequestDetailsDto>?> GetMyRequestsAsync()
         {
             AttachToken();
 
@@ -58,6 +58,17 @@ namespace CRM.Web.Services
             if (!response.IsSuccessStatusCode) return null;
 
             return await response.Content.ReadFromJsonAsync<List<RequestDetailsDto>>();
+        }
+
+        public async Task<List<RequestRecentDto>?> GetRecentRequestsByUserAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/request/recent");
+
+            if(!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<RequestRecentDto>>();
         }
 
         public async Task<bool> CreateAsync(RequestCreateDto dto)
