@@ -18,6 +18,8 @@
         --badge-progress-fg: #93711b;
         --badge-resolved-bg: #e3ecd9;
         --badge-resolved-fg: #4f7a34;
+        --blue-bg: #e7e6f7;
+        --blue: #5b57c9;
     }
 
     body {
@@ -28,7 +30,7 @@
     .client-page {
         max-width: 1180px;
         margin: 0 auto;
-        padding: 40px 24px 80px;
+        padding: 2px 24px 80px;
     }
 
     .back-link {
@@ -170,7 +172,7 @@
         margin-bottom: 18px;
     }
 
-    .request-row {
+    .ticket-row {
         display: flex;
         align-items: center;
         gap: 16px;
@@ -178,32 +180,29 @@
         border-top: 1px solid var(--border);
     }
 
-        .request-row:first-of-type {
+        .ticket-row:first-of-type {
             border-top: none;
         }
 
-    .request-code {
-        background: #efeadb;
-        color: var(--muted);
-        font-size: .75rem;
-        font-weight: 600;
-        border-radius: 8px;
-        padding: 4px 9px;
-        flex-shrink: 0;
-    }
-
-    .request-main {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .request-title {
+    .ticket-title {
         font-weight: 600;
         margin-bottom: 2px;
     }
 
-    .request-client {
+    .ticket-client {
         font-size: .82rem;
+        color: var(--muted);
+    }
+
+    .ticket-date {
+        text-align: right;
+        font-size: .85rem;
+        color: var(--ink);
+        min-width: 96px;
+    }
+
+    .ticket-updated {
+        font-size: .72rem;
         color: var(--muted);
     }
 
@@ -333,16 +332,90 @@
             background: var(--accent);
             border-radius: 50%;
         }
+
+    .ticket-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--blue-bg);
+        color: var(--blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .ticket-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+    .empty-state {
+        padding: 2.5rem 1.4rem;
+        text-align: center;
+        color: var(--muted);
+    }
+
+        .empty-state svg {
+            width: 32px;
+            height: 32px;
+            color: var(--muted);
+            margin-bottom: .75rem;
+        }
+
+        .empty-state .empty-title {
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: .25rem;
+        }
+
+        .empty-state .empty-sub {
+            font-size: .85rem;
+        }
+
+    .badge-status {
+        font-size: .75rem;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 5px 12px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .badge-status .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            background: currentColor;
+        }
+
+    .badge-new {
+        background: var(--badge-new-bg);
+        color: var(--badge-new-fg);
+    }
+
+    .badge-progress {
+        background: var(--badge-progress-bg);
+        color: var(--badge-progress-fg);
+    }
+
+    .badge-resolved {
+        background: var(--badge-resolved-bg);
+        color: var(--badge-resolved-fg);
+    }
 </style>
 
 <div class="client-page">
 
-    <a class="back-link" href="#">&lsaquo; BACK TO CLIENTS</a>
+    <a class="back-link" asp-controller="Customer" asp-action="Index">&lsaquo; BACK TO CLIENTS</a>
 
     <div class="page-header">
         <div>
-            <h1 class="page-title">Nord Logistics LLC</h1>
-            <div class="page-subtitle">Sergey Tkachuk &middot; client since 12.03.2026</div>
+            <h1 class="page-title">@Model.Name</h1>
+            <div class="page-subtitle">@Model.ContactPerson &middot; client since @Model.CreatedAt.ToString("dd/MM/yyyy")</div>
         </div>
         <div class="header-actions">
             <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#editClientModal">Edit</button>
@@ -356,19 +429,19 @@
                 <div class="panel-title">Information</div>
 
                 <div class="info-label">Contact Person</div>
-                <div class="info-value">Sergey Tkachuk</div>
+                <div class="info-value">@Model.ContactPerson</div>
 
                 <div class="info-label">Phone</div>
-                <div class="info-value">+373 22 123 456</div>
+                <div class="info-value">@Model.Telephone</div>
 
                 <div class="info-label">Email</div>
-                <div class="info-value">s.tkaciuc@nordlog.md</div>
+                <div class="info-value">@Model.Email</div>
 
                 <div class="info-label">Client Since</div>
-                <div class="info-value">12.03.2026</div>
+                <div class="info-value">@Model.CreatedAt.ToString("dd/MM/yyyy")</div>
 
                 <div class="info-label">Comment</div>
-                <div class="info-value mb-0">Key account, priority support.</div>
+                <div class="info-value mb-0">@Model.Comment</div>
             </div>
         </div>
 
@@ -376,35 +449,34 @@
             <div class="panel">
                 <div class="panel-title">Client Requests</div>
 
-                <div class="request-row">
-                    <span class="request-code">#T1</span>
-                    <div class="request-main">
-                        <div class="request-title">Order notifications not arriving</div>
-                        <div class="request-client">Ana Moraru</div>
+                @if (Model.Requests != null && Model.Requests.Count > 0)
+                {
+                    @foreach (var request in Model.Requests)
+                    {
+                        <div class="ticket-row">
+                            <span class="ticket-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h1" /><path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" /></svg>
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="ticket-title">@request.Title</div>
+                                <div class="ticket-client">@request.Manager</div>
+                            </div>
+                            <span class="badge-status"><span class="dot"></span>@request.Status</span>
+                            <div class="ticket-date">
+                                @request.UpdatedAt.ToString("dd/MM/yyyy")
+                                <div class="ticket-updated">updated</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h1" /><path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" /></svg>
+                        <div class="empty-title">No requests yet</div>
+                        <div class="empty-sub">New requests will show up here as they come in.</div>
                     </div>
-                    <span class="badge-status badge-new">New</span>
-                    <div class="request-date">28.08.2026<small>updated</small></div>
-                </div>
-
-                <div class="request-row">
-                    <span class="request-code">#T2</span>
-                    <div class="request-main">
-                        <div class="request-title">Request to change billing details</div>
-                        <div class="request-client">Viktor Railyan</div>
-                    </div>
-                    <span class="badge-status badge-progress">In Progress</span>
-                    <div class="request-date">26.08.2026<small>updated</small></div>
-                </div>
-
-                <div class="request-row">
-                    <span class="request-code">#T8</span>
-                    <div class="request-main">
-                        <div class="request-title">Repeat invoice request</div>
-                        <div class="request-client">Viktor Railyan</div>
-                    </div>
-                    <span class="badge-status badge-resolved">Resolved</span>
-                    <div class="request-date">07.08.2026<small>updated</small></div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -413,7 +485,7 @@
 <div class="modal fade" id="editClientModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="#">
+            <form method="post" asp-controller="Customer" asp-action="Update" asp-route-id="@Model.Id">
                 <div class="modal-header">
                     <div>
                         <div class="modal-eyebrow"><span class="dot"></span> EDITING</div>
@@ -424,25 +496,26 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
+                        <input type="hidden" name="Id" value="@Model.Id" />
                         <div class="col-12">
                             <div class="form-label-sm">Company Name *</div>
-                            <input type="text" name="CompanyName" class="form-control" value="Nord Logistics LLC" />
+                            <input type="text" name="Name" class="form-control" value="@Model.Name" />
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Contact Person</div>
-                            <input type="text" name="ContactPerson" class="form-control" value="Sergey Tkachuk" />
+                            <input type="text" name="ContactPerson" class="form-control" value="@Model.ContactPerson" />
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Phone</div>
-                            <input type="text" name="Phone" class="form-control" value="+373 22 123 456" />
+                            <input type="text" name="Telephone" class="form-control" value="@Model.Telephone" />
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Email</div>
-                            <input type="email" name="Email" class="form-control" value="s.tkaciuc@nordlog.md" />
+                            <input type="email" name="Email" class="form-control" value="@Model.Email" />
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Comment</div>
-                            <textarea name="Comment" class="form-control" rows="3">Key account, priority support.</textarea>
+                            <textarea name="Comment" class="form-control" rows="3">@Model.Comment</textarea>
                         </div>
                     </div>
                 </div>

@@ -63,6 +63,14 @@ namespace CRM.Web.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> UpdateAsync(int id, CustomerUpdateDto dto)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PutAsJsonAsync($"api/customer/{id}", dto);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<int> CountCustomersAsync()
         {
             AttachToken();

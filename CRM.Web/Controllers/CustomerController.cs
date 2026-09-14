@@ -40,5 +40,19 @@ namespace CRM.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, CustomerUpdateDto dto)
+        {
+            var success = await _customerApiClient.UpdateAsync(id, dto);
+
+            if (!success)
+            {
+                ModelState.AddModelError(string.Empty, "Couldn't update the customer");
+                return RedirectToAction("Details", new { id });
+            }
+
+            return RedirectToAction("Details", new { id });
+        }
     }
 }

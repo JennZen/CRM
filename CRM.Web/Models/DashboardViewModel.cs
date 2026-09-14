@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Application.DTOs.User;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CRM.Web.Models
@@ -21,7 +22,9 @@ namespace CRM.Web.Models
 
         public int FinishedRequests { get; set; }
 
-        public List<RequestRecentDto> RecentRequests { get; set; }
+        public List<RequestRecentDto> RecentRequests { get; set; } = new();
+
+        public List<UserWithRequestCountDto> ManagersWithRequestCount { get; set; } = new();
 
         public List<SelectListItem> Customers { get; set; } = new();
 

@@ -66,5 +66,23 @@ namespace CRM.Application.Services
 
             return _userMapper.ToDetailsDtos(users);
         }
+
+        public async Task<List<UserWithRequestCountDto>> GetUsersWithNumberOfRequestsAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            List<UserWithRequestCountDto> result = new List<UserWithRequestCountDto>();
+
+            foreach(var user in users)
+            {
+                result.Add(new UserWithRequestCountDto{ 
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    NumberRequests = user.Requests.Count()
+                });
+            }
+
+            return result;
+        }
     }
 }

@@ -23,6 +23,13 @@ namespace CRM.Api.Controllers
             return Ok(users);
         }
 
+        [HttpGet("with-request-count")]
+        public async Task<IActionResult> GetUsersWithNumberOfRequestsAsync()
+        {
+            var usersWithRequests = await _userService.GetUsersWithNumberOfRequestsAsync();
+            return Ok(usersWithRequests);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetUserByIdAsync(int id)
         {

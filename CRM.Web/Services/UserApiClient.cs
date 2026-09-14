@@ -47,6 +47,17 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<UserDetailsDto>();
         }
 
+        public async Task<List<UserWithRequestCountDto>?> GetWithNumberOfRequestsAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync($"api/user/with-request-count");
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<UserWithRequestCountDto>>();
+        }
+
         public async Task<bool> CreateAsync(UserCreateDto dto)
         {
             AttachToken();

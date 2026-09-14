@@ -752,32 +752,36 @@
                     <span class="hint text-end">total assigned</span>
                 </div>
 
-                <div class="manager-row">
-                    <div class="avatar" style="background:#7fa06f;">AM</div>
-                    <div class="flex-grow-1">
-                        <div class="manager-name">Anna Morari</div>
-                        <div class="manager-sub">Assigned requests</div>
-                    </div>
-                    <div class="manager-count">3</div>
-                </div>
+                @{
+                    var avatarColors = new[] { "#7fa06f", "#c98a5e", "#7b8bb0", "#a96b8a", "#5e9ac9", "#b0977b" };
+                }
 
-                <div class="manager-row">
-                    <div class="avatar" style="background:#c98a5e;">VR</div>
-                    <div class="flex-grow-1">
-                        <div class="manager-name">Victor Railean</div>
-                        <div class="manager-sub">Assigned requests</div>
-                    </div>
-                    <div class="manager-count">3</div>
-                </div>
+                @if (Model.ManagersWithRequestCount != null && Model.ManagersWithRequestCount.Any())
+                {
+                    for (int i = 0; i < Model.ManagersWithRequestCount.Count; i++)
+                    {
+                        var manager = Model.ManagersWithRequestCount[i];
+                        var color = avatarColors[i % avatarColors.Length];
+                        var initials = $"{(manager.FirstName.Length > 0 ? manager.FirstName[0] : ' ')}{(manager.LastName.Length > 0 ? manager.LastName[0] : ' ')}"
+                        .ToUpper();
 
-                <div class="manager-row">
-                    <div class="avatar" style="background:#7b8bb0;">DK</div>
-                    <div class="flex-grow-1">
-                        <div class="manager-name">Dorin Cojocaru</div>
-                        <div class="manager-sub">Assigned requests</div>
+                        <div class="manager-row">
+                            <div class="avatar" style="background:@color;">@initials</div>
+                            <div class="flex-grow-1">
+                                <div class="manager-name">@manager.FirstName @manager.LastName</div>
+                                <div class="manager-sub">Assigned requests</div>
+                            </div>
+                            <div class="manager-count">@manager.NumberRequests</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-title">No managers yet</div>
+                        <div class="empty-sub">Managers will show up here once added.</div>
                     </div>
-                    <div class="manager-count">2</div>
-                </div>
+                }
             </div>
         </div>
     </div>

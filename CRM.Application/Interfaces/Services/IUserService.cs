@@ -21,5 +21,7 @@ namespace CRM.Application.Interfaces.Services
         public Task<int> CountAsync();
 
         public Task<List<UserDetailsDto>> GetAllAsync();
+
+        public Task<List<UserWithRequestCountDto>> GetUsersWithNumberOfRequestsAsync();
     }
 }
