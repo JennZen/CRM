@@ -856,46 +856,39 @@
                 </button>
             </div>
 
-            <form>
+            <form method="post" asp-controller="Request" asp-action="Create">
                 <div class="modal-body">
 
                     <div class="field-group">
                         <label class="field-label" for="reqClient">Client <span class="req">*</span></label>
-                        <select class="form-select" id="reqClient" required>
-                            <option value="" selected>Select a client</option>
-                            <option value="nordlog">Nord Logistic LLC</option>
-                            <option value="vinia">SC Vinia Trade</option>
-                            <option value="agroprim">Agro Prim SRL</option>
-                            <option value="bunatati">Bunatati Natural</option>
-                            <option value="metaloprofil">Metaloprofil SRL</option>
+                        <select class="form-select" id="reqClient" name="CustomerId" asp-items="Model.Customers" required>
+                            <option value="">Select a client</option>
                         </select>
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="reqSubject">Subject <span class="req">*</span></label>
-                        <input type="text" class="form-control" id="reqSubject" placeholder="Ex: Question about invoice" required />
+                        <input type="text" class="form-control" id="reqSubject" name="Title" placeholder="Ex: Question about invoice" required />
                     </div>
 
                     <div class="field-group">
                         <label class="field-label" for="reqDescription">Description</label>
-                        <textarea class="form-control" id="reqDescription" placeholder="Details of the inquiry..."></textarea>
+                        <textarea class="form-control" id="reqDescription" name="Description" placeholder="Details of the inquiry..."></textarea>
                     </div>
 
                     <div class="row g-3 field-group">
                         <div class="col-6">
                             <label class="field-label" for="reqPriority">Priority</label>
-                            <select class="form-select" id="reqPriority">
-                                <option value="low">Low</option>
-                                <option value="medium" selected>Medium</option>
-                                <option value="high">High</option>
+                            <select class="form-select" id="reqPriority" name="Priority">
+                                <option value="0">Low</option>
+                                <option value="1" selected>Medium</option>
+                                <option value="2">High</option>
                             </select>
                         </div>
                         <div class="col-6">
                             <label class="field-label" for="reqManager">Manager</label>
-                            <select class="form-select" id="reqManager">
-                                <option value="anna" selected>Anna Morari</option>
-                                <option value="victor">Victor Railean</option>
-                                <option value="dorin">Dorin Cojocaru</option>
+                            <select class="form-select" id="reqManager" name="ManagerId" asp-items="Model.Managers">
+                                <option value="">Select a manager</option>
                             </select>
                         </div>
                     </div>

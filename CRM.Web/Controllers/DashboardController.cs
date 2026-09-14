@@ -1,8 +1,10 @@
 using CRM.Domain.Enums;
 using CRM.Web.Interfaces;
 using CRM.Web.Models;
+using DevExpress.Data.Mask.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.IdentityModel.Claims;
 using System.Security.Claims;
@@ -31,7 +33,8 @@ namespace CRM.Web.Controllers
             var firstName = User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
             var lastName = User.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
             var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var customers = await _customerApiClient.GetAllAsync();
+            var managers = await _userApiClient.GetAllAsync();
 
             var model = new DashboardViewModel()
             {
@@ -44,7 +47,17 @@ namespace CRM.Web.Controllers
                 NumberOfCustomers = await _customerApiClient.CountCustomersAsync(),
                 NumberOfManagers = await _userApiClient.CountUsersAsync(),
                 RecentRequests = await _requestApiClient.GetRecentRequestsByUserAsync(),
-                ManagersWithRequestCount = await _userApiClient.GetWithNumberOfRequestsAsync()
+                ManagersWithRequestCount = await _userApiClient.GetWithNumberOfRequestsAsync(),
+                Customers = customers.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = m.Id.ToString(),
+                    Text = $"{m.FirstName} {m.LastName}"
+                }).ToList(),
             };
 
             return View(model);

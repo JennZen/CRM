@@ -31,12 +31,8 @@ namespace CRM.Application.Mapping
 
         // DTO -> Domain
 
-        [MapperIgnoreSource(nameof(RequestCreateDto.CustomerId))]
-        [MapperIgnoreSource(nameof(RequestCreateDto.ManagerId))]
         public partial Request ToDomain(RequestCreateDto dto);
 
-        [MapperIgnoreSource(nameof(RequestUpdateDto.CustomerId))]
-        [MapperIgnoreSource(nameof(RequestUpdateDto.ManagerId))]
         public partial Request ToDomain(RequestUpdateDto dto);
 
 

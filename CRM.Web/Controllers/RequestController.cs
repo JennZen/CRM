@@ -1,4 +1,5 @@
-﻿using CRM.Web.Interfaces;
+﻿using CRM.Application.DTOs.Request;
+using CRM.Web.Interfaces;
 using CRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,12 @@ namespace CRM.Web.Controllers
         public IActionResult Details()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Create(RequestCreateDto dto)
+        {
+            await _requestApiClient.CreateAsync(dto);
+            return RedirectToAction("Index");
         }
     }
 }
