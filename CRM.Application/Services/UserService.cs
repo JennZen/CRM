@@ -17,11 +17,15 @@ namespace CRM.Application.Services
 
         private readonly IHasherService _hasherService;
 
+        private readonly IRequestRepository _requestRepository;
+
         private readonly UserMapper _userMapper;
 
-        public UserService(IUserRepository userRepository, IHasherService hasherService, UserMapper userMapper)
+        public UserService(IUserRepository userRepository, IRequestRepository requestRepository,
+            IHasherService hasherService, UserMapper userMapper)
         {
             _userRepository = userRepository;
+            _requestRepository = requestRepository;
             _hasherService = hasherService;
             _userMapper = userMapper;
         }
@@ -70,15 +74,15 @@ namespace CRM.Application.Services
         public async Task<List<UserWithRequestCountDto>> GetUsersWithNumberOfRequestsAsync()
         {
             var users = await _userRepository.GetAllAsync();
-
-            List<UserWithRequestCountDto> result = new List<UserWithRequestCountDto>();
+            var result = new List<UserWithRequestCountDto>();
 
             foreach(var user in users)
             {
-                result.Add(new UserWithRequestCountDto{ 
+                result.Add(new UserWithRequestCountDto
+                {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    NumberRequests = user.Requests.Count()
+                    NumberRequests = await _requestRepository.CountByUserAndStatusAsync(user.Id, null)
                 });
             }
 

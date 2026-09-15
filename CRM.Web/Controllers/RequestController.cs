@@ -1,8 +1,10 @@
 ﻿using CRM.Application.DTOs.Request;
 using CRM.Web.Interfaces;
+using CRM.Web.Models;
 using CRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CRM.Web.Controllers
 {
@@ -11,19 +13,40 @@ namespace CRM.Web.Controllers
     {
         private readonly IRequestApiClient _requestApiClient;
 
-        public RequestController(IRequestApiClient requestApiClient)
+        private readonly IUserApiClient _userApiClient;
+
+        private readonly ICustomerApiClient _customerApiClient;
+
+        public RequestController(IRequestApiClient requestApiClient, IUserApiClient userApiClient, ICustomerApiClient customerApiClient)
         {
             _requestApiClient = requestApiClient;
+            _customerApiClient = customerApiClient;
+            _userApiClient = userApiClient;
         }
 
         public async Task<IActionResult> Index()
         {
-            var requests = await _requestApiClient.GetMyRequestsAsync();
-            var numberRequests = await _requestApiClient.CountRequestsAsync(null);
+            var customers = await _customerApiClient.GetAllAsync();
+            var managers = await _userApiClient.GetAllAsync();
 
-            ViewBag.NumberRequests = numberRequests;
+            var model = new RequestIndexViewModel()
+            { 
+                AllRequests = await _requestApiClient.GetMyRequestsAsync(),
+                NumberOfRequests = await _requestApiClient.CountRequestsAsync(null),
+                Customers = customers.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = m.Id.ToString(),
+                    Text = $"{m.FirstName} {m.LastName}"
+                }).ToList(),
+            };
 
-            return View(requests);
+
+            return View(model);
         }
 
         public IActionResult Details()
