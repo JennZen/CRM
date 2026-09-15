@@ -59,11 +59,12 @@ namespace CRM.DataAccess.Repositories
             return await query.CountAsync();
         }
 
-        public async Task<List<Request>> GetRecentByUserAsync(int userId)
+        public async Task<List<Request>> GetRecentByUserAsync(int userId, int n = 10)
         {
             var requests = await _uow.Query<RequestDb>().
                         Where(r => r.Manager.Oid == userId).
                         OrderByDescending(r => r.UpdatedAt).
+                        Take(n).
                         ToListAsync();
 
             return _mapper.ToDomains(requests);
