@@ -186,7 +186,6 @@
         resize: vertical;
     }
 
-    /* Timeline */
     .timeline-item {
         display: flex;
         gap: 12px;
@@ -222,7 +221,6 @@
         flex: 1;
     }
 
-    /* Modal */
     .modal-content {
         background: var(--card-bg);
         border-radius: 20px;
@@ -292,7 +290,7 @@
 
 <div class="request-page">
 
-    <a class="back-link" href="#">&lsaquo; BACK TO REQUESTS</a>
+    <a asp-controller="Request" asp-action="Index" class="back-link">&lsaquo; BACK TO REQUESTS</a>
 
     <div class="eyebrow"><span class="dot"></span> REQUEST #T7 &middot; HIGH</div>
 

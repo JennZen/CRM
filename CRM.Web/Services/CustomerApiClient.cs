@@ -35,11 +35,17 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<List<CustomerDetailsDto>>();
         }
 
-        public async Task<List<CustomerListDto>?> GetAllCardsAsync()
+        public async Task<List<CustomerListDto>?> GetAllCardsAsync(string? search = null)
         {
             AttachToken();
 
-            var response = await _httpClient.GetAsync("api/customer/cards");
+            var url = "api/customer/cards";
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                url += $"?search={Uri.EscapeDataString(search)}";
+            }
+
+            var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode) return null;
 
             return await response.Content.ReadFromJsonAsync<List<CustomerListDto>>();

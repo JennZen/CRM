@@ -16,12 +16,13 @@ namespace CRM.Web.Controllers
             _customerApiClient = customerApiClient;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search = null)
         {
-            var cards = await _customerApiClient.GetAllCardsAsync();
+            var cards = await _customerApiClient.GetAllCardsAsync(search);
             var numberClients = await _customerApiClient.CountCustomersAsync();
 
             ViewBag.NumberClients = numberClients;
+            ViewBag.Search = search;
 
             return View(cards);
         }

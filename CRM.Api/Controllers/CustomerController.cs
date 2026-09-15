@@ -26,9 +26,9 @@ namespace CRM.Api.Controllers
         }
 
         [HttpGet("cards")]
-        public async Task<IActionResult> GetAllCustomerCardsAsync()
+        public async Task<IActionResult> GetAllCustomerCardsAsync([FromQuery] string? search)
         {
-            var customers = await _customerService.GetAllCardsAsync();
+            var customers = await _customerService.GetAllCardsAsync(search);
             return Ok(customers);
         }
 

@@ -9,7 +9,7 @@ namespace CRM.Application.Interfaces.Repositories
 {
     public interface ICustomerRepository
     {
-        public Task<List<Customer>> GetAllAsync();
+        public Task<List<Customer>> GetAllAsync(string? search = null);
 
         public Task<Customer?> GetByIdAsync(int id);
 

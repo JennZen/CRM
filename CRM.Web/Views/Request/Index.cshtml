@@ -155,6 +155,21 @@
         color: var(--muted);
     }
 
+    .req-title-link,
+    .req-title-link:hover,
+    .req-title-link:focus,
+    .req-title-link:active,
+    .req-title-link:visited {
+        color: inherit;
+        text-decoration: none;
+        outline: none;
+        box-shadow: none;
+    }
+
+        .req-title-link:hover {
+            text-decoration: underline;
+        }
+
     .badge-status {
         font-size: .76rem;
         font-weight: 500;
@@ -439,9 +454,7 @@
                     {
                         <tr>
                             <td class="req-subject">
-                                <a asp-controller="Request"
-                                   asp-action="Details"
-                                   asp-route-id="@request.Id">
+                                <a asp-controller="Request" asp-action="Details" asp-route-id="@request.Id" class="req-title-link">
                                     @request.Title
                                 </a>
                             </td>

@@ -29,9 +29,9 @@ namespace CRM.Application.Services
             return _customerMapper.ToDetailsDtos(customers);
         }
 
-        public async Task<List<CustomerListDto>> GetAllCardsAsync()
+        public async Task<List<CustomerListDto>> GetAllCardsAsync(string? search = null)
         {
-            var customers = await _customerRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync(search);
 
             return _customerMapper.ToListDtos(customers);
         }

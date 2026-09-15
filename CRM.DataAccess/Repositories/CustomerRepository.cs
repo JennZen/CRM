@@ -3,6 +3,7 @@ using CRM.DataAccess.Mapping;
 using CRM.DataAccess.Models;
 using CRM.Domain.Entities;
 using DevExpress.Xpo;
+using DevExpress.Xpo.DB.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,22 @@ namespace CRM.DataAccess.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<Customer>> GetAllAsync()
+        public async Task<List<Customer>> GetAllAsync(string? search = null)
         {
-            var customers = await _uow.Query<CustomerDb>().ToListAsync();
+            IQueryable<CustomerDb> query = _uow.Query<CustomerDb>();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim();
+
+                query = query.Where(c =>
+                    c.Name.Contains(search) ||
+                    (c.ContactPerson != null && c.ContactPerson.Contains(search)) ||
+                    (c.Email != null && c.Email.Contains(search)) ||
+                    (c.Telephone != null && c.Telephone.Contains(search)));
+            }
+
+            var customers = await query.ToListAsync();
             return _mapper.ToDomains(customers);
         }
 
