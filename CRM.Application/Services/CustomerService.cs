@@ -2,6 +2,7 @@
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
+using CRM.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,19 @@ namespace CRM.Application.Services
     {
         private readonly ICustomerRepository _customerRepository;
 
+        private readonly IRequestRepository _requestRepository;
+
         private readonly CustomerMapper _customerMapper;
 
-        public CustomerService(ICustomerRepository customerRepository, CustomerMapper customerMapper)
+        private readonly RequestMapper _requestMapper;
+
+        public CustomerService(ICustomerRepository customerRepository, IRequestRepository requestRepository, 
+            CustomerMapper customerMapper, RequestMapper requestMapper)
         {
             _customerRepository = customerRepository;
+            _requestRepository = requestRepository;
             _customerMapper = customerMapper;
+            _requestMapper = requestMapper;
         }
         
         public async Task<List<CustomerDetailsDto>> GetAllAsync()
@@ -29,11 +37,18 @@ namespace CRM.Application.Services
             return _customerMapper.ToDetailsDtos(customers);
         }
 
-        public async Task<List<CustomerListDto>> GetAllCardsAsync(string? search = null)
+        public async Task<List<CustomerListDto>> GetAllCardsAsync(int userId, string? search = null)
         {
             var customers = await _customerRepository.GetAllAsync(search);
+            var dtos = _customerMapper.ToListDtos(customers);
 
-            return _customerMapper.ToListDtos(customers);
+            foreach(var dto in dtos)
+            {
+                dto.NumberOfRequests = await _requestRepository.CountByUserAndStatusAsync(userId, null);
+                dto.NumberOfActiveRequests = await _requestRepository.CountByUserAndStatusAsync(userId, Status.Active);
+            }
+
+            return dtos;
         }
 
         public async Task<CustomerDetailsDto?> GetByIdAsync(int id)
@@ -41,7 +56,12 @@ namespace CRM.Application.Services
             var customer = await _customerRepository.GetByIdAsync(id);
             if (customer == null) return null;
 
-            return _customerMapper.ToDetailsDto(customer);
+            var dto = _customerMapper.ToDetailsDto(customer);
+            
+            var requests = await _requestRepository.GetByCustomerAsync(id);
+            dto.Requests = requests.Select(r => _requestMapper.ToMiniDto(r)).ToList();
+
+            return dto;
         }
 
         public async Task<int> CountAsync()

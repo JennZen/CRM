@@ -70,6 +70,13 @@ namespace CRM.DataAccess.Repositories
             return _mapper.ToDomains(requests);
         }
 
+        public async Task<List<Request>> GetByCustomerAsync(int customerId)
+        {
+            var requests = await _uow.Query<RequestDb>().Where(r => r.Customer.Oid == customerId).ToListAsync();
+
+            return _mapper.ToDomains(requests);
+        }
+
         public async Task<bool> AddAsync(Request request)
         {
             if (request == null) return false;

@@ -1,7 +1,7 @@
-﻿@model CRM.Application.DTOs.Customer.CustomerDetailsDto;
+﻿@model CustomerDetailsViewModel;
 
 @{
-    ViewData["Title"] = $"{@Model.Name}";
+    ViewData["Title"] = $"{@Model.Customer?.Name}";
 }
 
 <style>
@@ -17,7 +17,7 @@
         --badge-progress-bg: #f4e6c9;
         --badge-progress-fg: #93711b;
         --badge-resolved-bg: #e3ecd9;
-        --badge-resolved-fg: #4f7a34;
+        --badge-resolved-fg: #4b7a5a;
         --blue-bg: #e7e6f7;
         --blue: #5b57c9;
     }
@@ -406,6 +406,144 @@
         background: var(--badge-resolved-bg);
         color: var(--badge-resolved-fg);
     }
+
+    #newRequestModal .modal-content {
+        background: var(--bg);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    #newRequestModal .modal-header-custom {
+        padding: 1.5rem 1.75rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+    }
+
+    #newRequestModal .modal-title-custom {
+        font-weight: 500;
+        font-size: 1.6rem;
+        margin: 0 0 .3rem;
+    }
+
+    #newRequestModal .modal-subtitle {
+        color: var(--muted);
+        font-size: .9rem;
+    }
+
+    #newRequestModal .modal-close-btn {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: #ebe8e0;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        #newRequestModal .modal-close-btn:hover {
+            background: #e0ddd3;
+        }
+
+    #newRequestModal .modal-body {
+        padding: 1.5rem 1.75rem;
+    }
+
+    #newRequestModal .field-label {
+        font-size: .72rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: .5rem;
+        display: block;
+    }
+
+        #newRequestModal .field-label .req {
+            color: var(--badge-progress-fg);
+        }
+
+    #newRequestModal .form-control,
+    #newRequestModal .form-select {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: .65rem .9rem;
+        font-size: .92rem;
+        color: var(--ink);
+    }
+
+        #newRequestModal .form-control:focus,
+        #newRequestModal .form-select:focus {
+            border-color: var(--accent-dark);
+            box-shadow: 0 0 0 3px rgba(111,143,78,.15);
+        }
+
+    #newRequestModal textarea.form-control {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    #newRequestModal .field-group {
+        margin-bottom: 1.25rem;
+    }
+
+    #newRequestModal .hint-note {
+        font-size: .82rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+        #newRequestModal .hint-note .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-dark);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+    #newRequestModal .modal-footer-custom {
+        padding: 1.1rem 1.75rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: .6rem;
+    }
+
+    #newRequestModal .btn-cancel {
+        background: #ece7d8;
+        color: var(--ink);
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+    }
+
+        #newRequestModal .btn-cancel:hover {
+            background: #e2ddcb;
+        }
+
+    #newRequestModal .btn-save {
+        background: var(--accent-dark);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        #newRequestModal .btn-save:hover {
+            background: #445c25;
+        }
 </style>
 
 <div class="client-page">
@@ -414,8 +552,8 @@
 
     <div class="page-header">
         <div>
-            <h1 class="page-title">@Model.Name</h1>
-            <div class="page-subtitle">@Model.ContactPerson &middot; client since @Model.CreatedAt.ToString("dd/MM/yyyy")</div>
+            <h1 class="page-title">@Model.Customer?.Name</h1>
+            <div class="page-subtitle">@Model.Customer?.ContactPerson &middot; client since @Model.Customer?.CreatedAt.ToString("dd/MM/yyyy")</div>
         </div>
         <div class="header-actions">
             <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#editClientModal">Edit</button>
@@ -429,19 +567,19 @@
                 <div class="panel-title">Information</div>
 
                 <div class="info-label">Contact Person</div>
-                <div class="info-value">@Model.ContactPerson</div>
+                <div class="info-value">@Model.Customer?.ContactPerson</div>
 
                 <div class="info-label">Phone</div>
-                <div class="info-value">@Model.Telephone</div>
+                <div class="info-value">@Model.Customer?.Telephone</div>
 
                 <div class="info-label">Email</div>
-                <div class="info-value">@Model.Email</div>
+                <div class="info-value">@Model.Customer?.Email</div>
 
                 <div class="info-label">Client Since</div>
-                <div class="info-value">@Model.CreatedAt.ToString("dd/MM/yyyy")</div>
+                <div class="info-value">@Model.Customer?.CreatedAt.ToString("dd/MM/yyyy")</div>
 
                 <div class="info-label">Comment</div>
-                <div class="info-value mb-0">@Model.Comment</div>
+                <div class="info-value mb-0">@Model.Customer?.Comment</div>
             </div>
         </div>
 
@@ -449,9 +587,9 @@
             <div class="panel">
                 <div class="panel-title">Client Requests</div>
 
-                @if (Model.Requests != null && Model.Requests.Count > 0)
+                @if (Model.Customer?.Requests != null && Model.Customer?.Requests.Count > 0)
                 {
-                    @foreach (var request in Model.Requests)
+                    @foreach (var request in Model.Customer.Requests)
                     {
                         <div class="ticket-row">
                             <span class="ticket-icon">
@@ -485,7 +623,7 @@
 <div class="modal fade" id="editClientModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" asp-controller="Customer" asp-action="Update" asp-route-id="@Model.Id">
+            <form method="post" asp-controller="Customer" asp-action="Update" asp-route-id="@Model.Customer?.Id">
                 <div class="modal-header">
                     <div>
                         <div class="modal-eyebrow"><span class="dot"></span> EDITING</div>
@@ -496,26 +634,26 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <input type="hidden" name="Id" value="@Model.Customer?.Id" />
                         <div class="col-12">
                             <div class="form-label-sm">Company Name *</div>
-                            <input type="text" name="Name" class="form-control" value="@Model.Name" />
+                            <input type="text" name="Name" class="form-control" value="@Model.Customer?.Name" />
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Contact Person</div>
-                            <input type="text" name="ContactPerson" class="form-control" value="@Model.ContactPerson" />
+                            <input type="text" name="ContactPerson" class="form-control" value="@Model.Customer?.ContactPerson" />
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Phone</div>
-                            <input type="text" name="Telephone" class="form-control" value="@Model.Telephone" />
+                            <input type="text" name="Telephone" class="form-control" value="@Model.Customer?.Telephone" />
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Email</div>
-                            <input type="email" name="Email" class="form-control" value="@Model.Email" />
+                            <input type="email" name="Email" class="form-control" value="@Model.Customer?.Email" />
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Comment</div>
-                            <textarea name="Comment" class="form-control" rows="3">@Model.Comment</textarea>
+                            <textarea name="Comment" class="form-control" rows="3">@Model.Customer?.Comment</textarea>
                         </div>
                     </div>
                 </div>
@@ -528,59 +666,69 @@
     </div>
 </div>
 
-<div class="modal fade" id="newRequestModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="newRequestModal" tabindex="-1" aria-labelledby="newRequestModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="#">
-                <div class="modal-header">
-                    <div>
-                        <div class="modal-eyebrow"><span class="dot"></span> NEW REQUEST</div>
-                        <div class="modal-title-lg">New Request</div>
-                        <div class="modal-desc">Client inquiry to be handled by a manager.</div>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+
+            <div class="modal-header-custom">
+                <div class="eyebrow"><span class="dot"></span>New request</div>
+                <div class="modal-title-custom" id="newRequestModalLabel">New request</div>
+                <div class="modal-subtitle">Customer inquiry for a manager to process.</div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <form method="post" asp-controller="Request" asp-action="Create">
                 <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <div class="form-label-sm">Client *</div>
-                            <select name="ClientId" class="form-select">
-                                <option selected>Nord Logistics LLC</option>
-                                <option>Vector Trans SRL</option>
-                                <option>Bravo Group ICS</option>
+
+                    <div class="field-group">
+                        <label class="field-label" for="reqClient">Client <span class="req">*</span></label>
+                        <select class="form-select" id="reqClient" name="CustomerId" asp-items="Model.Customers" required>
+                            <option value="">Select a client</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="reqSubject">Subject <span class="req">*</span></label>
+                        <input type="text" class="form-control" id="reqSubject" name="Title" placeholder="Ex: Question about invoice" required />
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="reqDescription">Description</label>
+                        <textarea class="form-control" id="reqDescription" name="Description" placeholder="Details of the inquiry..."></textarea>
+                    </div>
+
+                    <div class="row g-3 field-group">
+                        <div class="col-6">
+                            <label class="field-label" for="reqPriority">Priority</label>
+                            <select class="form-select" id="reqPriority" name="Priority">
+                                <option value="0">Low</option>
+                                <option value="1" selected>Medium</option>
+                                <option value="2">High</option>
                             </select>
                         </div>
-                        <div class="col-12">
-                            <div class="form-label-sm">Subject *</div>
-                            <input type="text" name="Title" class="form-control" placeholder="Ex: Billing inquiry" />
-                        </div>
-                        <div class="col-12">
-                            <div class="form-label-sm">Description</div>
-                            <textarea name="Description" class="form-control" rows="3" placeholder="Request details..."></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-label-sm">Priority</div>
-                            <select name="Priority" class="form-select">
-                                <option>Low</option>
-                                <option selected>Medium</option>
-                                <option>High</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-label-sm">Manager</div>
-                            <select name="ManagerId" class="form-select">
-                                <option selected>Ana Moraru</option>
-                                <option>Viktor Railyan</option>
+                        <div class="col-6">
+                            <label class="field-label" for="reqManager">Manager</label>
+                            <select class="form-select" id="reqManager" name="ManagerId" asp-items="Model.Managers">
+                                <option value="">Select a manager</option>
                             </select>
                         </div>
                     </div>
-                    <div class="hint-note"><span class="dot"></span> New request gets "New" status automatically</div>
+
+                    <div class="hint-note">
+                        <span class="dot"></span>
+                        New requests automatically get the "New" status
+                    </div>
+
                 </div>
-                <div class="modal-footer justify-content-end">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-accent">Save Request</button>
+
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn-save">Save request</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>

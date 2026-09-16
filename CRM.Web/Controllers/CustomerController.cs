@@ -1,7 +1,10 @@
 ﻿using CRM.Application.DTOs.Customer;
 using CRM.Web.Interfaces;
+using CRM.Web.Models;
+using CRM.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 
 namespace CRM.Web.Controllers
@@ -11,9 +14,15 @@ namespace CRM.Web.Controllers
     {
         private readonly ICustomerApiClient _customerApiClient;
 
-        public CustomerController(ICustomerApiClient customerApiClient)
+        private readonly IRequestApiClient _requestApiClient;
+
+        private readonly IUserApiClient _userApiClient;
+
+        public CustomerController(ICustomerApiClient customerApiClient, IRequestApiClient requestApiClient, IUserApiClient userApiClient)
         {
             _customerApiClient = customerApiClient;
+            _requestApiClient = requestApiClient;
+            _userApiClient = userApiClient;
         }
 
         public async Task<IActionResult> Index(string? search = null)
@@ -29,9 +38,25 @@ namespace CRM.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var customer = await _customerApiClient.GetByIdAsync(id);
+            var customers = await _customerApiClient.GetAllAsync();
+            var managers = await _userApiClient.GetAllAsync();
 
-            return View(customer);
+            var model = new CustomerDetailsViewModel()
+            {
+                Customer = await _customerApiClient.GetByIdAsync(id),
+                Customers = customers.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = m.Id.ToString(),
+                    Text = $"{m.FirstName} {m.LastName}"
+                }).ToList(),
+            };
+
+            return View(model);
         }
 
         [HttpPost]

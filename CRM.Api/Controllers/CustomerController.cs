@@ -3,6 +3,7 @@ using CRM.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CRM.Api.Controllers
 {
@@ -28,7 +29,9 @@ namespace CRM.Api.Controllers
         [HttpGet("cards")]
         public async Task<IActionResult> GetAllCustomerCardsAsync([FromQuery] string? search)
         {
-            var customers = await _customerService.GetAllCardsAsync(search);
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var customers = await _customerService.GetAllCardsAsync(userId, search);
             return Ok(customers);
         }
 

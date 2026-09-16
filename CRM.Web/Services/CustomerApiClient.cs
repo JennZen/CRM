@@ -8,17 +8,17 @@ namespace CRM.Web.Services
     {
         private readonly HttpClient _httpClient;
 
-        private readonly IHttpContextAccessor _httpContentAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CustomerApiClient(IHttpClientFactory factory, IHttpContextAccessor httpContentAccessor)
+        public CustomerApiClient(IHttpClientFactory factory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = factory.CreateClient("CRM.Api");
-            _httpContentAccessor = httpContentAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         private void AttachToken()
         {
-            var token = _httpContentAccessor.HttpContext?.Session.GetString("JwtToken");
+            var token = _httpContextAccessor.HttpContext?.Session.GetString("JwtToken");
             if(!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
