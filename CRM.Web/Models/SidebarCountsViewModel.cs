@@ -6,6 +6,8 @@
         
         public int RequestsCount { get; set; }
 
+        public int UserCount { get; set; }
+
         public string CurrentController { get; set; } = "";
     }
 }

@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Request #T7";
+﻿@model RequestDetailsViewModel;
+
+@{
+    ViewData["Title"] = $"Request: {Model.Request?.Title}";
 }
 
 <style>
@@ -121,7 +123,6 @@
             background: #e2ddcb;
         }
 
-    /* Status pills */
     .status-tabs {
         display: flex;
         gap: 10px;
@@ -292,12 +293,12 @@
 
     <a asp-controller="Request" asp-action="Index" class="back-link">&lsaquo; BACK TO REQUESTS</a>
 
-    <div class="eyebrow"><span class="dot"></span> REQUEST #T7 &middot; HIGH</div>
+    <div class="eyebrow"><span class="dot"></span> REQUEST &middot; @Model.Request?.Priority</div>
 
     <div class="page-header">
         <div>
-            <h1 class="page-title">Error in personal dashboard</h1>
-            <div class="page-subtitle">Client: Vinia Trade SRL &middot; created 25.08.2026 &middot; updated 01.09.2026</div>
+            <h1 class="page-title">@Model.Request?.Title</h1>
+            <div class="page-subtitle">Client: @Model.Request?.Customer &middot; created @Model.Request?.CreatedAt.ToString("dd/MM/yy") &middot; updated @Model.Request?.UpdatedAt.ToString("dd/MM/yy")</div>
         </div>
         <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#editRequestModal">Edit</button>
     </div>
@@ -314,7 +315,7 @@
             <div class="panel">
                 <div class="panel-title">Description</div>
 
-                <div class="description-text">Login page returns a 500 error.</div>
+                <div class="description-text">@Model.Request?.Description</div>
 
                 <div class="form-label-sm">Responsible Manager</div>
                 <select class="form-select">

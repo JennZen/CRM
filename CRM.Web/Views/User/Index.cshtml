@@ -1,0 +1,562 @@
+﻿@model List<CRM.Application.DTOs.User.UserDetailsDto>;
+
+@{
+    ViewData["Title"] = "Users";
+}
+<style>
+    :root {
+        --bg: #f2efe8;
+        --card: #ffffff;
+        --ink: #1c1b19;
+        --muted: #7a766e;
+        --line: #e7e2d8;
+        --green: #4b7a5a;
+        --green-bg: #e6efe4;
+        --amber: #a9812f;
+        --amber-bg: #f4ecd8;
+        --blue-bg: #e8ecf5;
+        --blue: #4a5a8a;
+        --red: #a94b3f;
+        --red-bg: #f4e2de;
+        --gray: #6f6b64;
+        --gray-bg: #eeece5;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+    }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .78rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            display: inline-block;
+        }
+
+    .page-title {
+        font-weight: 500;
+        font-size: 2.1rem;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: .95rem;
+    }
+
+    .btn-dark-soft {
+        background: #1c1b19;
+        color: #fff;
+        border-radius: 10px;
+        padding: .55rem 1.1rem;
+        font-size: .9rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        white-space: nowrap;
+    }
+
+        .btn-dark-soft:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .req-table-wrap {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    table.req-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table.req-table thead th {
+            text-align: left;
+            font-size: .7rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 600;
+            padding: .9rem 1.4rem;
+            border-bottom: 1px solid var(--line);
+            background: var(--bg);
+            white-space: nowrap;
+        }
+
+        table.req-table tbody td {
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--line);
+            font-size: .9rem;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        table.req-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        table.req-table tbody tr:hover {
+            background: #faf9f5;
+        }
+
+    .req-name {
+        font-weight: 600;
+    }
+
+    .req-email {
+        color: var(--muted);
+    }
+
+    .badge-role {
+        font-size: .76rem;
+        font-weight: 500;
+        padding: .3rem .65rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+    }
+
+        .badge-role .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: .35rem;
+            display: inline-block;
+        }
+
+    .badge-admin {
+        background: var(--amber-bg);
+        color: var(--amber);
+    }
+
+        .badge-admin .dot {
+            background: var(--amber);
+        }
+
+    .badge-manager {
+        background: var(--blue-bg);
+        color: var(--blue);
+    }
+
+        .badge-manager .dot {
+            background: var(--blue);
+        }
+
+    .row-actions {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        white-space: nowrap;
+    }
+
+    .btn-action {
+        background: transparent;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+    }
+
+        .btn-action:hover {
+            background: var(--gray-bg);
+            color: var(--ink);
+        }
+
+        .btn-action.danger:hover {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+    .app-modal .modal-content {
+        background: var(--bg);
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .app-modal .modal-header-custom {
+        padding: 1.5rem 1.75rem 1.25rem;
+        border-bottom: 1px solid var(--line);
+        position: relative;
+    }
+
+    .app-modal .modal-title-custom {
+        font-weight: 500;
+        font-size: 1.6rem;
+        margin: 0 0 .3rem;
+    }
+
+    .app-modal .modal-header-custom.no-border {
+    border-bottom: none;
+    padding-bottom: .5rem;
+}
+
+    .app-modal .modal-subtitle {
+        color: var(--muted);
+        font-size: .9rem;
+    }
+
+    .app-modal .modal-close-btn {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.5rem;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: #ebe8e0;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .app-modal .modal-close-btn:hover {
+            background: #e0ddd3;
+        }
+
+    .app-modal .modal-body {
+        padding: 1.5rem 1.75rem;
+    }
+
+    .app-modal .field-label {
+        font-size: .72rem;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: .5rem;
+        display: block;
+    }
+
+        .app-modal .field-label .req {
+            color: var(--red);
+        }
+
+    .app-modal .form-control,
+    .app-modal .form-select {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: .65rem .9rem;
+        font-size: .92rem;
+        color: var(--ink);
+    }
+
+        .app-modal .form-control:focus,
+        .app-modal .form-select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px var(--green-bg);
+        }
+
+    .app-modal .field-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .app-modal .modal-footer-custom {
+        padding: 1.1rem 1.75rem;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: flex-end;
+        gap: .6rem;
+    }
+
+    .app-modal .btn-cancel {
+        background: var(--gray-bg);
+        color: var(--ink);
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+    }
+
+        .app-modal .btn-cancel:hover {
+            background: #e2ded3;
+        }
+
+    .app-modal .btn-save {
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        .app-modal .btn-save:hover {
+            background: #3f6a4c;
+        }
+
+    .app-modal .btn-delete {
+        background: var(--red);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: .6rem 1.3rem;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+        .app-modal .btn-delete:hover {
+            background: #8c3a30;
+        }
+
+    .delete-icon-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--red-bg);
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container-fluid px-0" style="max-width:1200px;">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-3">
+        <div>
+            <div class="eyebrow"><span class="dot"></span>@Model.Count users</div>
+            <div class="page-title">Users</div>
+            <div class="subtitle">Manage accounts and access levels.</div>
+        </div>
+        <button class="btn-dark-soft" type="button" data-bs-toggle="modal" data-bs-target="#newUserModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14" /></svg>
+            New user
+        </button>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="text-center py-5">
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.5"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 width="48"
+                 height="48"
+                 style="color: var(--muted); margin-bottom: 1rem;">
+
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+
+            <div class="fs-5 fw-medium mb-1">No users yet</div>
+            <div class="subtitle mb-3">
+                There are no user accounts to display.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="req-table-wrap">
+            <table class="req-table">
+                <thead>
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="req-name">@user.FirstName</td>
+                            <td class="req-name">@user.LastName</td>
+                            <td class="req-email">@user.Email</td>
+                            <td>
+                                <span class="badge-role @(user.Role.ToString() == "Admin" ? "badge-admin" : "badge-manager")">
+                                    <span class="dot"></span>@user.Role
+                                </span>
+                            </td>
+                            <td>
+                                <div class="row-actions">
+                                    <button class="btn-action" type="button" data-bs-toggle="modal" data-bs-target="#editUserModal-@user.Id" title="Edit user">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+                                    </button>
+                                    <button class="btn-action danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteUserModal-@user.Id" title="Delete user">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<div class="modal fade app-modal" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="eyebrow"><span class="dot"></span>New user</div>
+                <div class="modal-title-custom" id="newUserModalLabel">New user</div>
+                <div class="modal-subtitle">Create an account and assign an access level.</div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <form method="post" asp-controller="User" asp-action="Create">
+                <div class="modal-body">
+
+                    <div class="row g-3 field-group">
+                        <div class="col-6">
+                            <label class="field-label" for="newFirstName">First name <span class="req">*</span></label>
+                            <input type="text" class="form-control" id="newFirstName" name="FirstName" placeholder="Ex: John" required />
+                        </div>
+                        <div class="col-6">
+                            <label class="field-label" for="newLastName">Last name <span class="req">*</span></label>
+                            <input type="text" class="form-control" id="newLastName" name="LastName" placeholder="Ex: Smith" required />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label" for="newEmail">Email <span class="req">*</span></label>
+                        <input type="email" class="form-control" id="newEmail" name="Email" placeholder="john.smith@company.com" required />
+                    </div>
+
+                    <div class="field-group mb-0">
+                        <label class="field-label" for="newRole">Role</label>
+                        <select class="form-select" id="newRole" name="Role">
+                            <option value="Manager" selected>Manager</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn-save">Create user</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    @foreach (var user in Model)
+    {
+        <!-- Edit modal for @user.Email -->
+        <div class="modal fade app-modal" id="editUserModal-@user.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header-custom">
+                        <div class="eyebrow"><span class="dot"></span>Edit user</div>
+                        <div class="modal-title-custom">@user.FirstName @user.LastName</div>
+                        <div class="modal-subtitle">Update the account details and access level.</div>
+                        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+
+                    <form method="post" asp-controller="User" asp-action="Edit">
+                        <input type="hidden" name="Id" value="@user.Id" />
+                        <div class="modal-body">
+
+                            <div class="row g-3 field-group">
+                                <div class="col-6">
+                                    <label class="field-label" for="editFirstName-@user.Id">First name <span class="req">*</span></label>
+                                    <input type="text" class="form-control" id="editFirstName-@user.Id" name="FirstName" value="@user.FirstName" required />
+                                </div>
+                                <div class="col-6">
+                                    <label class="field-label" for="editLastName-@user.Id">Last name <span class="req">*</span></label>
+                                    <input type="text" class="form-control" id="editLastName-@user.Id" name="LastName" value="@user.LastName" required />
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label" for="editEmail-@user.Id">Email <span class="req">*</span></label>
+                                <input type="email" class="form-control" id="editEmail-@user.Id" name="Email" value="@user.Email" required />
+                            </div>
+
+                            <div class="field-group mb-0">
+                                <label class="field-label" for="editRole-@user.Id">Role</label>
+                                <select class="form-select" id="editRole-@user.Id" name="Role">
+                                    <option value="Manager" selected="@(user.Role.ToString() == "Manager")">Manager</option>
+                                    <option value="Admin" selected="@(user.Role.ToString() == "Admin")">Admin</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer-custom">
+                            <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn-save">Save changes</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade app-modal" id="deleteUserModal-@user.Id" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header-custom no-border">
+                        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+
+                    <form method="post" asp-controller="User" asp-action="Delete">
+                        <input type="hidden" name="Id" value="@user.Id" />
+                        <div class="modal-body">
+                            <div class="delete-icon-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+                            </div>
+                            <p class="mb-0">
+                                Are you sure you want to delete <strong>@user.FirstName @user.LastName</strong>? This action cannot be undone.
+                            </p>
+                        </div>
+                        <div class="modal-footer-custom">
+                            <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn-delete">Delete user</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    }
+}

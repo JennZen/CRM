@@ -49,9 +49,14 @@ namespace CRM.Web.Controllers
             return View(model);
         }
 
-        public IActionResult Details()
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var model = new RequestDetailsViewModel()
+            {
+                Request = await _requestApiClient.GetByIdAsync(id),
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> Create(RequestCreateDto dto)

@@ -34,11 +34,13 @@ namespace CRM.Web.ViewComponents
             var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
             var customersCount = await _httpClient.GetFromJsonAsync<int>("api/customer/count");
             var requestsCount = await _httpClient.GetFromJsonAsync<int>("api/request/my/count");
+            var userCount = await _httpClient.GetFromJsonAsync<int>("api/user/count");
 
             return View(new SidebarCountsViewModel() 
             { 
                 CustomersCount = customersCount, 
                 RequestsCount = requestsCount,
+                UserCount = userCount,
                 CurrentController = currentController,
             });
         }

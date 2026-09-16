@@ -15,27 +15,16 @@ namespace CRM.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            try
-            {
-                var users = await _userApiClient.GetAllAsync();
-                return View(users);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            var users = await _userApiClient.GetAllAsync();
+            return View(users);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateDto dto)
         {
             var result = await _userApiClient.CreateAsync(dto);
-            if (result == null)
-            {
-                ModelState.AddModelError("", "Unable to create user");
-                return View(dto);
-            }
-            return RedirectToAction(nameof(Index));
+
+            return RedirectToAction("Index");
         }
 
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CRM.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +17,7 @@ namespace CRM.Application.DTOs.User
         public string LastName { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
+
+        public UserRole Role { get; set; }
     }
 }
