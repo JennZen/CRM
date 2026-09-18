@@ -49,11 +49,15 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<RequestDetailsDto>();
         }
 
-        public async Task<List<RequestDetailsDto>?> GetMyRequestsAsync()
+        public async Task<List<RequestDetailsDto>?> GetMyRequestsAsync(Status? status = null)
         {
             AttachToken();
 
-            var response = await _httpClient.GetAsync("api/request/my");
+            var url = "api/request/my";
+            if (status.HasValue)
+                url += $"?status={status}";
+
+            var response = await _httpClient.GetAsync(url);
 
             if (!response.IsSuccessStatusCode) return null;
 

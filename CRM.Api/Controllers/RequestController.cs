@@ -39,11 +39,11 @@ namespace CRM.Api.Controllers
         }
 
         [HttpGet("my")]
-        public async Task<IActionResult> GetRequestsByUserAsync()
+        public async Task<IActionResult> GetRequestsByUserAsync(Status? status)
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var requests = await _requestService.GetByUserAsync(userId);
+            var requests = await _requestService.GetByUserAsync(userId, status);
             return Ok(requests);
         }
 
@@ -66,7 +66,6 @@ namespace CRM.Api.Controllers
             return Ok(number);
         }
 
-        
 
         [HttpPost]
         public async Task<IActionResult> CreateRequestAsync([FromBody] RequestCreateDto requestCreateDto)

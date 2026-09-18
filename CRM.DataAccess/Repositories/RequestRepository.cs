@@ -16,6 +16,7 @@ namespace CRM.DataAccess.Repositories
     public class RequestRepository : IRequestRepository
     {
         private readonly UnitOfWork _uow;
+
         private readonly RequestMapper _mapper;
 
         public RequestRepository(UnitOfWork uow, RequestMapper mapper)
@@ -27,7 +28,6 @@ namespace CRM.DataAccess.Repositories
         public async Task<List<Request>> GetAllAsync()
         {
             var requests = await _uow.Query<RequestDb>().ToListAsync();
-
             return _mapper.ToDomains(requests);
         }
 
@@ -40,11 +40,20 @@ namespace CRM.DataAccess.Repositories
             return _mapper.ToDomain(request);
         }
 
-        public async Task<List<Request>> GetByUserAsync(int userId)
+        public async Task<List<Request>> GetByUserAsync(int userId, Status? status = null)
         {
-            var requests = await _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId).ToListAsync();
-
-            return _mapper.ToDomains(requests);
+            if(status == null)
+            {
+                var requests = await _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId).ToListAsync();
+                return _mapper.ToDomains(requests);
+            }
+            else
+            {
+                var requests = await _uow.Query<RequestDb>().Where(r => r.Manager.Oid == userId 
+                                                            && r.Status == status).ToListAsync();
+                return _mapper.ToDomains(requests);
+            }
+            
         }
 
         public async Task<int> CountByUserAndStatusAsync(int userId, Status? status)

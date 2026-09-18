@@ -37,9 +37,9 @@ namespace CRM.Services.Services
             return request is null ? null : _requestMapper.ToDetailsDto(request);
         }
 
-        public async Task<List<RequestDetailsDto>> GetByUserAsync(int userId)
+        public async Task<List<RequestDetailsDto>> GetByUserAsync(int userId, Status? status = null)
         {
-            var requests = await _requestRepository.GetByUserAsync(userId);
+            var requests = await _requestRepository.GetByUserAsync(userId, status);
             return _requestMapper.ToDetailsDtos(requests);
         }
 

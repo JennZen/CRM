@@ -11,7 +11,7 @@ namespace CRM.Web.Interfaces
 
         public Task<bool> CreateAsync(RequestCreateDto dto);
 
-        public Task<List<RequestDetailsDto>?> GetMyRequestsAsync();
+        public Task<List<RequestDetailsDto>?> GetMyRequestsAsync(Status? status = null);
 
         public Task<List<RequestRecentDto>?> GetRecentRequestsByUserAsync();
 

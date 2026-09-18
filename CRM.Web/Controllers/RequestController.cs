@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Domain.Enums;
 using CRM.Web.Interfaces;
 using CRM.Web.Models;
 using CRM.Web.Services;
@@ -24,15 +25,16 @@ namespace CRM.Web.Controllers
             _userApiClient = userApiClient;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Status? status)
         {
             var customers = await _customerApiClient.GetAllAsync();
             var managers = await _userApiClient.GetAllAsync();
 
             var model = new RequestIndexViewModel()
             { 
-                AllRequests = await _requestApiClient.GetMyRequestsAsync(),
+                AllRequests = await _requestApiClient.GetMyRequestsAsync(status),
                 NumberOfRequests = await _requestApiClient.CountRequestsAsync(null),
+                CurrentStatus = status,
                 Customers = customers.Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),

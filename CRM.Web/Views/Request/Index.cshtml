@@ -1,4 +1,5 @@
-﻿@model RequestIndexViewModel;
+﻿@using CRM.Domain.Enums
+@model RequestIndexViewModel;
 
 @{
     ViewData["Title"] = "Requests";
@@ -90,6 +91,8 @@
         padding: .45rem 1rem;
         font-size: .85rem;
         cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
     }
 
         .filter-tab:hover {
@@ -400,43 +403,42 @@
         </button>
     </div>
 
-    @if (Model == null || Model.AllRequests.Count == 0)
-    {
-    <div class="text-center py-5">
-        <svg viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="1.5"
-             stroke-linecap="round"
-             stroke-linejoin="round"
-             width="48"
-             height="48"
-             style="color: var(--muted); margin-bottom: 1rem;">
-
-            <path d="M6 3h9l3 3v15H6z" />
-            <path d="M15 3v4h4" />
-            <path d="M9 12h6" />
-            <path d="M9 16h4" />
-        </svg>
-
-        <div class="fs-5 fw-medium mb-1">No requests yet</div>
-        <div class="subtitle mb-3">
-            There are no customer requests to display.
-        </div>
+    <div class="filter-tabs">
+        <a asp-action="Index" asp-route-status="" class="filter-tab @(Model.CurrentStatus == null ? "active" : "")">All</a>
+        <a asp-action="Index" asp-route-status="New" class="filter-tab @(Model.CurrentStatus == Status.New ? "active" : "")">New</a>
+        <a asp-action="Index" asp-route-status="Active" class="filter-tab @(Model.CurrentStatus == Status.Active ? "active" : "")">Active</a>
+        <a asp-action="Index" asp-route-status="Finished" class="filter-tab @(Model.CurrentStatus == Status.Finished ? "active" : "")">Finished</a>
+        <a asp-action="Index" asp-route-status="Solved" class="filter-tab @(Model.CurrentStatus == Status.Solved ? "active" : "")">Solved</a>
+        <a asp-action="Index" asp-route-status="Rejected" class="filter-tab @(Model.CurrentStatus == Status.Rejected ? "active" : "")">Rejected</a>
     </div>
 
-        }
+    @if (Model == null || Model.AllRequests.Count == 0)
+    {
+        <div class="text-center py-5">
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.5"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 width="48"
+                 height="48"
+                 style="color: var(--muted); margin-bottom: 1rem;">
+
+                <path d="M6 3h9l3 3v15H6z" />
+                <path d="M15 3v4h4" />
+                <path d="M9 12h6" />
+                <path d="M9 16h4" />
+            </svg>
+
+            <div class="fs-5 fw-medium mb-1">No requests yet</div>
+            <div class="subtitle mb-3">
+                There are no customer requests to display.
+            </div>
+        </div>
+    }
     else
     {
-
-        <div class="filter-tabs">
-            <button class="filter-tab active">All</button>
-            <button class="filter-tab">New</button>
-            <button class="filter-tab">In progress</button>
-            <button class="filter-tab">Resolved</button>
-            <button class="filter-tab">Closed</button>
-        </div>
-
         <div class="req-table-wrap">
             <table class="req-table">
                 <thead>
@@ -485,8 +487,7 @@
                 </tbody>
             </table>
         </div>
-
-        }
+    }
 </div>
 
 <div class="modal fade" id="newRequestModal" tabindex="-1" aria-labelledby="newRequestModalLabel" aria-hidden="true">
