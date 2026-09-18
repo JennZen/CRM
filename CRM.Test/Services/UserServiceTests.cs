@@ -14,6 +14,7 @@ namespace CRM.Test.Services
     public class UserServiceTests
     {
         private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly Mock<IRequestRepository> _requestRepositoryMock;
         private readonly Mock<IHasherService> _hasherServiceMock;
         private readonly UserMapper _userMapper;
         private readonly UserService _sut;
@@ -21,9 +22,10 @@ namespace CRM.Test.Services
         public UserServiceTests()
         {
             _userRepositoryMock = new Mock<IUserRepository>(MockBehavior.Strict);
+            _requestRepositoryMock = new Mock<IRequestRepository>(MockBehavior.Strict);
             _hasherServiceMock = new Mock<IHasherService>(MockBehavior.Strict);
             _userMapper = new UserMapper();
-            _sut = new UserService(_userRepositoryMock.Object, _hasherServiceMock.Object, _userMapper);
+            _sut = new UserService(_userRepositoryMock.Object, _requestRepositoryMock.Object, _hasherServiceMock.Object, _userMapper);
         }
 
         private static User CreateUser(

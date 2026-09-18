@@ -111,13 +111,9 @@ namespace CRM.Api.Controllers
 
 
         [HttpPut("{id:int}/status")]
-        public async Task<IActionResult> ChangeRequestStatusAsync(int id, [FromBody] string status)
+        public async Task<IActionResult> ChangeRequestStatusAsync(int id, [FromBody] Status status)
         {
-            if (!Enum.TryParse<Status>(status, true, out var parsedStatus))
-            {
-                return BadRequest("Invalid status value.");
-            }
-            var result = await _requestService.ChangeStatusAsync(id, parsedStatus);
+            var result = await _requestService.ChangeStatusAsync(id, status);
             if (!result)
             {
                 return NotFound();

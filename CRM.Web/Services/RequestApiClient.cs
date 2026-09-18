@@ -1,6 +1,8 @@
-﻿using CRM.Application.DTOs.Request;
+﻿using CRM.Application.DTOs.Customer;
+using CRM.Application.DTOs.Request;
 using CRM.Domain.Enums;
 using CRM.Web.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 
 namespace CRM.Web.Services
@@ -100,6 +102,22 @@ namespace CRM.Web.Services
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<int>();
+        }
+
+        public async Task<bool> UpdateAsync(int id, RequestUpdateDto dto)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PutAsJsonAsync($"api/request/{id}", dto);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> ChangeRequestStatusAsync(int id, Status status)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PutAsJsonAsync($"api/request/{id}/status", status);
+            return response.IsSuccessStatusCode;
         }
     }
 }

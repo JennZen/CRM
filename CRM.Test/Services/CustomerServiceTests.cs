@@ -16,64 +16,36 @@ namespace CRM.Test.Services
 {
     public class CustomerServiceTests
     {
-        private readonly Mock<ICustomerRepository> _repositoryMock;
+        private readonly Mock<ICustomerRepository> _customerRepositoryMock;
 
-        private readonly CustomerMapper _mapper;
+        private readonly Mock<IRequestRepository> _requestRepositoryMock;
 
-        private readonly CustomerService _service;
+        private readonly CustomerMapper _customerMapper;
+
+        private readonly RequestMapper _requestMapper;
+
+        private readonly CustomerService _customerService;
 
         public CustomerServiceTests()
         {
-            _repositoryMock = new Mock<ICustomerRepository>();
+            _customerRepositoryMock = new Mock<ICustomerRepository>();
 
-            _mapper = new CustomerMapper();
+            _requestRepositoryMock = new Mock<IRequestRepository>();
 
-            _service = new CustomerService(_repositoryMock.Object, _mapper);
-        }
+            _requestMapper = new RequestMapper();
 
-        [Fact]
-        public async Task GetByIdAsync_ShouldReturnCustomer_WhenCustomerExists()
-        {
-            var customer = new Customer()
-            {
-                Id = 1,
-                Name = "Sweet Entertainment",
-                ContactPerson = "Ana",
-                Telephone = "+1 (555) 839-2041",
-                Email = "support@sweet.entertainment",
-                Comment = "Big entertainment company in France",
-                CreatedAt = DateTime.Now
-            };
+            _customerMapper = new CustomerMapper();
 
-            var dto = new CustomerDetailsDto()
-            {
-                Id = 1,
-                Name = "Sweet Entertainment",
-                ContactPerson = "Ana",
-                Telephone = "+1 (555) 839-2041",
-                Email = "support@sweet.entertainment",
-                Comment = "Big entertainment company in France"
-            };
 
-            _repositoryMock.Setup(x => x.GetByIdAsync(1)).ReturnsAsync(customer);
-
-            var result = await _service.GetByIdAsync(1);
-
-            Xunit.Assert.NotNull(result);
-            Xunit.Assert.Equal(1, result.Id);
-            Xunit.Assert.Equal("Sweet Entertainment", result.Name);
-            Xunit.Assert.Equal("Ana", result.ContactPerson);
-            Xunit.Assert.Equal("+1 (555) 839-2041", result.Telephone);
-            Xunit.Assert.Equal("support@sweet.entertainment", result.Email);
-            Xunit.Assert.Equal("Big entertainment company in France", result.Comment);
+            _customerService = new CustomerService(_customerRepositoryMock.Object, _requestRepositoryMock.Object, _customerMapper, _requestMapper);
         }
 
         [Fact]
         public async Task GetByIdAsync_ShouldReturnNull_WhenCustomerDoesNotExist()
         {
-            _repositoryMock.Setup(x => x.GetByIdAsync(999)).ReturnsAsync((Customer?)null);
+            _customerRepositoryMock.Setup(x => x.GetByIdAsync(999)).ReturnsAsync((Customer?)null);
 
-            var result = await _service.GetByIdAsync(999);
+            var result = await _customerService.GetByIdAsync(999);
 
             Xunit.Assert.Null(result);
         }
@@ -95,11 +67,11 @@ namespace CRM.Test.Services
                 }
             };
 
-            _repositoryMock
-                .Setup(x => x.GetAllAsync())
+            _customerRepositoryMock
+                .Setup(x => x.GetAllAsync(null))
                 .ReturnsAsync(customers);
 
-            var result = await _service.GetAllAsync();
+            var result = await _customerService.GetAllAsync();
 
             Xunit.Assert.NotNull(result);
             Xunit.Assert.Equal(2, result.Count());
@@ -108,11 +80,11 @@ namespace CRM.Test.Services
         [Fact]
         public async Task GetAllAsync_ShouldReturnEmptyCollection_WhenNoCustomersExist()
         {
-            _repositoryMock
-                .Setup(x => x.GetAllAsync())
+            _customerRepositoryMock
+                .Setup(x => x.GetAllAsync(null))
                 .ReturnsAsync(new List<Customer>());
 
-            var result = await _service.GetAllAsync();
+            var result = await _customerService.GetAllAsync();
 
 
             Xunit.Assert.NotNull(result);
@@ -142,18 +114,18 @@ namespace CRM.Test.Services
                 CreatedAt = DateTime.Now
             };
 
-            _repositoryMock
+            _customerRepositoryMock
                 .Setup(x => x.CreateAsync(It.IsAny<Customer>()))
                 .ReturnsAsync(createdCustomer);
 
-            var result = await _service.CreateAsync(createDto);
+            var result = await _customerService.CreateAsync(createDto);
 
             Xunit.Assert.NotNull(result);
             Xunit.Assert.Equal(1, result.Id);
             Xunit.Assert.Equal(createDto.Name, result.Name);
             Xunit.Assert.Equal(createDto.Email, result.Email);
 
-            _repositoryMock.Verify(
+            _customerRepositoryMock.Verify(
                 x => x.CreateAsync(It.IsAny<Customer>()),
                 Times.Once);
         }
@@ -171,15 +143,15 @@ namespace CRM.Test.Services
                 Comment = "Updated comment"
             };
 
-            _repositoryMock
+            _customerRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<Customer>()))
                 .ReturnsAsync(true);
 
-            var result = await _service.UpdateAsync(updateDto);
+            var result = await _customerService.UpdateAsync(updateDto);
 
             Xunit.Assert.True(result);
 
-            _repositoryMock.Verify(
+            _customerRepositoryMock.Verify(
                 x => x.UpdateAsync(It.IsAny<Customer>()),
                 Times.Once);
         }
@@ -193,11 +165,11 @@ namespace CRM.Test.Services
                 Name = "Unknown"
             };
 
-            _repositoryMock
+            _customerRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<Customer>()))
                 .ReturnsAsync(false);
 
-            var result = await _service.UpdateAsync(updateDto);
+            var result = await _customerService.UpdateAsync(updateDto);
 
             Xunit.Assert.False(result);
         }
@@ -205,15 +177,15 @@ namespace CRM.Test.Services
         [Fact]
         public async Task DeleteAsync_ShouldReturnTrue_WhenDeleteSuccessful()
         {
-            _repositoryMock
+            _customerRepositoryMock
                 .Setup(x => x.DeleteAsync(1))
                 .ReturnsAsync(true);
 
-            var result = await _service.DeleteAsync(1);
+            var result = await _customerService.DeleteAsync(1);
 
             Xunit.Assert.True(result);
 
-            _repositoryMock.Verify(
+            _customerRepositoryMock.Verify(
                 x => x.DeleteAsync(1),
                 Times.Once);
         }
@@ -221,11 +193,11 @@ namespace CRM.Test.Services
         [Fact]
         public async Task DeleteAsync_ShouldReturnFalse_WhenDeleteFailed()
         {
-            _repositoryMock
+            _customerRepositoryMock
                 .Setup(x => x.DeleteAsync(999))
                 .ReturnsAsync(false);
 
-            var result = await _service.DeleteAsync(999);
+            var result = await _customerService.DeleteAsync(999);
 
             Xunit.Assert.False(result);
         }

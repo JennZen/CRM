@@ -129,6 +129,14 @@
         margin-bottom: 28px;
     }
 
+    ```css
+    .status-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+    }
+
     .status-pill {
         border: 1px solid var(--border);
         background: var(--pill-inactive-bg);
@@ -138,13 +146,53 @@
         font-size: .85rem;
         font-weight: 500;
         cursor: pointer;
+        transition: all .18s ease;
     }
 
-        .status-pill.active {
+        .status-pill:hover {
             background: #fff;
-            color: var(--pill-active-fg);
-            border-color: var(--pill-active-border);
-            font-weight: 600;
+            border-color: #d5cfbf;
+            transform: translateY(-1px);
+        }
+
+        /* New */
+        .status-pill:nth-child(1).active {
+            background: #fff7dc;
+            color: #9a7415;
+            border-color: #e8d28a;
+            box-shadow: 0 2px 8px rgba(154, 116, 21, .10);
+        }
+
+        /* Active */
+        .status-pill:nth-child(2).active {
+            background: #edf3ff;
+            color: #4c6fb1;
+            border-color: #b9cbed;
+            box-shadow: 0 2px 8px rgba(76, 111, 177, .10);
+        }
+
+        /* Finished */
+        .status-pill:nth-child(3).active {
+            background: #edf6e8;
+            color: #557a3d;
+            border-color: #bdd5ac;
+            box-shadow: 0 2px 8px rgba(85, 122, 61, .10);
+        }
+
+        /* Solved */
+        .status-pill:nth-child(4).active {
+            background: #f2edfa;
+            color: #76589e;
+            border-color: #cfbee6;
+            box-shadow: 0 2px 8px rgba(118, 88, 158, .10);
+        }
+
+        /* Rejected */
+        .status-pill:nth-child(5).active {
+            background: #faeeee;
+            color: #a45b5b;
+            border-color: #e4c1c1;
+            box-shadow: 0 2px 8px rgba(164, 91, 91, .10);
         }
 
     .panel {
@@ -303,12 +351,28 @@
         <button type="button" class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#editRequestModal">Edit</button>
     </div>
 
-    <div class="status-tabs">
-        <button type="button" class="status-pill active">New</button>
-        <button type="button" class="status-pill">In Progress</button>
-        <button type="button" class="status-pill">Resolved</button>
-        <button type="button" class="status-pill">Closed</button>
-    </div>
+    <form asp-controller="Request" asp-action="ChangeStatus" asp-route-id="@Model.Request?.Id" method="post" class="status-tabs">
+        <button type="submit" name="status" value="New"
+                class="status-pill @(Model.Request?.Status.ToString() == "New" ? "active" : "")">
+            New
+        </button>
+        <button type="submit" name="status" value="Active"
+                class="status-pill @(Model.Request?.Status.ToString() == "Active" ? "active" : "")">
+            Active
+        </button>
+        <button type="submit" name="status" value="Finished"
+                class="status-pill @(Model.Request?.Status.ToString() == "Finished" ? "active" : "")">
+            Finished
+        </button>
+        <button type="submit" name="status" value="Solved"
+                class="status-pill @(Model.Request?.Status.ToString() == "Solved" ? "active" : "")">
+            Solved
+        </button>
+        <button type="submit" name="status" value="Rejected"
+                class="status-pill @(Model.Request?.Status.ToString() == "Rejected" ? "active" : "")">
+            Rejected
+        </button>
+    </form>
 
     <div class="row g-4">
         <div class="col-lg-5">
@@ -318,9 +382,11 @@
                 <div class="description-text">@Model.Request?.Description</div>
 
                 <div class="form-label-sm">Responsible Manager</div>
-                <select class="form-select">
-                    <option selected>Ana Moraru</option>
-                    <option>Viktor Railyan</option>
+                <select class="form-select" disabled>
+                    @foreach (var m in Model.Managers)
+                    {
+                        <option value="@m.Value" selected="@(m.Text == Model.Request?.Manager)">@m.Text</option>
+                    }
                 </select>
             </div>
         </div>
@@ -378,11 +444,10 @@
     </div>
 </div>
 
-<!-- Edit Request Modal -->
 <div class="modal fade" id="editRequestModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="#">
+            <form asp-controller="Request" asp-action="Update" asp-route-id="@Model.Request?.Id" method="post">
                 <div class="modal-header">
                     <div>
                         <div class="modal-eyebrow"><span class="dot"></span> EDITING</div>
@@ -393,39 +458,43 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
+                        <input type="hidden" name="Id" value="@Model.Request?.Id" />
                         <div class="col-12">
                             <div class="form-label-sm">Client *</div>
-                            <select name="ClientId" class="form-select">
-                                <option selected>Vinia Trade SRL</option>
-                                <option>Nord Logistics LLC</option>
-                                <option>Bravo Group ICS</option>
+                            <select name="CustomerId" class="form-select">
+                                @foreach (var c in Model.Customers)
+                                {
+                                    <option value="@c.Value" selected="@(c.Text == Model.Request?.Customer)">@c.Text</option>
+                                }
                             </select>
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Subject *</div>
-                            <input type="text" name="Title" class="form-control" value="Error in personal dashboard" />
+                            <input type="text" name="Title" class="form-control" value="@Model.Request?.Title" />
                         </div>
                         <div class="col-12">
                             <div class="form-label-sm">Description</div>
-                            <textarea name="Description" class="form-control" rows="3">Login page returns a 500 error.</textarea>
+                            <textarea name="Description" class="form-control" rows="3">@Model.Request?.Description</textarea>
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Priority</div>
                             <select name="Priority" class="form-select">
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option selected>High</option>
+                                <option value="0" selected="@(Model.Request?.Priority.ToString() == "Low")">Low</option>
+                                <option value="1" selected="@(Model.Request?.Priority.ToString() == "Medium")">Medium</option>
+                                <option value="2" selected="@(Model.Request?.Priority.ToString() == "High")">High</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <div class="form-label-sm">Manager</div>
                             <select name="ManagerId" class="form-select">
-                                <option selected>Ana Moraru</option>
-                                <option>Viktor Railyan</option>
+                                @foreach (var m in Model.Managers)
+                                {
+                                    <option value="@m.Value" selected="@(m.Text == Model.Request?.Manager)">@m.Text</option>
+                                }
                             </select>
                         </div>
                     </div>
-                    <div class="hint-note"><span class="dot"></span> New request gets "New" status automatically</div>
+                    <div class="hint-note"><span class="dot"></span> Status stays unchanged when editing details</div>
                 </div>
                 <div class="modal-footer justify-content-end">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>

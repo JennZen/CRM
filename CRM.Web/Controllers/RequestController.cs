@@ -53,18 +53,54 @@ namespace CRM.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
+            var customers = await _customerApiClient.GetAllAsync();
+            var managers = await _userApiClient.GetAllAsync();
+
             var model = new RequestDetailsViewModel()
             {
                 Request = await _requestApiClient.GetByIdAsync(id),
+                Customers = customers.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Managers = managers.Select(m => new SelectListItem
+                {
+                    Value = m.Id.ToString(),
+                    Text = $"{m.FirstName} {m.LastName}"
+                }).ToList(),
             };
 
             return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Create(RequestCreateDto dto)
         {
             await _requestApiClient.CreateAsync(dto);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, RequestUpdateDto dto)
+        {
+            dto.Id = id;
+            var success = await _requestApiClient.UpdateAsync(id, dto);
+
+            if (!success)
+            {
+                TempData["Error"] = "Failed to update request.";
+            }
+
+            return RedirectToAction("Details", new { id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(int id, Status status)
+        {
+            await _requestApiClient.ChangeRequestStatusAsync(id, status);
+
+            return RedirectToAction("Details", new { id });
         }
     }
 }

@@ -153,10 +153,24 @@ namespace CRM.DataAccess.Repositories
 
         public async Task<bool> UpdateAsync(Request request)
         {
-            if(request == null) return false;
+            if (request == null) return false;
 
             var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(request.Id);
             if (requestDb == null) return false;
+
+            if (request.CustomerId != 0)
+            {
+                var customerDb = await _uow.GetObjectByKeyAsync<CustomerDb>(request.CustomerId);
+                if (customerDb == null) return false;
+                requestDb.Customer = customerDb;
+            }
+
+            if (request.ManagerId != 0)
+            {
+                var managerDb = await _uow.GetObjectByKeyAsync<UserDb>(request.ManagerId);
+                if (managerDb == null) return false;
+                requestDb.Manager = managerDb;
+            }
 
             requestDb.UpdatedAt = DateTime.Now;
             requestDb.Title = request.Title;

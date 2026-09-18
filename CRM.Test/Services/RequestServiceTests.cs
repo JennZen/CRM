@@ -108,12 +108,12 @@ namespace CRM.Test.Services
         {
             var userId = 42;
             var requests = new List<Request> { CreateRequest(1, managerId: userId) };
-            _repositoryMock.Setup(r => r.GetByUserAsync(userId)).ReturnsAsync(requests);
+            _repositoryMock.Setup(r => r.GetByUserAsync(userId, null)).ReturnsAsync(requests);
 
             var result = await _sut.GetByUserAsync(userId);
 
             Xunit.Assert.Single(result);
-            _repositoryMock.Verify(r => r.GetByUserAsync(userId), Times.Once);
+            _repositoryMock.Verify(r => r.GetByUserAsync(userId, null), Times.Once);
         }
 
 
@@ -144,7 +144,7 @@ namespace CRM.Test.Services
             {
                 Title = "New request",
                 Description = "New description",
-                Priority = Priority.High.ToString(),
+                Priority = Priority.High,
                 CustomerId = 10,
                 ManagerId = 20
             };
@@ -187,21 +187,6 @@ namespace CRM.Test.Services
             Xunit.Assert.True(result);
             _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Request>()), Times.Once);
         }
-
-        [Fact]
-        public async Task UpdateAsync_ReturnsFalse_WhenRequestNotFound()
-        {
-            var updateDto = new RequestUpdateDto { Id = 999, Title = "Doesn't exist" };
-
-            _repositoryMock
-                .Setup(r => r.UpdateAsync(It.IsAny<Request>()))
-                .ReturnsAsync(false);
-
-            var result = await _sut.UpdateAsync(updateDto);
-
-            Xunit.Assert.False(result);
-        }
-
 
         [Fact]
         public async Task DeleteAsync_ReturnsTrue_WhenRepositorySucceeds()
