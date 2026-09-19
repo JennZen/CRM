@@ -21,5 +21,7 @@ namespace CRM.Web.Interfaces
         public Task<bool> UpdateAsync(int id, RequestUpdateDto dto);
 
         public Task<bool> ChangeRequestStatusAsync(int id, Status status);
+
+        public Task<bool> SetRequestManagerAsync(int id, int managerId);
     }
 }

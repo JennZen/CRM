@@ -125,5 +125,13 @@ namespace CRM.Web.Services
             var response = await _httpClient.PutAsJsonAsync($"api/request/{id}/status", status);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> SetRequestManagerAsync(int id, int managerId)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PutAsJsonAsync($"api/request/{id}/manager", managerId);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

@@ -105,5 +105,13 @@ namespace CRM.Web.Controllers
 
             return RedirectToAction("Details", new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SetManager(int id, int managerId)
+        {
+            await _requestApiClient.SetRequestManagerAsync(id, managerId);
+
+            return RedirectToAction("Details", new { id });
+        }
     }
 }

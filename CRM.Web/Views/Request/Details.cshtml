@@ -211,6 +211,44 @@
         margin-bottom: 24px;
     }
 
+    .manager-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: #fff;
+    }
+
+    .manager-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--accent-dark);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: .95rem;
+        flex-shrink: 0;
+    }
+
+    .manager-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .manager-name {
+        font-weight: 600;
+    }
+
+    .manager-role {
+        font-size: .78rem;
+        color: var(--muted);
+    }
+
     .form-label-sm {
         font-size: .72rem;
         letter-spacing: .08em;
@@ -382,12 +420,15 @@
                 <div class="description-text">@Model.Request?.Description</div>
 
                 <div class="form-label-sm">Responsible Manager</div>
-                <select class="form-select" disabled>
-                    @foreach (var m in Model.Managers)
-                    {
-                        <option value="@m.Value" selected="@(m.Text == Model.Request?.Manager)">@m.Text</option>
-                    }
-                </select>
+
+                <div class="manager-card">
+                    <div class="manager-avatar">
+                        @(string.IsNullOrEmpty(Model.Request?.Manager) ? "?" : Model.Request.Manager.Substring(0, 1).ToUpper())
+                    </div>
+                    <div class="manager-info">
+                        <div class="manager-name">@(Model.Request?.Manager ?? "Unassigned")</div>
+                    </div>
+                </div>
             </div>
         </div>
 
