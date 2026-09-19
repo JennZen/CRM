@@ -1,8 +1,10 @@
-﻿using CRM.Web.Models;
+﻿using CRM.Domain.Enums;
+using CRM.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace CRM.Web.ViewComponents
 {
@@ -31,10 +33,19 @@ namespace CRM.Web.ViewComponents
         {
             AttachToken();
 
+            var role = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value ?? "";
+
             var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
             var customersCount = await _httpClient.GetFromJsonAsync<int>("api/customer/count");
-            var requestsCount = await _httpClient.GetFromJsonAsync<int>("api/request/my/count");
-            var userCount = await _httpClient.GetFromJsonAsync<int>("api/user/count");
+
+            int requestsCount = 0, userCount = 0;
+
+            if(role == UserRole.Admin.ToString())
+            {
+                requestsCount = await _httpClient.GetFromJsonAsync<int>("api/request/count");
+                userCount = await _httpClient.GetFromJsonAsync<int>("api/user/count");
+            }
+            else requestsCount = await _httpClient.GetFromJsonAsync<int>("api/request/my/count");
 
             return View(new SidebarCountsViewModel() 
             { 

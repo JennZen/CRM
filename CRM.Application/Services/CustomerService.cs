@@ -37,15 +37,15 @@ namespace CRM.Application.Services
             return _customerMapper.ToDetailsDtos(customers);
         }
 
-        public async Task<List<CustomerListDto>> GetAllCardsAsync(int userId, string? search = null)
+        public async Task<List<CustomerListDto>> GetAllCardsAsync(string? search = null)
         {
             var customers = await _customerRepository.GetAllAsync(search);
             var dtos = _customerMapper.ToListDtos(customers);
 
             foreach(var dto in dtos)
             {
-                dto.NumberOfRequests = await _requestRepository.CountByUserAndStatusAsync(userId, null);
-                dto.NumberOfActiveRequests = await _requestRepository.CountByUserAndStatusAsync(userId, Status.Active);
+                dto.NumberOfRequests = await _requestRepository.CountByCustomerAndStatusAsync(dto.Id, null);
+                dto.NumberOfActiveRequests = await _requestRepository.CountByCustomerAndStatusAsync(dto.Id, Status.Active);
             }
 
             return dtos;

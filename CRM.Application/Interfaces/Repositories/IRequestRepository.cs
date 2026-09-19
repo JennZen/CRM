@@ -23,6 +23,8 @@ namespace CRM.Application.Interfaces.Repositories
 
         public Task<int> CountByUserAndStatusAsync(int userId, Status? status);
 
+        public Task<int> CountByCustomerAndStatusAsync(int customerId, Status? status);
+
         public Task<bool> AddAsync(Request request);
         
         public Task<bool> UpdateAsync(Request request);

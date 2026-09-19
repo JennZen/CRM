@@ -76,6 +76,18 @@ namespace CRM.DataAccess.Repositories
             return await query.CountAsync();
         }
 
+        public async Task<int> CountByCustomerAndStatusAsync(int customerId, Status? status)
+        {
+            var query = _uow.Query<RequestDb>().Where(r => r.Customer.Oid == customerId);
+
+            if (status.HasValue)
+            {
+                query = query.Where(r => r.Status == status);
+            }
+
+            return await query.CountAsync();
+        }
+
         public async Task<List<Request>> GetRecentByUserAsync(int userId, int n = 10)
         {
             var requests = await _uow.Query<RequestDb>().

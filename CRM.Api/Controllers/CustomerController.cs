@@ -29,9 +29,7 @@ namespace CRM.Api.Controllers
         [HttpGet("cards")]
         public async Task<IActionResult> GetAllCustomerCardsAsync([FromQuery] string? search)
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-            var customers = await _customerService.GetAllCardsAsync(userId, search);
+            var customers = await _customerService.GetAllCardsAsync(search);
             return Ok(customers);
         }
 
