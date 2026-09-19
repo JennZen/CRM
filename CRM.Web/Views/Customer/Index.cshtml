@@ -102,6 +102,26 @@
             color: #fff;
         }
 
+    .badge-archived {
+        background: var(--red-bg);
+        color: var(--red);
+        font-size: .76rem;
+        font-weight: 600;
+        padding: .3rem .65rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        margin-bottom: .5rem;
+    }
+
+    .client-card.archived {
+        background: #f0efec;
+        filter: grayscale(1);
+        opacity: .85;
+    }
+
     .client-card {
         background: var(--card);
         border: 1px solid var(--line);
@@ -371,7 +391,7 @@
                 <circle cx="12" cy="7" r="4" />
             </svg>
             <div class="fs-5 fw-medium mb-1">No clients yet</div>
-            <div class="subtitle mb-3">Add your first customers to get started.</div>
+            <div class="subtitle mb-3">Add your first clients to get started.</div>
         </div>
     }
     else
@@ -381,7 +401,13 @@
             {
                 <div class="col-12 col-lg-6">
                     <a asp-controller="Customer" asp-action="Details" asp-route-id="@card.Id" class="text-decoration-none text-reset">
-                        <div class="client-card">
+                        <div class="client-card @(card.IsArchived ? "archived" : "")">
+
+                            @if (card.IsArchived)
+                            {
+                                <span class="badge-archived">Archived</span>
+                            }
+
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <div class="client-name">@card.Name</div>
@@ -408,7 +434,7 @@
                             </div>
                         </div>
                     </a>
-                </div>       
+                </div>
             }
         </div>
     }

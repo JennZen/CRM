@@ -15,6 +15,8 @@ namespace CRM.Application.Interfaces.Repositories
 
         public Task<int> CountAsync();
 
+        public Task ArchiveAsync(int id);
+
         public Task<Customer> CreateAsync(Customer customer);
 
         public Task<bool> UpdateAsync(Customer customer);   

@@ -55,6 +55,15 @@ namespace CRM.DataAccess.Repositories
             return await _uow.Query<CustomerDb>().CountAsync();
         }
 
+        public async Task ArchiveAsync(int id)
+        {
+            var existingCustomer = await _uow.GetObjectByKeyAsync<CustomerDb>(id);
+            if (existingCustomer == null) return;
+
+            existingCustomer.IsArchived = true;
+            await _uow.CommitChangesAsync();
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var existingCustomer = await _uow.GetObjectByKeyAsync<CustomerDb>(id);
@@ -72,6 +81,7 @@ namespace CRM.DataAccess.Repositories
             var existingCustomer = await _uow.GetObjectByKeyAsync<CustomerDb>(customer.Id);
             if (existingCustomer == null) return false;
 
+            existingCustomer.IsArchived = customer.IsArchived;
             existingCustomer.Name = customer.Name;
             existingCustomer.Email = customer.Email;
             existingCustomer.Telephone = customer.Telephone;

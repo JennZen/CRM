@@ -10,6 +10,8 @@ namespace CRM.Domain.Entities
     {
         public int Id { get; set; }
 
+        public bool IsArchived { get; set; } = false;
+
         public string Name { get; set; } = string.Empty;
 
         public string ContactPerson { get; set; } = string.Empty;

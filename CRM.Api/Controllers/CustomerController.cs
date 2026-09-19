@@ -53,6 +53,13 @@ namespace CRM.Api.Controllers
             return Ok(count);
         }
 
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> ArchiveCustomerAsync(int id)
+        {
+            await _customerService.ArchiveAsync(id);
+            return NoContent();
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerCreateDto customerCreateDto)
         {

@@ -14,6 +14,14 @@ namespace CRM.DataAccess.Models
     {
         public CustomerDb(Session session) : base(session) { }
 
+        private bool _isArchived = false;
+
+        public bool IsArchived
+        {
+            get => _isArchived;
+            set => SetPropertyValue(nameof(IsArchived), ref _isArchived, value);
+        }
+
         private string _name = string.Empty;
 
         [Size(255)]

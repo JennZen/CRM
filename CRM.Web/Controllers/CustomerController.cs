@@ -80,5 +80,13 @@ namespace CRM.Web.Controllers
 
             return RedirectToAction("Details", new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Archive(int id)
+        {
+            await _customerApiClient.ArchiveAsync(id);
+
+            return RedirectToAction("Details", new { id });
+        }
     }
 }

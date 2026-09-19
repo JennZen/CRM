@@ -18,6 +18,8 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<int> CountAsync();
 
+        public Task ArchiveAsync(int id);
+
         public Task<CustomerDetailsDto> CreateAsync(CustomerCreateDto customer);
 
         public Task<bool> UpdateAsync(CustomerUpdateDto customer);

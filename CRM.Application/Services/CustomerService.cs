@@ -69,6 +69,11 @@ namespace CRM.Application.Services
             return await _customerRepository.CountAsync();
         }
 
+        public async Task ArchiveAsync(int id)
+        {
+            await _customerRepository.ArchiveAsync(id);
+        }
+
         public async Task<CustomerDetailsDto> CreateAsync(CustomerCreateDto customer)
         {
             var domainCustomer = _customerMapper.ToDomain(customer);

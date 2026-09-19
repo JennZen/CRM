@@ -85,5 +85,13 @@ namespace CRM.Web.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<int>();
         }
+
+        public async Task<bool> ArchiveAsync(int id)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PatchAsync($"api/customer/{id}", null);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

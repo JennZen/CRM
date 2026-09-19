@@ -16,5 +16,7 @@ namespace CRM.Web.Interfaces
         public Task<bool> UpdateAsync(int id, CustomerUpdateDto dto);
 
         public Task<int> CountCustomersAsync();
+
+        public Task<bool> ArchiveAsync(int id);
     }
 }
