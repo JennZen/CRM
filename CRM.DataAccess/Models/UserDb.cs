@@ -15,6 +15,14 @@ namespace CRM.DataAccess.Models
     {
         public UserDb(Session session) : base(session) { }
 
+        private bool _isActive = true;
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetPropertyValue(nameof(IsActive), ref _isActive, value);
+        }
+
         private string _firstName = string.Empty;
         [Size(100)]
         public string FirstName

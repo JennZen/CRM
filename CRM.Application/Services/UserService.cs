@@ -47,6 +47,7 @@ namespace CRM.Application.Services
         public async Task<bool> UpdateAsync(UserUpdateDto dto)
         {
             var user = _userMapper.ToDomain(dto);
+            user.Role = dto.Role;
 
             return await _userRepository.UpdateAsync(user);
         }
@@ -62,6 +63,11 @@ namespace CRM.Application.Services
             if (user == null) return null;
 
             return _userMapper.ToDetailsDto(user);
+        }
+
+        public async Task DeactivateAsync(int userId)
+        {
+            await _userRepository.DeactivateAsync(userId);
         }
 
         public async Task<List<UserDetailsDto>> GetAllAsync()

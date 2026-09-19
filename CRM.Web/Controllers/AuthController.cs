@@ -21,8 +21,6 @@ namespace CRM.Web.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-           //if (User.Identity is { IsAuthenticated: true }) return RedirectToAction("Index", "Dashboard");
-
             return View(new LoginViewModel());
         }
 

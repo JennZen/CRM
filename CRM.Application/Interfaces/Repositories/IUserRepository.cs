@@ -15,6 +15,8 @@ namespace CRM.Application.Interfaces.Repositories
 
         public Task<bool> DeleteAsync(int userId);
 
+        public Task DeactivateAsync(int userId);
+
         public Task<User?> GetByIdAsync(int userId);
 
         public Task<int> CountAsync();

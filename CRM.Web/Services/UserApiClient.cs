@@ -66,6 +66,22 @@ namespace CRM.Web.Services
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> DeactivateAsync(int id)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PatchAsync($"api/user/{id}", null);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> UpdateAsync(int id, UserUpdateDto dto)
+        {
+            AttachToken();
+
+            var response = await _httpClient.PutAsJsonAsync($"api/user/{id}", dto);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<int> CountUsersAsync()
         {
             AttachToken();

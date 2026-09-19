@@ -124,6 +124,24 @@
         color: var(--muted);
     }
 
+    .badge-active {
+        background: var(--green-bg);
+        color: var(--green);
+    }
+
+        .badge-active .dot {
+            background: var(--green);
+        }
+
+    .badge-inactive {
+        background: var(--red-bg);
+        color: var(--red);
+    }
+
+        .badge-inactive .dot {
+            background: var(--red);
+        }
+
     .badge-role {
         font-size: .76rem;
         font-weight: 500;
@@ -386,6 +404,7 @@
                         <th>Last name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -399,6 +418,11 @@
                             <td>
                                 <span class="badge-role @(user.Role.ToString() == "Admin" ? "badge-admin" : "badge-manager")">
                                     <span class="dot"></span>@user.Role
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-role @(user.IsActive ? "badge-active" : "badge-inactive")">
+                                    <span class="dot"></span>@(user.IsActive ? "Active" : "Deactivated")
                                 </span>
                             </td>
                             <td>
@@ -494,7 +518,7 @@
                         </button>
                     </div>
 
-                    <form method="post" asp-controller="User" asp-action="Edit">
+                    <form method="post" asp-controller="User" asp-action="Update" asp-route-id="@user.Id">
                         <input type="hidden" name="Id" value="@user.Id" />
                         <div class="modal-body">
 
@@ -517,8 +541,8 @@
                             <div class="field-group mb-0">
                                 <label class="field-label" for="editRole-@user.Id">Role</label>
                                 <select class="form-select" id="editRole-@user.Id" name="Role">
-                                    <option value="Manager" selected="@(user.Role.ToString() == "Manager")">Manager</option>
-                                    <option value="Admin" selected="@(user.Role.ToString() == "Admin")">Admin</option>
+                                    <option value="0" selected="@(user.Role.ToString() == "Manager")">Manager</option>
+                                    <option value="1" selected="@(user.Role.ToString() == "Admin")">Admin</option>
                                 </select>
                             </div>
 
@@ -544,19 +568,19 @@
                         </button>
                     </div>
 
-                    <form method="post" asp-controller="User" asp-action="Delete">
+                    <form method="post" asp-controller="User" asp-action="Deactivate" asp-route-id="@user.Id">
                         <input type="hidden" name="Id" value="@user.Id" />
                         <div class="modal-body">
                             <div class="delete-icon-wrap">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
                             </div>
                             <p class="mb-0">
-                                Are you sure you want to delete <strong>@user.FirstName @user.LastName</strong>? This action cannot be undone.
+                                Are you sure you want to deactivate <strong>@user.FirstName @user.LastName</strong>? This action cannot be undone.
                             </p>
                         </div>
                         <div class="modal-footer-custom">
                             <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn-delete">Delete user</button>
+                            <button type="submit" class="btn-delete">Deactivate user</button>
                         </div>
                     </form>
 

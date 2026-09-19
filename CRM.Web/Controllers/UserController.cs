@@ -29,12 +29,19 @@ namespace CRM.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        /*[HttpPost]
-        public async Task<IActionResult> Update(UserUpdateDto dto)
+        [HttpPost]
+        public async Task<IActionResult> Update(int id, UserUpdateDto dto)
         {
-            var result = await _userApiClient.
-        }*/
+            var result = await _userApiClient.UpdateAsync(id, dto);
 
+            return RedirectToAction("Index");
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Deactivate(int id)
+        {
+            var result = await _userApiClient.DeactivateAsync(id);
+            return RedirectToAction("Index");
+        }
     }
 }

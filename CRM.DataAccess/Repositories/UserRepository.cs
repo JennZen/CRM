@@ -4,6 +4,7 @@ using CRM.DataAccess.Models;
 using CRM.Domain.Entities;
 using DevExpress.Data;
 using DevExpress.Xpo;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,16 @@ namespace CRM.DataAccess.Repositories
             return true;
         }
 
+        public async Task DeactivateAsync(int userId)
+        {
+            var userDb = await _uow.GetObjectByKeyAsync<UserDb>(userId);
+
+            if (userDb == null) return;
+
+            userDb.IsActive = false;
+            await _uow.CommitChangesAsync();
+        }
+
         public async Task<bool> AddAsync(User user)
         {
             if (user == null) return false;
@@ -94,8 +105,10 @@ namespace CRM.DataAccess.Repositories
             if(userDb == null) return false;
 
             userDb.PasswordHash = user.PasswordHash;
+            userDb.IsActive = user.IsActive;
             userDb.LastName = user.LastName;
             userDb.FirstName = user.FirstName;
+            userDb.Role = user.Role;
             userDb.Email = user.Email;
             userDb.UpdatedAt = DateTime.Now;
 

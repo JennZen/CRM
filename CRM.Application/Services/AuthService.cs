@@ -33,6 +33,8 @@ namespace CRM.Application.Services
             var user = await _userRepository.GetByEmailAsync(dto.Email);
             if (user == null) return null;
 
+            if (user.IsActive == false) return null;
+
             var isValid = _hasherService.VerifyPassword(dto.Password, user.PasswordHash);
             if(!isValid) return null;
 

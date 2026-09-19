@@ -55,6 +55,15 @@ namespace CRM.Api.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> DeactivateUserAsync(int id)
+        {
+            await _userService.DeactivateAsync(id);
+
+            return NoContent();
+        }
+
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] UserUpdateDto dto)
         {

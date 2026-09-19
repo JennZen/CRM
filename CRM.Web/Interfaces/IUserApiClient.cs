@@ -12,6 +12,10 @@ namespace CRM.Web.Interfaces
 
         public Task<bool> CreateAsync(UserCreateDto dto);
 
+        public Task<bool> UpdateAsync(int id, UserUpdateDto dto);
+
+        public Task<bool> DeactivateAsync(int id);
+
         public Task<int> CountUsersAsync();
     }
 }
