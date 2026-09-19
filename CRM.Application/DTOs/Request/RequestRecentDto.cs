@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CRM.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace CRM.Application.DTOs.Request
 
         public string Title { get; set; } = string.Empty;
 
-        public string Status { get; set; } = string.Empty;
+        public Status Status { get; set; }
 
         public string Manager { get; set; } = string.Empty;
 

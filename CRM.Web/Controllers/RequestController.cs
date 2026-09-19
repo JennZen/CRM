@@ -29,10 +29,13 @@ namespace CRM.Web.Controllers
         {
             var customers = await _customerApiClient.GetAllAsync();
             var managers = await _userApiClient.GetAllAsync();
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
 
             var model = new RequestIndexViewModel()
-            { 
-                AllRequests = await _requestApiClient.GetMyRequestsAsync(status),
+            {
+                AllRequests = (role == UserRole.Admin.ToString())
+                              ? await _requestApiClient.GetAllAsync(status)
+                              : await _requestApiClient.GetMyRequestsAsync(status),
                 NumberOfRequests = await _requestApiClient.CountRequestsAsync(null),
                 CurrentStatus = status,
                 Customers = customers.Select(c => new SelectListItem

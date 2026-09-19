@@ -11,7 +11,7 @@ namespace CRM.Application.Interfaces.Repositories
 {
     public interface IRequestRepository
     {
-        public Task<List<Request>> GetAllAsync();
+        public Task<List<Request>> GetAllAsync(Status? status = null);
 
         public Task<Request?> GetByIdAsync(int id);
 

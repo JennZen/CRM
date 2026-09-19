@@ -11,7 +11,7 @@ namespace CRM.Application.Interfaces.Services
 {
     public interface IRequestService
     {
-        public Task<List<RequestListDto>> GetAllAsync();
+        public Task<List<RequestListDto>> GetAllAsync(Status? status = null);
 
         public Task<RequestDetailsDto?> GetByIdAsync(int id);
 

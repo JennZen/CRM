@@ -21,9 +21,9 @@ namespace CRM.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRequestsAsync()
+        public async Task<IActionResult> GetAllRequestsAsync(Status? status = null)
         {
-            var requests = await _requestService.GetAllAsync();
+            var requests = await _requestService.GetAllAsync(status);
             return Ok(requests);
         }
 

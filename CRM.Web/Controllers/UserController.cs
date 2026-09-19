@@ -1,9 +1,11 @@
 ﻿using CRM.Application.DTOs.User;
 using CRM.Web.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRM.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserApiClient _userApiClient;
@@ -26,6 +28,12 @@ namespace CRM.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        /*[HttpPost]
+        public async Task<IActionResult> Update(UserUpdateDto dto)
+        {
+            var result = await _userApiClient.
+        }*/
 
 
     }

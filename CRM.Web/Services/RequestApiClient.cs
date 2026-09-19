@@ -28,11 +28,17 @@ namespace CRM.Web.Services
             }
         }
 
-        public async Task<List<RequestDetailsDto>?> GetAllAsync()
+        public async Task<List<RequestDetailsDto>?> GetAllAsync(Status? status = null)
         {
             AttachToken();
 
-            var response = await _httpClient.GetAsync("api/request");
+            var url = "api/request";
+
+            if (status.HasValue)
+                url += $"?status={status}";
+
+            var response = await _httpClient.GetAsync(url);
+
 
             if (!response.IsSuccessStatusCode) return null;
 

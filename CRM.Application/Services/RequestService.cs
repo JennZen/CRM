@@ -24,9 +24,9 @@ namespace CRM.Services.Services
             _requestMapper = requestMapper;
         }
 
-        public async Task<List<RequestListDto>> GetAllAsync()
+        public async Task<List<RequestListDto>> GetAllAsync(Status? status = null)
         {
-            var requests = await _requestRepository.GetAllAsync();
+            var requests = await _requestRepository.GetAllAsync(status);
 
             return _requestMapper.ToListDtos(requests);
         }

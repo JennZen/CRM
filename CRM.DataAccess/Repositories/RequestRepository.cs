@@ -25,10 +25,18 @@ namespace CRM.DataAccess.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<Request>> GetAllAsync()
+        public async Task<List<Request>> GetAllAsync(Status? status = null)
         {
-            var requests = await _uow.Query<RequestDb>().ToListAsync();
-            return _mapper.ToDomains(requests);
+            if(status == null)
+            {
+                var requests = await _uow.Query<RequestDb>().ToListAsync();
+                return _mapper.ToDomains(requests);
+            }
+            else 
+            {
+                var requests = await _uow.Query<RequestDb>().Where(r => r.Status == status).ToListAsync();
+                return _mapper.ToDomains(requests);
+            }   
         }
 
         public async Task<Request?> GetByIdAsync(int id)

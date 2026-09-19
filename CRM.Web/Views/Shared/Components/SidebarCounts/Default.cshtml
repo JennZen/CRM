@@ -1,4 +1,6 @@
-﻿@model SidebarCountsViewModel
+﻿@using System.Security.Claims
+@using CRM.Domain.Enums
+@model SidebarCountsViewModel
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
@@ -15,11 +17,17 @@
             <span class="badge rounded-pill badge-count">@Model.RequestsCount</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link d-flex justify-content-between @(Model.CurrentController.Equals("User", StringComparison.OrdinalIgnoreCase) ? "active" : "")"
-           asp-controller="User" asp-action="Index">
-            <span><i class="bi bi-person-badge me-2"></i>Users</span>
-            <span class="badge rounded-pill badge-count">@Model.UserCount</span>
-        </a>
-    </li>
+    @{
+        var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "";
+        if(role == UserRole.Admin.ToString())
+        {
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between @(Model.CurrentController.Equals("User", StringComparison.OrdinalIgnoreCase) ? "active" : "")"
+                   asp-controller="User" asp-action="Index">
+                    <span><i class="bi bi-person-badge me-2"></i>Users</span>
+                    <span class="badge rounded-pill badge-count">@Model.UserCount</span>
+                </a>
+            </li>
+        }
+    }
 </ul>

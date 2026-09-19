@@ -6,7 +6,7 @@ namespace CRM.Web.Interfaces
 {
     public interface IRequestApiClient
     {
-        public Task<List<RequestDetailsDto>?> GetAllAsync();
+        public Task<List<RequestDetailsDto>?> GetAllAsync(Status? status = null);
 
         public Task<RequestDetailsDto?> GetByIdAsync(int id);
 

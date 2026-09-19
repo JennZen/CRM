@@ -16,9 +16,9 @@ namespace CRM.Application.DTOs.Request
 
         public string Description { get; set; } = string.Empty;
 
-        public string Status { get; set; } = string.Empty;
+        public Status Status { get; set; }
 
-        public string Priority { get; set; } = string.Empty;
+        public Priority Priority { get; set; } 
 
         public string Customer { get; set; } = string.Empty;
 

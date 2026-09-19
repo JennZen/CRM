@@ -4,6 +4,27 @@
 @{
     ViewData["Title"] = "Requests";
 }
+
+@functions {
+    string StatusBadgeClass(Status status) => status switch
+    {
+        Status.New => "badge-new",
+        Status.Active => "badge-progress",
+        Status.Finished => "badge-finished",
+        Status.Solved => "badge-done",
+        Status.Rejected => "badge-rejected",
+        _ => "badge-new"
+    };
+
+    string PriorityBadgeClass(Priority priority) => priority switch
+    {
+        Priority.High => "priority-high",
+        Priority.Medium => "priority-medium",
+        Priority.Low => "priority-low",
+        _ => "priority-medium"
+    };
+}
+
 <style>
     :root {
         --bg: #f2efe8;
@@ -21,6 +42,8 @@
         --red-bg: #f4e2de;
         --gray: #6f6b64;
         --gray-bg: #eeece5;
+        --teal: #2f7a78;
+        --teal-bg: #e2efee;
     }
 
     body {
@@ -172,6 +195,24 @@
 
         .req-title-link:hover {
             text-decoration: underline;
+        }
+
+    .badge-finished {
+        background: var(--teal-bg);
+        color: var(--teal);
+    }
+
+        .badge-finished .dot {
+            background: var(--teal);
+        }
+
+    .badge-rejected {
+        background: var(--red-bg);
+        color: var(--red);
+    }
+
+        .badge-rejected .dot {
+            background: var(--red);
         }
 
     .badge-status {
@@ -465,13 +506,13 @@
                             <td class="req-client">@request.Customer</td>
 
                             <td>
-                                <span class="badge-status">
-                                    @request.Status
+                                <span class="badge-status @StatusBadgeClass(request.Status)">
+                                    <span class="dot"></span>@request.Status
                                 </span>
                             </td>
 
                             <td>
-                                <span class="badge-priority">
+                                <span class="badge-priority @PriorityBadgeClass(request.Priority)">
                                     @request.Priority
                                 </span>
                             </td>
@@ -509,7 +550,7 @@
 
                     <div class="field-group">
                         <label class="field-label" for="reqClient">Client <span class="req">*</span></label>
-                        <select class="form-select" id="reqClient" name="CustomerId" asp-items="Model.Customers" required>
+                        <select class="form-select" id="reqClient" name="CustomerId" asp-items="Model?.Customers" required>
                             <option value="">Select a client</option>
                         </select>
                     </div>

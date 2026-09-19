@@ -1,8 +1,22 @@
-﻿@model DashboardViewModel;
+﻿@using CRM.Domain.Enums
+@model DashboardViewModel;
 
 @{
     ViewData["Title"] = "Dashboard";
 }
+
+@functions {
+    string StatusBadgeClass(Status status) => status switch
+    {
+        Status.New => "badge-new",
+        Status.Active => "badge-progress",
+        Status.Finished => "badge-finished",
+        Status.Solved => "badge-done",
+        Status.Rejected => "badge-rejected",
+        _ => "badge-new"
+    };
+}
+
 <style>
     :root {
         --bg: #f2efe8;
@@ -298,6 +312,14 @@
             margin-right: .35rem;
         }
 
+        .badge-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: .35rem;
+        }
+
     .badge-new {
         background: var(--blue-bg);
         color: var(--blue);
@@ -323,6 +345,24 @@
 
         .badge-done .dot {
             background: var(--green);
+        }
+
+    .badge-finished {
+        background: var(--blue-bg);
+        color: var(--blue);
+    }
+
+        .badge-finished .dot {
+            background: var(--blue);
+        }
+
+    .badge-rejected {
+        background: var(--red-bg);
+        color: var(--red);
+    }
+
+        .badge-rejected .dot {
+            background: var(--red);
         }
 
     .ticket-date {
@@ -772,7 +812,7 @@
                                     <div class="ticket-title">@request.Title</div>
                                     <div class="ticket-client">@request.Customer</div>
                                 </div>
-                                <span class="badge-status"><span class="dot"></span>@request.Status</span>
+                                <span class="badge-status @StatusBadgeClass(request.Status)"><span class="dot"></span>@request.Status</span>
                                 <div class="ticket-date">
                                     @request.UpdatedAt.ToString("dd/MM/yyyy")
                                     <div class="ticket-updated">updated</div>

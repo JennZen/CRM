@@ -36,15 +36,6 @@ namespace CRM.Application.Mapping
         public partial Request ToDomain(RequestUpdateDto dto);
 
 
-        // Enum -> string
-
-        private static string MapStatus(Status status)
-            => status.ToString();
-
-        private static string MapPriority(Priority priority)
-            => priority.ToString();
-
-
         // Related entities -> string
 
         private static string MapCustomer(Customer? customer)
@@ -54,17 +45,5 @@ namespace CRM.Application.Mapping
             => manager == null
                 ? string.Empty
                 : $"{manager.FirstName} {manager.LastName}";
-
-
-        // string -> enum
-
-        private static Priority MapPriority(string priority)
-        {
-            if (Enum.TryParse<Priority>(priority, true, out var result))
-                return result;
-
-            throw new ArgumentException(
-                $"Invalid priority: {priority}");
-        }
     }
 }
