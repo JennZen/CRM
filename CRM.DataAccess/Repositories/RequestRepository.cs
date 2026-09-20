@@ -141,22 +141,49 @@ namespace CRM.DataAccess.Repositories
                 FinishedAt = null
             };
 
+            var historyEntry = new RequestHistoryDb(_uow)
+            {
+                Request = requestDb,
+                Action = "Request created.",
+                AuthorName = "System",
+                CreatedAt = DateTime.Now
+            };
+
             await _uow.CommitChangesAsync();
             return true;
         }
 
-        public async Task<bool> ChangeStatusAsync(int requestId, Status status)
+        public async Task<bool> ChangeStatusAsync(int requestId, Status status, string authorName)
         {
             var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(requestId);
 
             if (requestDb == null) return false;
 
             requestDb.Status = status;
+            requestDb.UpdatedAt = DateTime.Now;
+
+            var historyEntry = new RequestHistoryDb(_uow)
+            {
+                Request = requestDb,
+                Action = $"Status changed to \"{GetStatusDisplayName(status)}\".",
+                AuthorName = authorName,
+                CreatedAt = DateTime.Now
+            };
 
             await _uow.CommitChangesAsync();
 
             return true;
         }
+
+        private static string GetStatusDisplayName(Status status) => status switch
+        {
+            Status.New => "New",
+            Status.Active => "Active",
+            Status.Solved => "Solved",
+            Status.Finished => "Finished",
+            Status.Rejected => "Rejected",
+            _ => status.ToString()
+        };
 
         public async Task<bool> DeleteAsync(int requestId)
         {
@@ -195,7 +222,6 @@ namespace CRM.DataAccess.Repositories
             requestDb.UpdatedAt = DateTime.Now;
             requestDb.Title = request.Title;
             requestDb.Description = request.Description;
-            requestDb.Status = request.Status;
             requestDb.Priority = request.Priority;
 
             await _uow.CommitChangesAsync();
@@ -213,6 +239,17 @@ namespace CRM.DataAccess.Repositories
             requestDb.Manager = managerDb;
             await _uow.CommitChangesAsync();
             return true;
+        }
+
+        public async Task<List<RequestHistory>> GetHistoryAsync(int requestId)
+        {
+            var requestDb = await _uow.GetObjectByKeyAsync<RequestDb>(requestId);
+            if (requestDb == null) return new List<RequestHistory>();
+
+            return requestDb.History
+                .OrderByDescending(h => h.CreatedAt)
+                .Select(_mapper.ToDomain)
+                .ToList();
         }
     }
 }

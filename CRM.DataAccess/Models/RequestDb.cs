@@ -65,6 +65,9 @@ namespace CRM.DataAccess.Models
             set => SetPropertyValue(nameof(Manager), ref _manager, value);
         }
 
+        [Association("Request-History")]
+        public XPCollection<RequestHistoryDb> History => GetCollection<RequestHistoryDb>(nameof(History));
+
         private DateTime _createdAt = DateTime.Now;
         public DateTime CreatedAt
         {

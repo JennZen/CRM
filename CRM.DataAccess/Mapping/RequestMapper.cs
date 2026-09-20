@@ -4,8 +4,6 @@ using Riok.Mapperly.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CRM.DataAccess.Mapping
 {
@@ -52,9 +50,26 @@ namespace CRM.DataAccess.Mapping
                         UpdatedAt = r.Manager.UpdatedAt
                     },
 
+                History = r.History
+                    .OrderByDescending(h => h.CreatedAt)
+                    .Select(ToDomain)
+                    .ToList(),
+
                 CreatedAt = r.CreatedAt,
                 UpdatedAt = r.UpdatedAt,
                 FinishedAt = r.FinishedAt
+            };
+        }
+
+        public RequestHistory ToDomain(RequestHistoryDb h)
+        {
+            return new RequestHistory
+            {
+                Id = h.Oid,
+                RequestId = h.Request?.Oid ?? 0,
+                Action = h.Action,
+                AuthorName = h.AuthorName,
+                CreatedAt = h.CreatedAt
             };
         }
 

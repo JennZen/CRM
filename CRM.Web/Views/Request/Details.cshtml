@@ -434,54 +434,28 @@
 
         <div class="col-lg-7">
             <div class="panel">
-                <div class="panel-title">History &amp; Comments</div>
+                <div class="panel-title">History</div>
 
-                <div class="timeline-item">
-                    <span class="timeline-dot"></span>
-                    <div>
-                        <div class="timeline-text">Status changed to "New".</div>
-                        <div class="timeline-meta">You &middot; 01.09.2026</div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <span class="timeline-dot"></span>
-                    <div>
-                        <div class="timeline-text">Status changed to "Closed".</div>
-                        <div class="timeline-meta">You &middot; 01.09.2026</div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <span class="timeline-dot"></span>
-                    <div>
-                        <div class="timeline-text">Status changed to "Resolved".</div>
-                        <div class="timeline-meta">You &middot; 01.09.2026</div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <span class="timeline-dot"></span>
-                    <div>
-                        <div class="timeline-text">Status changed to "In Progress".</div>
-                        <div class="timeline-meta">Ana Moraru &middot; 30.08.2026 09:00</div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <span class="timeline-dot"></span>
-                    <div>
-                        <div class="timeline-text">Request created.</div>
-                        <div class="timeline-meta">System &middot; 25.08.2026 13:20</div>
-                    </div>
-                </div>
-
-                <div class="comment-box">
-                    <input type="text" class="form-control comment-input" placeholder="Add a comment..." />
-                    <button type="button" class="btn btn-cancel">Add</button>
-                </div>
+                @if (Model.Request?.History != null && Model.Request.History.Any())
+                {
+                    foreach (var item in Model.Request.History)
+                    {
+                        <div class="timeline-item">
+                            <span class="timeline-dot"></span>
+                            <div>
+                                <div class="timeline-text">@item.Action</div>
+                                <div class="timeline-meta">
+                            @item.AuthorName &middot; @(item.CreatedAt.ToString("dd.MM.yyyy"))
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="timeline-meta">No history yet.</div>
+                }
             </div>
-        </div>
     </div>
 </div>
 

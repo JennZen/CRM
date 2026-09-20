@@ -1,6 +1,7 @@
 ﻿using CRM.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace CRM.Domain.Entities
         public User? Manager { get; set; }
 
         public int ManagerId { get; set; }
+
+        public List<RequestHistory> History { get; set; } = new();
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

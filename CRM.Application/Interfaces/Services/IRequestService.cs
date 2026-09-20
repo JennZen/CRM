@@ -27,7 +27,7 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<bool> DeleteAsync(int requestId);
 
-        public Task<bool> ChangeStatusAsync(int requestId, Status status);
+        public Task<bool> ChangeStatusAsync(int requestId, Status status, string authorName);
 
         public Task<bool> SetManagerAsync(int requestId, int managerId);
     }

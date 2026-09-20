@@ -29,10 +29,12 @@ namespace CRM.Application.Interfaces.Repositories
         
         public Task<bool> UpdateAsync(Request request);
 
-        public Task<bool> DeleteAsync(int requestId); 
+        public Task<bool> DeleteAsync(int requestId);
 
-        public Task<bool> ChangeStatusAsync(int requestId, Status status);
+        public Task<bool> ChangeStatusAsync(int requestId, Status status, string authorName);
 
         public Task<bool> SetManagerAsync(int requestId, int managerId);
+
+        public Task<List<RequestHistory>> GetHistoryAsync(int requestId);
     }
 }

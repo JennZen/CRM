@@ -73,9 +73,9 @@ namespace CRM.Services.Services
             return await _requestRepository.DeleteAsync(requestId);
         }
 
-        public async Task<bool> ChangeStatusAsync(int requestId, Status status)
+        public async Task<bool> ChangeStatusAsync(int requestId, Status status, string authorName)
         {
-            return await _requestRepository.ChangeStatusAsync(requestId, status);
+            return await _requestRepository.ChangeStatusAsync(requestId, status, authorName);
         }
 
         public async Task<bool> SetManagerAsync(int requestId, int managerId)

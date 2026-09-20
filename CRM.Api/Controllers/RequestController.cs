@@ -113,7 +113,12 @@ namespace CRM.Api.Controllers
         [HttpPut("{id:int}/status")]
         public async Task<IActionResult> ChangeRequestStatusAsync(int id, [FromBody] Status status)
         {
-            var result = await _requestService.ChangeStatusAsync(id, status);
+
+            var firstName = User.FindFirst(ClaimTypes.GivenName)?.Value ?? "";
+            var lastName = User.FindFirst(ClaimTypes.Surname)?.Value ?? "";
+            var authorName = $"{firstName} {lastName}".ToString();
+
+            var result = await _requestService.ChangeStatusAsync(id, status, authorName);
             if (!result)
             {
                 return NotFound();

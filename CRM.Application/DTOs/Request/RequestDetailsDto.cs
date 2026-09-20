@@ -24,6 +24,8 @@ namespace CRM.Application.DTOs.Request
 
         public string Manager { get; set; } = string.Empty;
 
+        public List<RequestHistoryDto> History { get; set; } = new();
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
