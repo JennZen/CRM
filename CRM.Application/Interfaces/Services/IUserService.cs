@@ -24,6 +24,8 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<List<UserDetailsDto>> GetAllAsync();
 
+        public Task<List<UserSelectDto>> GetAllActiveAsync();
+
         public Task<List<UserWithRequestCountDto>> GetUsersWithNumberOfRequestsAsync();
     }
 }

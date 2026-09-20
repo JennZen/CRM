@@ -20,6 +20,10 @@ namespace CRM.Application.Mapping
         
         public partial List<CustomerListDto> ToListDtos(List<Customer> c);
 
+        public partial CustomerSelectDto ToSelectDto(Customer c);
+
+        public partial List<CustomerSelectDto> ToSelectDtos(List<Customer> c);
+
         public partial Customer ToDomain(CustomerUpdateDto c);
 
         public partial Customer ToDomain(CustomerCreateDto c);

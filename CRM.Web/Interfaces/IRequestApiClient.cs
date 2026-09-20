@@ -16,7 +16,9 @@ namespace CRM.Web.Interfaces
 
         public Task<List<RequestRecentDto>?> GetRecentRequestsByUserAsync();
 
-        public Task<int> CountRequestsAsync(Status? status);
+        public Task<int> CountRequestsAsync();
+
+        public Task<int> CountMyRequestsAsync(Status? status);
 
         public Task<bool> UpdateAsync(int id, RequestUpdateDto dto);
 

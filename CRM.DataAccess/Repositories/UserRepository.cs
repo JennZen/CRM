@@ -38,6 +38,13 @@ namespace CRM.DataAccess.Repositories
             return _mapper.ToDomains(users);
         }
 
+        public async Task<List<User>> GetAllActiveAsync()
+        {
+            var users = await _uow.Query<UserDb>().Where(u => u.IsActive == true).ToListAsync();
+
+            return _mapper.ToDomains(users);
+        }
+
         public async Task<User?> GetByIdAsync(int id)
         {
             var user = await _uow.GetObjectByKeyAsync<UserDb>(id);

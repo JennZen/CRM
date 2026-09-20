@@ -2,6 +2,7 @@
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
+using CRM.Domain.Entities;
 using CRM.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,13 @@ namespace CRM.Application.Services
             var customers = await _customerRepository.GetAllAsync();
 
             return _customerMapper.ToDetailsDtos(customers);
+        }
+
+        public async Task<List<CustomerSelectDto>> GetAllActiveAsync()
+        {
+            var customers = await _customerRepository.GetAllActiveAsync();
+
+            return _customerMapper.ToSelectDtos(customers);
         }
 
         public async Task<List<CustomerListDto>> GetAllCardsAsync(string? search = null)

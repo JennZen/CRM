@@ -16,6 +16,10 @@ namespace CRM.Application.Mapping
 
         public partial List<UserDetailsDto> ToDetailsDtos(List<User> u);
 
+        public partial UserSelectDto ToSelectDto(User u);
+
+        public partial List<UserSelectDto> ToSelectDtos(List<User> u);
+
         public partial User ToDomain(UserCreateDto dto);
 
         public partial User ToDomain(UserUpdateDto dto);

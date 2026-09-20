@@ -11,6 +11,8 @@ namespace CRM.Application.Interfaces.Repositories
     {
         public Task<List<Customer>> GetAllAsync(string? search = null);
 
+        public Task<List<Customer>> GetAllActiveAsync();
+
         public Task<Customer?> GetByIdAsync(int id);
 
         public Task<int> CountAsync();

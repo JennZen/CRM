@@ -35,6 +35,16 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<List<CustomerDetailsDto>>();
         }
 
+        public async Task<List<CustomerSelectDto>?> GetAllActiveAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/customer/active");
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<CustomerSelectDto>>();
+        }
+
         public async Task<List<CustomerListDto>?> GetAllCardsAsync(string? search = null)
         {
             AttachToken();

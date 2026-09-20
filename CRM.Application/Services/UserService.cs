@@ -77,6 +77,13 @@ namespace CRM.Application.Services
             return _userMapper.ToDetailsDtos(users);
         }
 
+        public async Task<List<UserSelectDto>> GetAllActiveAsync()
+        {
+            var users = await _userRepository.GetAllActiveAsync();
+
+            return _userMapper.ToSelectDtos(users);
+        }
+
         public async Task<List<UserWithRequestCountDto>> GetUsersWithNumberOfRequestsAsync()
         {
             var users = await _userRepository.GetAllAsync();

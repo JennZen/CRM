@@ -58,7 +58,7 @@ namespace CRM.Api.Controllers
 
 
         [HttpGet("my/count")]
-        public async Task<IActionResult> CountRequestsAsync(Status? status)
+        public async Task<IActionResult> CountMyRequestsAsync(Status? status)
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 

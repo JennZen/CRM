@@ -36,6 +36,17 @@ namespace CRM.Web.Services
             return await response.Content.ReadFromJsonAsync<List<UserDetailsDto>>();
         }
 
+        public async Task<List<UserSelectDto>?> GetAllActiveAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/user/active");
+
+            if (!response.IsSuccessStatusCode) return null;
+
+            return await response.Content.ReadFromJsonAsync<List<UserSelectDto>>();
+        }
+
         public async Task<UserDetailsDto?> GetByIdAsync(int id)
         {
             AttachToken();

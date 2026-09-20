@@ -33,17 +33,17 @@ namespace CRM.Web.Controllers
             var firstName = User.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
             var lastName = User.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
             var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-            var customers = await _customerApiClient.GetAllAsync();
-            var managers = await _userApiClient.GetAllAsync();
+            var customers = await _customerApiClient.GetAllActiveAsync();
+            var managers = await _userApiClient.GetAllActiveAsync();
 
             var model = new DashboardViewModel()
             {
                 UserFirstName = firstName,
                 UserLastName = lastName,
-                NewRequests = await _requestApiClient.CountRequestsAsync(Status.New),
-                InProgressRequests = await _requestApiClient.CountRequestsAsync(Status.Active),
-                FinishedRequests = await _requestApiClient.CountRequestsAsync(Status.Finished),
-                TotalRequests = await _requestApiClient.CountRequestsAsync(null),
+                NewRequests = await _requestApiClient.CountMyRequestsAsync(Status.New),
+                InProgressRequests = await _requestApiClient.CountMyRequestsAsync(Status.Active),
+                FinishedRequests = await _requestApiClient.CountMyRequestsAsync(Status.Finished),
+                TotalRequests = await _requestApiClient.CountMyRequestsAsync(null),
                 NumberOfCustomers = await _customerApiClient.CountCustomersAsync(),
                 NumberOfManagers = await _userApiClient.CountUsersAsync(),
                 RecentRequests = await _requestApiClient.GetRecentRequestsByUserAsync(),

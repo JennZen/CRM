@@ -26,6 +26,13 @@ namespace CRM.Api.Controllers
             return Ok(customers);
         }
 
+        [HttpGet("active")]
+        public async Task<IActionResult> GetAllActiveCustomersAsync()
+        {
+            var customers = await _customerService.GetAllActiveAsync();
+            return Ok(customers);
+        }
+
         [HttpGet("cards")]
         public async Task<IActionResult> GetAllCustomerCardsAsync([FromQuery] string? search)
         {

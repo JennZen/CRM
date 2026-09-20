@@ -38,8 +38,8 @@ namespace CRM.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var customers = await _customerApiClient.GetAllAsync();
-            var managers = await _userApiClient.GetAllAsync();
+            var customers = await _customerApiClient.GetAllActiveAsync();
+            var managers = await _userApiClient.GetAllActiveAsync();
 
             var model = new CustomerDetailsViewModel()
             {

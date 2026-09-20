@@ -92,7 +92,7 @@ namespace CRM.Web.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<int> CountRequestsAsync(Status? status)
+        public async Task<int> CountMyRequestsAsync(Status? status)
         {
             AttachToken();
 
@@ -104,6 +104,17 @@ namespace CRM.Web.Services
             }
 
             var response = await _httpClient.GetAsync(url);
+
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<int>();
+        }
+
+        public async Task<int> CountRequestsAsync()
+        {
+            AttachToken();
+
+            var response = await _httpClient.GetAsync("api/request/count");
 
             response.EnsureSuccessStatusCode();
 

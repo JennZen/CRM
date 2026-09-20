@@ -5,7 +5,10 @@ namespace CRM.Web.Interfaces
     public interface IUserApiClient
     {
         public Task<List<UserDetailsDto>?> GetAllAsync();
-        
+
+        public Task<List<UserSelectDto>?> GetAllActiveAsync();
+
+
         public Task<UserDetailsDto?> GetByIdAsync(int id);
 
         public Task<List<UserWithRequestCountDto>?> GetWithNumberOfRequestsAsync();
