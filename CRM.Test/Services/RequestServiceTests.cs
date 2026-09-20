@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Application.Exceptions;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Mapping;
 using CRM.Domain.Entities;
@@ -49,12 +50,11 @@ namespace CRM.Test.Services
             };
         }
 
-
         [Fact]
         public async Task GetAllAsync_ReturnsMappedList_WhenRepositoryReturnsRequests()
         {
             var requests = new List<Request> { CreateRequest(1), CreateRequest(2) };
-            _repositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(requests);
+            _repositoryMock.Setup(r => r.GetAllAsync(null)).ReturnsAsync(requests);
 
             var result = await _sut.GetAllAsync();
 
@@ -62,13 +62,13 @@ namespace CRM.Test.Services
             Xunit.Assert.Equal(2, result.Count);
             Xunit.Assert.Equal(requests[0].Id, result[0].Id);
             Xunit.Assert.Equal(requests[0].Title, result[0].Title);
-            _repositoryMock.Verify(r => r.GetAllAsync(), Times.Once);
+            _repositoryMock.Verify(r => r.GetAllAsync(null), Times.Once);
         }
 
         [Fact]
         public async Task GetAllAsync_ReturnsEmptyList_WhenRepositoryReturnsEmpty()
         {
-            _repositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<Request>());
+            _repositoryMock.Setup(r => r.GetAllAsync(null)).ReturnsAsync(new List<Request>());
 
             var result = await _sut.GetAllAsync();
 
@@ -76,6 +76,17 @@ namespace CRM.Test.Services
             Xunit.Assert.Empty(result);
         }
 
+        [Fact]
+        public async Task GetAllAsync_PassesStatusFilter_ToRepository()
+        {
+            var requests = new List<Request> { CreateRequest(1, status: Status.Active) };
+            _repositoryMock.Setup(r => r.GetAllAsync(Status.Active)).ReturnsAsync(requests);
+
+            var result = await _sut.GetAllAsync(Status.Active);
+
+            Xunit.Assert.Single(result);
+            _repositoryMock.Verify(r => r.GetAllAsync(Status.Active), Times.Once);
+        }
 
         [Fact]
         public async Task GetByIdAsync_ReturnsMappedDto_WhenRequestExists()
@@ -92,16 +103,14 @@ namespace CRM.Test.Services
         }
 
         [Fact]
-        public async Task GetByIdAsync_ReturnsNull_WhenRequestDoesNotExist()
+        public async Task GetByIdAsync_ThrowsNotFoundException_WhenRequestDoesNotExist()
         {
             _repositoryMock.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((Request?)null);
 
-            var result = await _sut.GetByIdAsync(999);
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.GetByIdAsync(999));
 
-            Xunit.Assert.Null(result);
             _repositoryMock.Verify(r => r.GetByIdAsync(999), Times.Once);
         }
-
 
         [Fact]
         public async Task GetByUserAsync_ReturnsMappedList_ForGivenUser()
@@ -116,6 +125,42 @@ namespace CRM.Test.Services
             _repositoryMock.Verify(r => r.GetByUserAsync(userId, null), Times.Once);
         }
 
+        [Fact]
+        public async Task GetByUserAsync_PassesStatusFilter_ToRepository()
+        {
+            var userId = 42;
+            var requests = new List<Request> { CreateRequest(1, managerId: userId, status: Status.Finished) };
+            _repositoryMock.Setup(r => r.GetByUserAsync(userId, Status.Finished)).ReturnsAsync(requests);
+
+            var result = await _sut.GetByUserAsync(userId, Status.Finished);
+
+            Xunit.Assert.Single(result);
+            _repositoryMock.Verify(r => r.GetByUserAsync(userId, Status.Finished), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetRecentByUserAsync_ReturnsMappedRecentDtos()
+        {
+            var userId = 42;
+            var requests = new List<Request> { CreateRequest(1, managerId: userId), CreateRequest(2, managerId: userId) };
+            _repositoryMock.Setup(r => r.GetRecentByUserAsync(userId, 10)).ReturnsAsync(requests);
+
+            var result = await _sut.GetRecentByUserAsync(userId);
+
+            Xunit.Assert.Equal(2, result.Count);
+            _repositoryMock.Verify(r => r.GetRecentByUserAsync(userId, 10), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetRecentByUserAsync_ReturnsEmptyList_WhenNoRequests()
+        {
+            var userId = 42;
+            _repositoryMock.Setup(r => r.GetRecentByUserAsync(userId , 10)).ReturnsAsync(new List<Request>());
+
+            var result = await _sut.GetRecentByUserAsync(userId);
+
+            Xunit.Assert.Empty(result);
+        }
 
         [Theory]
         [InlineData(null)]
@@ -135,11 +180,9 @@ namespace CRM.Test.Services
             _repositoryMock.Verify(r => r.CountByUserAndStatusAsync(userId, status), Times.Once);
         }
 
-
         [Fact]
         public async Task AddAsync_MapsDtoToDomain_CallsRepository_AndReturnsMappedDetailsDto()
         {
-            // Arrange
             var createDto = new RequestCreateDto
             {
                 Title = "New request",
@@ -164,7 +207,6 @@ namespace CRM.Test.Services
             _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Request>()), Times.Once);
         }
 
-
         [Fact]
         public async Task UpdateAsync_MapsDtoToDomain_AndReturnsTrue_WhenUpdateSucceeds()
         {
@@ -173,7 +215,7 @@ namespace CRM.Test.Services
                 Id = 1,
                 Title = "Updated title",
                 Description = "Updated description",
-                Priority = Priority.Low.ToString(),
+                Priority = Priority.Low,
             };
 
             _repositoryMock
@@ -189,6 +231,24 @@ namespace CRM.Test.Services
         }
 
         [Fact]
+        public async Task UpdateAsync_ThrowsNotFoundException_WhenUpdateFails()
+        {
+            var updateDto = new RequestUpdateDto
+            {
+                Id = 999,
+                Title = "Unknown",
+                Description = "Unknown",
+                Priority = Priority.Low,
+            };
+
+            _repositoryMock
+                .Setup(r => r.UpdateAsync(It.IsAny<Request>()))
+                .ReturnsAsync(false);
+
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.UpdateAsync(updateDto));
+        }
+
+        [Fact]
         public async Task DeleteAsync_ReturnsTrue_WhenRepositorySucceeds()
         {
             _repositoryMock.Setup(r => r.DeleteAsync(1)).ReturnsAsync(true);
@@ -200,29 +260,37 @@ namespace CRM.Test.Services
         }
 
         [Fact]
-        public async Task DeleteAsync_ReturnsFalse_WhenRequestNotFound()
+        public async Task DeleteAsync_ThrowsNotFoundException_WhenRequestNotFound()
         {
             _repositoryMock.Setup(r => r.DeleteAsync(999)).ReturnsAsync(false);
 
-            var result = await _sut.DeleteAsync(999);
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.DeleteAsync(999));
+        }
+
+        [Fact]
+        public async Task ChangeStatusAsync_DelegatesToRepository_WithAuthorName_AndReturnsResult()
+        {
+            _repositoryMock
+                .Setup(r => r.ChangeStatusAsync(1, Status.Finished, "Ana"))
+                .ReturnsAsync(true);
+
+            var result = await _sut.ChangeStatusAsync(1, Status.Finished, "Ana");
+
+            Xunit.Assert.True(result);
+            _repositoryMock.Verify(r => r.ChangeStatusAsync(1, Status.Finished, "Ana"), Times.Once);
+        }
+
+        [Fact]
+        public async Task ChangeStatusAsync_ReturnsFalse_WhenRequestNotFound()
+        {
+            _repositoryMock
+                .Setup(r => r.ChangeStatusAsync(999, Status.Finished, "Ana"))
+                .ReturnsAsync(false);
+
+            var result = await _sut.ChangeStatusAsync(999, Status.Finished, "Ana");
 
             Xunit.Assert.False(result);
         }
-
-
-        [Fact]
-        public async Task ChangeStatusAsync_DelegatesToRepository_AndReturnsResult()
-        {
-            _repositoryMock
-                .Setup(r => r.ChangeStatusAsync(1, Status.Finished))
-                .ReturnsAsync(true);
-
-            var result = await _sut.ChangeStatusAsync(1, Status.Finished);
-
-            Xunit.Assert.True(result);
-            _repositoryMock.Verify(r => r.ChangeStatusAsync(1, Status.Finished), Times.Once);
-        }
-
 
         [Fact]
         public async Task SetManagerAsync_DelegatesToRepository_AndReturnsResult()

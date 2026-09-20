@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.User;
+using CRM.Application.Exceptions;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
@@ -33,7 +34,8 @@ namespace CRM.Test.Services
             string firstName = "John",
             string lastName = "Doe",
             string email = "john.doe@test.com",
-            string passwordHash = "hashed")
+            string passwordHash = "hashed",
+            bool isActive = true)
         {
             return new User
             {
@@ -41,7 +43,8 @@ namespace CRM.Test.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                IsActive = isActive
             };
         }
 
@@ -86,8 +89,9 @@ namespace CRM.Test.Services
         }
 
         [Fact]
-        public async Task UpdateAsync_MapsDtoToDomain_AndReturnsTrue_WhenUpdateSucceeds()
+        public async Task UpdateAsync_LoadsExistingUser_PreservesIsActive_AndReturnsTrue_WhenUpdateSucceeds()
         {
+            var existingUser = CreateUser(id: 1, isActive: true);
             var dto = new UserUpdateDto
             {
                 Id = 1,
@@ -96,29 +100,44 @@ namespace CRM.Test.Services
                 Email = "updated@test.com"
             };
 
+            _userRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingUser);
             _userRepositoryMock
                 .Setup(r => r.UpdateAsync(It.Is<User>(u =>
                     u.Id == dto.Id &&
                     u.FirstName == dto.FirstName &&
-                    u.Email == dto.Email)))
+                    u.Email == dto.Email &&
+                    u.IsActive == existingUser.IsActive)))
                 .ReturnsAsync(true);
 
             var result = await _sut.UpdateAsync(dto);
 
             Xunit.Assert.True(result);
+            _userRepositoryMock.Verify(r => r.GetByIdAsync(1), Times.Once);
             _userRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
-        public async Task UpdateAsync_ReturnsFalse_WhenUserNotFound()
+        public async Task UpdateAsync_ThrowsNotFoundException_WhenUserToUpdateDoesNotExist()
         {
             var dto = new UserUpdateDto { Id = 999, FirstName = "Nobody" };
 
+            _userRepositoryMock.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((User?)null);
+
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.UpdateAsync(dto));
+
+            _userRepositoryMock.Verify(r => r.GetByIdAsync(999), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ThrowsNotFoundException_WhenRepositoryUpdateFails()
+        {
+            var existingUser = CreateUser(id: 1);
+            var dto = new UserUpdateDto { Id = 1, FirstName = "Updated" };
+
+            _userRepositoryMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(existingUser);
             _userRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<User>())).ReturnsAsync(false);
 
-            var result = await _sut.UpdateAsync(dto);
-
-            Xunit.Assert.False(result);
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.UpdateAsync(dto));
         }
 
         [Fact]
@@ -133,13 +152,11 @@ namespace CRM.Test.Services
         }
 
         [Fact]
-        public async Task DeleteAsync_ReturnsFalse_WhenUserNotFound()
+        public async Task DeleteAsync_ThrowsNotFoundException_WhenUserNotFound()
         {
             _userRepositoryMock.Setup(r => r.DeleteAsync(999)).ReturnsAsync(false);
 
-            var result = await _sut.DeleteAsync(999);
-
-            Xunit.Assert.False(result);
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.DeleteAsync(999));
         }
 
         [Fact]
@@ -151,20 +168,29 @@ namespace CRM.Test.Services
             var result = await _sut.GetByIdAsync(5);
 
             Xunit.Assert.NotNull(result);
-            Xunit.Assert.Equal(5, result!.Id);
+            Xunit.Assert.Equal(5, result.Id);
             Xunit.Assert.Equal("Found", result.FirstName);
             _userRepositoryMock.Verify(r => r.GetByIdAsync(5), Times.Once);
         }
 
         [Fact]
-        public async Task GetByIdAsync_ReturnsNull_WhenUserDoesNotExist()
+        public async Task GetByIdAsync_ThrowsNotFoundException_WhenUserDoesNotExist()
         {
             _userRepositoryMock.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((User?)null);
 
-            var result = await _sut.GetByIdAsync(999);
+            await Xunit.Assert.ThrowsAsync<NotFoundException>(() => _sut.GetByIdAsync(999));
 
-            Xunit.Assert.Null(result);
             _userRepositoryMock.Verify(r => r.GetByIdAsync(999), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeactivateAsync_CallsRepository()
+        {
+            _userRepositoryMock.Setup(r => r.DeactivateAsync(1)).Returns(Task.CompletedTask);
+
+            await _sut.DeactivateAsync(1);
+
+            _userRepositoryMock.Verify(r => r.DeactivateAsync(1), Times.Once);
         }
 
         [Fact]
@@ -186,6 +212,61 @@ namespace CRM.Test.Services
             _userRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<User>());
 
             var result = await _sut.GetAllAsync();
+
+            Xunit.Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetAllActiveAsync_ReturnsMappedSelectDtos()
+        {
+            var users = new List<User> { CreateUser(1), CreateUser(2) };
+            _userRepositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(users);
+
+            var result = await _sut.GetAllActiveAsync();
+
+            Xunit.Assert.Equal(2, result.Count);
+            _userRepositoryMock.Verify(r => r.GetAllActiveAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAllActiveAsync_ReturnsEmptyList_WhenNoActiveUsers()
+        {
+            _userRepositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(new List<User>());
+
+            var result = await _sut.GetAllActiveAsync();
+
+            Xunit.Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetUsersWithNumberOfRequestsAsync_ReturnsListWithCounts_ForEachUser()
+        {
+            var users = new List<User>
+            {
+                CreateUser(1, "Alice", "A"),
+                CreateUser(2, "Bob", "B")
+            };
+            _userRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(users);
+            _requestRepositoryMock.Setup(r => r.CountByUserAndStatusAsync(1, null)).ReturnsAsync(4);
+            _requestRepositoryMock.Setup(r => r.CountByUserAndStatusAsync(2, null)).ReturnsAsync(0);
+
+            var result = await _sut.GetUsersWithNumberOfRequestsAsync();
+
+            Xunit.Assert.Equal(2, result.Count);
+            Xunit.Assert.Equal("Alice", result[0].FirstName);
+            Xunit.Assert.Equal(4, result[0].NumberRequests);
+            Xunit.Assert.Equal("Bob", result[1].FirstName);
+            Xunit.Assert.Equal(0, result[1].NumberRequests);
+            _requestRepositoryMock.Verify(r => r.CountByUserAndStatusAsync(1, null), Times.Once);
+            _requestRepositoryMock.Verify(r => r.CountByUserAndStatusAsync(2, null), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetUsersWithNumberOfRequestsAsync_ReturnsEmptyList_WhenNoUsers()
+        {
+            _userRepositoryMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<User>());
+
+            var result = await _sut.GetUsersWithNumberOfRequestsAsync();
 
             Xunit.Assert.Empty(result);
         }
