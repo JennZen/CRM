@@ -1,9 +1,11 @@
 ﻿using CRM.Application.DTOs.Customer;
+using CRM.Application.Exceptions;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
 using CRM.Domain.Entities;
 using CRM.Domain.Enums;
+using DevExpress.Data.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,10 +61,10 @@ namespace CRM.Application.Services
             return dtos;
         }
 
-        public async Task<CustomerDetailsDto?> GetByIdAsync(int id)
+        public async Task<CustomerDetailsDto> GetByIdAsync(int id)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
-            if (customer == null) return null;
+            if (customer == null) throw new NotFoundException(nameof(Request), id);
 
             var dto = _customerMapper.ToDetailsDto(customer);
             
@@ -93,12 +95,22 @@ namespace CRM.Application.Services
         public async Task<bool> UpdateAsync(CustomerUpdateDto customer)
         {
             var domainCustomer = _customerMapper.ToDomain(customer);
-            return await _customerRepository.UpdateAsync(domainCustomer);
+            var updated = await _customerRepository.UpdateAsync(domainCustomer);
+
+            if(!updated)
+                throw new NotFoundException(nameof(Customer), customer.Id);
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            return await _customerRepository.DeleteAsync(id);
+            var deleted =  await _customerRepository.DeleteAsync(id);
+
+            if (!deleted)
+                throw new NotFoundException(nameof(Customer), id);
+
+            return true;
         }
     }
 }

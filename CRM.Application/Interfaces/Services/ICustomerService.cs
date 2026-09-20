@@ -16,7 +16,7 @@ namespace CRM.Application.Interfaces.Services
 
         public Task<List<CustomerListDto>> GetAllCardsAsync(string? search = null);
 
-        public Task<CustomerDetailsDto?> GetByIdAsync(int id);
+        public Task<CustomerDetailsDto> GetByIdAsync(int id);
 
         public Task<int> CountAsync();
 

@@ -1,4 +1,5 @@
 ﻿using CRM.Application.DTOs.User;
+using CRM.Application.Exceptions;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
@@ -49,18 +50,28 @@ namespace CRM.Application.Services
             var user = _userMapper.ToDomain(dto);
             user.Role = dto.Role;
 
-            return await _userRepository.UpdateAsync(user);
+            var updated = await _userRepository.UpdateAsync(user);
+
+            if (!updated)
+                throw new NotFoundException(nameof(User), dto.Id);
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(int userId)
         {
-            return await _userRepository.DeleteAsync(userId);
+            var deleted = await _userRepository.DeleteAsync(userId);
+
+            if (!deleted)
+                throw new NotFoundException(nameof(User), userId);
+
+            return true;
         }
 
-        public async Task<UserDetailsDto?> GetByIdAsync(int userId)
+        public async Task<UserDetailsDto> GetByIdAsync(int userId)
         {
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) return null;
+            var user = await _userRepository.GetByIdAsync(userId)
+                ?? throw new NotFoundException(nameof(User), userId);
 
             return _userMapper.ToDetailsDto(user);
         }

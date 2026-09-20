@@ -41,9 +41,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> GetUserByIdAsync(int id)
         {
             var user = await _userService.GetByIdAsync(id);
-
-            if(user == null) return NotFound();
-
             return Ok(user);
         }
 
@@ -57,8 +54,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
             var result = await _userService.DeleteAsync(id);
-            if (result == false) return NotFound();
-
             return NoContent();
         }
 
@@ -66,7 +61,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> DeactivateUserAsync(int id)
         {
             await _userService.DeactivateAsync(id);
-
             return NoContent();
         }
 
@@ -80,7 +74,6 @@ namespace CRM.Api.Controllers
             }
 
             var result = await _userService.UpdateAsync(dto);
-            if (result == false) return NotFound();
             return Ok(result);
         }
 

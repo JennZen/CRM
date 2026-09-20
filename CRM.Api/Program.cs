@@ -1,3 +1,4 @@
+using CRM.Api.Middleware;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Services;
@@ -26,8 +27,8 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
+        Type = SecuritySchemeType.Http, 
+        Scheme = "bearer",                 
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
         Description = "Enter your token:"
@@ -108,7 +109,8 @@ using (var scope = app.Services.CreateScope())
     using var uow = new UnitOfWork(dataLayer);
     uow.UpdateSchema(typeof(CRM.DataAccess.Models.CustomerDb),
                       typeof(CRM.DataAccess.Models.RequestDb),
-                      typeof(CRM.DataAccess.Models.UserDb));
+                      typeof(CRM.DataAccess.Models.UserDb),
+                      typeof(CRM.DataAccess.Models.RequestHistoryDb));
 }
 
 using (var scope = app.Services.CreateScope())
@@ -134,6 +136,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

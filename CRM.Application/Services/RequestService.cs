@@ -1,7 +1,9 @@
 ﻿using CRM.Application.DTOs.Request;
+using CRM.Application.Exceptions;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using CRM.Application.Mapping;
+using CRM.Domain.Entities;
 using CRM.Domain.Enums;
 using DevExpress.Xpo;
 using System;
@@ -33,7 +35,9 @@ namespace CRM.Services.Services
 
         public async Task<RequestDetailsDto?> GetByIdAsync(int id)
         {
-            var request = await _requestRepository.GetByIdAsync(id);
+            var request = await _requestRepository.GetByIdAsync(id) 
+                ?? throw new NotFoundException(nameof(Request), id);
+
             return request is null ? null : _requestMapper.ToDetailsDto(request);
         }
 
@@ -65,12 +69,22 @@ namespace CRM.Services.Services
         public async Task<bool> UpdateAsync(RequestUpdateDto request)
         {
             var domainRequest = _requestMapper.ToDomain(request);
-            return await _requestRepository.UpdateAsync(domainRequest);
+            var updated = await _requestRepository.UpdateAsync(domainRequest);
+
+            if(!updated)
+                throw new NotFoundException(nameof(Request), request.Id);
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(int requestId)
         {
-            return await _requestRepository.DeleteAsync(requestId);
+            var deleted = await _requestRepository.DeleteAsync(requestId);
+
+            if (!deleted)
+                throw new NotFoundException(nameof(Request), requestId);
+
+            return true;
         }
 
         public async Task<bool> ChangeStatusAsync(int requestId, Status status, string authorName)

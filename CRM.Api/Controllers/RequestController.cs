@@ -31,10 +31,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> GetRequestByIdAsync(int id)
         {
             var request = await _requestService.GetByIdAsync(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
             return Ok(request);
         }
 
@@ -83,10 +79,6 @@ namespace CRM.Api.Controllers
             }
 
             var result = await _requestService.UpdateAsync(requestUpdateDto);
-            if (!result)
-            {
-                return NotFound();
-            }
 
             return NoContent();
         }
@@ -102,10 +94,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> DeleteRequestAsync(int id)
         {
             var result = await _requestService.DeleteAsync(id);
-            if (!result)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
 
@@ -119,10 +107,6 @@ namespace CRM.Api.Controllers
             var authorName = $"{firstName} {lastName}".ToString();
 
             var result = await _requestService.ChangeStatusAsync(id, status, authorName);
-            if (!result)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
 
@@ -130,10 +114,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> SetRequestManagerAsync(int id, [FromBody] int managerId)
         {
             var result = await _requestService.SetManagerAsync(id, managerId);
-            if (!result)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
     }

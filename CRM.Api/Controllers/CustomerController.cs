@@ -44,10 +44,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> GetCustomerByIdAsync(int id)
         {
             var customer = await _customerService.GetByIdAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
             return Ok(customer);
         }
 
@@ -81,10 +77,6 @@ namespace CRM.Api.Controllers
             }
 
             var result = await _customerService.UpdateAsync(dto);
-            if (result == false)
-            {
-                return NotFound();
-            }
 
             return NoContent();
         }
@@ -93,10 +85,6 @@ namespace CRM.Api.Controllers
         public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
             var deletedCustomer = await _customerService.DeleteAsync(id);
-            if (deletedCustomer == false)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
     }

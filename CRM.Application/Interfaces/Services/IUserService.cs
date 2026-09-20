@@ -18,7 +18,7 @@ namespace CRM.Application.Interfaces.Services
 
         public Task DeactivateAsync(int userId);
 
-        public Task<UserDetailsDto?> GetByIdAsync(int userId);
+        public Task<UserDetailsDto> GetByIdAsync(int userId);
 
         public Task<int> CountAsync();
 
