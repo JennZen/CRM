@@ -47,8 +47,12 @@ namespace CRM.Application.Services
 
         public async Task<bool> UpdateAsync(UserUpdateDto dto)
         {
+            var existingUser = await _userRepository.GetByIdAsync(dto.Id)
+                ?? throw new NotFoundException(nameof(User), dto.Id);
+
             var user = _userMapper.ToDomain(dto);
             user.Role = dto.Role;
+            user.IsActive = existingUser.IsActive;
 
             var updated = await _userRepository.UpdateAsync(user);
 
